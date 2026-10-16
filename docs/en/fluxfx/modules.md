@@ -72,3 +72,4 @@ For example, Vortex Center `(0, 0, 0)` in World mode refers to the world origin,
 - [Appearance over lifetime](./lifetime-appearance.md): color, size, and rotation.
 - [Texture animation and blinking](./texture-animation-blink.md): frames and periodic brightness.
 - [Trails](./trails.md): recording and rendering movement history.
+- [Custom modules](./custom-modules.md): creating your own modules with C# and HLSL.

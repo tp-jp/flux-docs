@@ -4,6 +4,8 @@
 
 Get handles for Main, Emission, Shape, and modules from `FluxParticleSystem`, then use typed methods to adjust the configuration prepared in the Inspector.
 
+To implement a handle for your own module, see [Custom modules](./custom-modules.md#runtime-handle).
+
 <span id="操作の入口"></span>
 
 ## API entry points

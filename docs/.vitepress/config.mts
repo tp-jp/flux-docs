@@ -48,7 +48,8 @@ const jaTheme: DefaultTheme.Config = {
           { text: '動きの変化', link: '/fluxfx/motion' },
           { text: '寿命に応じた見た目', link: '/fluxfx/lifetime-appearance' },
           { text: 'テクスチャアニメーションと点滅', link: '/fluxfx/texture-animation-blink' },
-          { text: 'Trails', link: '/fluxfx/trails' }
+          { text: 'Trails', link: '/fluxfx/trails' },
+          { text: 'カスタムモジュール', link: '/fluxfx/custom-modules' }
         ] },
         { text: 'UdonSharpからの制御', items: [
           { text: '再生と停止', link: '/fluxfx/playback' },
@@ -107,6 +108,7 @@ const labels: Record<string, string> = {
   "Inspectorとプレビュー": "Inspector and preview",
   "モジュール": "Modules",
   "モジュールの基本": "Module basics",
+  "カスタムモジュール": "Custom modules",
   "力と速度": "Forces and velocity",
   "動きの変化": "Motion effects",
   "寿命に応じた見た目": "Appearance over lifetime",

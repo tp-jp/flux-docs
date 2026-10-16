@@ -38,6 +38,7 @@
 | [寿命に応じた見た目](./lifetime-appearance.md) | Color・Size・Rotation over Lifetime |
 | [テクスチャアニメーションと点滅](./texture-animation-blink.md) | Texture Sheet Animation、Blink |
 | [Trails](./trails.md) | 軌跡の設定と表示 |
+| [カスタムモジュール](./custom-modules.md) | 独自の設定・GPU処理・UdonSharp用ハンドルの作成 |
 
 <span id="controlling-fluxfx-from-udonsharp"></span>
 

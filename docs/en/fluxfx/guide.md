@@ -38,6 +38,7 @@ Start with installation and the quick start, then explore Inspector settings, mo
 | [Appearance over lifetime](./lifetime-appearance.md) | Color, Size, and Rotation over Lifetime |
 | [Texture animation and blinking](./texture-animation-blink.md) | Texture Sheet Animation and Blink |
 | [Trails](./trails.md) | Trail settings and display |
+| [Custom modules](./custom-modules.md) | Creating custom settings, GPU operations, and UdonSharp handles |
 
 <span id="udonsharpからの制御"></span>
 

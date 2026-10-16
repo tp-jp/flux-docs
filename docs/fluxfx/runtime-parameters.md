@@ -4,6 +4,8 @@
 
 `FluxParticleSystem`からMain・Emission・Shape・各モジュールの操作ハンドルを取得し、型付きのメソッドで値を変更します。Inspectorで用意した構成を、実行中に調整するためのAPIです。
 
+独自モジュールのハンドルを実装する方法は[カスタムモジュール](./custom-modules.md#runtime-handle)を参照してください。
+
 <span id="api-entry-points"></span>
 
 ## 操作の入口

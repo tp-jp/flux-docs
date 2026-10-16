@@ -72,3 +72,4 @@ Gravity → Force → Noise → Vortex → Drag → Limit Velocity
 - [寿命に応じた見た目](./lifetime-appearance.md)：色・サイズ・回転の変化
 - [テクスチャアニメーションと点滅](./texture-animation-blink.md)：コマの切り替えと周期的な明暗
 - [Trails](./trails.md)：移動経路の記録と軌跡の表示
+- [カスタムモジュール](./custom-modules.md)：C#とHLSLによる独自モジュールの作成

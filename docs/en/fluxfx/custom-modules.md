@@ -54,6 +54,147 @@ For Strength, the parts connect as follows:
 
 The CustomLift Operation runs during Update, reads velocity and time, and writes velocity. Declaring the Values read and written and the dependencies between operations lets FluxFX determine execution order alongside other modules. This is separate from Stage, which determines the Inspector display group.
 
+## Standard Value IDs {#standard-value-ids}
+
+`step.time` and `particle.velocity` are **Value IDs** defined by FluxFX. They are separate from **Parameter IDs**, such as `custom-lift.strength`, declared in a Contract. Reference Values in an Operation's `reads` and `writes`, and specify Parameters in `parameters`. The same string can exist in different categories: for example, `render.size` is both a Value ID and a Parameter ID.
+
+Do not reuse the standard IDs below for your own values. To read a standard Value, reference its existing definition rather than registering it again with `AddValue`. The implementation rejects duplicate IDs within each category; it does not reserve entire prefixes as keywords. Give custom IDs a unique prefix.
+
+### Values defined by Core {#core-values}
+
+FluxFX 0.0.3 Core defines the following 13 Values. Types are members of `FluxParticleValueType`. “Writable” means `SharedMutable`; writes still require an Operation declaration and appropriate execution order.
+
+| Value ID | Type | Purpose | Writes from custom Operations |
+| --- | --- | --- | --- |
+| `particle.position` | Float3 | Particle position in simulation space | Writable |
+| `particle.velocity` | Float3 | Particle velocity in simulation space | Writable |
+| `particle.age` | Float | Particle age in seconds; also used for liveness checks | Not allowed: SystemManaged |
+| `particle.spawn-key` | UInt | Spawn key retained by the particle, used to reproduce random values | Not allowed: SystemManaged |
+| `particle.lifetime` | Float | Particle lifetime in seconds | Not allowed: ReadOnly |
+| `particle.start-color` | Float4 | Initial color (RGBA) | Not allowed: ReadOnly |
+| `particle.start-size` | Float | Initial size | Not allowed: ReadOnly |
+| `render.size` | Float | Size for rendering | Writable |
+| `render.uv-transform` | Float4 | UV scale (xy) and offset (zw) for rendering | Writable |
+| `render.color` | Float4 | Color for rendering (RGBA) | Writable |
+| `step.time` | Float | Simulation time shared by the system, in seconds | Not allowed: ReadOnly |
+| `step.delta-time` | Float | Current update interval in seconds | Not allowed: ReadOnly |
+| `spawn.key` | UInt | Key supplied at spawn time | Not allowed: ReadOnly |
+
+`SystemManaged` Values are managed by Core; custom modules can only read them. `ReadOnly` Values also cannot appear in an Operation's `writes`.
+
+A Value definition and a Provider supplying that Value are separate registrations. Standard construction registers Providers for `step.delta-time`, `spawn.key`, lifetime, initial color, and initial size. **A module that needs `step.time` must register its Provider.** As in CustomLift below, check `context.Providers.ContainsKey("step.time")` before adding a Uniform Provider to avoid duplicates.
+
+### Values added conditionally {#conditional-values}
+
+The following Values are not present in every configuration.
+
+| Value ID | Type and write policy | Condition and purpose |
+| --- | --- | --- |
+| `emitter.row0`, `emitter.row1`, `emitter.row2` | Float4, ReadOnly | World Simulation Space. The first three rows of the emitter's local-to-world matrix |
+| `spawn.direction` | Float3, ReadOnly | Sphere, Hemisphere, Circle, or Cone Shape. Supplies the spawn direction |
+| `render.rotation` | Float3, SharedMutable | Random Start Rotation, a nonzero constant Start Rotation, or an Operation writing this Value. Rotation for rendering |
+| `particle.start-rotation` | Float3, ReadOnly | Random Between Two Constants Start Rotation. Per-particle initial rotation |
+
+Standard modules also add helper Values. These depend on the module and mode, so do not treat them as universally available inputs. All are ReadOnly.
+
+| Value ID | Type | Registering module and condition |
+| --- | --- | --- |
+| `velocity-over-lifetime.center-offset` | Float3 | Velocity over Lifetime |
+| `color.normalized-age`, `color.gradient` | Float, Float4 | Color over Lifetime in Gradient mode |
+| `size.normalized-age`, `size.curve` | Float, Float | Size over Lifetime in Curve mode |
+| `rotation.normalized-age`, `rotation.curve` | Float, Float | Rotation over Lifetime in Curve mode |
+
+To register your own normalized age, Curve, or Gradient, pass unique IDs to `contribution.NormalizedAge`, `Curve`, or `Gradient`.
+
+### Specify which version of a Value to read {#value-read-versions}
+
+In addition to the Value ID, specify how to read it using the second argument of `FluxParticleValueRead`.
+
+| ReadVersion | Purpose |
+| --- | --- |
+| `Provided` | A Provider supplies the Value, such as time, lifetime, or initial color. Requires a registered Provider whose inputs are available in that Phase |
+| `StepPrevious` | Reads particle state before the update, during Update. In the velocity pipeline, it may be connected to the preceding writer's result |
+| `AfterOperation` | Reads the result written by a specified Operation in the same Phase. Pass its Operation ID as the third argument |
+| `Committed` | Reads updated particle state during Render |
+
+For example, CustomLift reads `particle.velocity` with `StepPrevious`, and `step.time` and `step.delta-time` with `Provided`. Configuration compilation fails if a Value or Provider is missing, or if the Phase or dependencies are incompatible.
+
+## Standard Operation IDs and execution order {#standard-operation-ids}
+
+An Operation ID identifies a processing operation. It is separate from a Value ID or Module ID, and is the ID used in dependencies. For example, Gravity's Operation ID is `gravity`. Duplicate Operation IDs are rejected. The following operations are registered by standard FluxFX 0.0.3 configurations.
+
+### Operations added by Core and settings {#core-operations}
+
+| Operation ID | Phase | Purpose and condition |
+| --- | --- | --- |
+| `spawn.position` | Spawn | Initializes particle position and age. Implementation varies with Shape and Simulation Space |
+| `spawn.velocity` | Spawn | Initializes particle velocity and spawn key. Implementation varies with Start Speed and related settings |
+| `velocity.identity` | Update | Carries velocity into the next state unchanged. Added only when no Update Operation writes velocity |
+| `motion` | Update | Advances position using the final velocity result and updates age |
+| `render.start` | Render | Sets rendering color from initial color |
+| `render.uv-start` | Render | Sets UV scale to 1 and offset to 0 |
+| `render.size-start` | Render | Sets rendering size from initial size |
+| `render.rotation-start` | Render | Sets rendering rotation from initial rotation. Added when the configuration needs `render.rotation` |
+| `render.intensity` | Render | Applies Renderer Intensity to rendering color, after other rendering color writers |
+
+### Operations added by standard modules {#module-operations}
+
+These are registered when the corresponding module is included. Turning Enabled off retains the Operation, so Enabled does not determine whether a dependency target exists.
+
+| Operation ID | Phase | Module and main output |
+| --- | --- | --- |
+| `gravity` | Update | Gravity: velocity |
+| `force` | Update | Force: velocity |
+| `noise` | Update | Noise: velocity |
+| `vortex` | Update | Vortex: velocity |
+| `drag` | Update | Drag: velocity |
+| `limit-velocity` | Update | Limit Velocity: velocity |
+| `velocity-over-lifetime` | Update | Velocity over Lifetime: modifies position after `motion` |
+| `render.color` | Render | Color over Lifetime: rendering color |
+| `render.blink` | Render | Blink: rendering color |
+| `render.size-over-lifetime` | Render | Size over Lifetime: rendering size |
+| `render.rotation-over-lifetime` | Render | Rotation over Lifetime: rendering rotation |
+| `render.texture-sheet-animation` | Render | Texture Sheet Animation: rendering UV transform |
+
+Trails does not register an Operation in this list. It registers parameters and handle mappings; history updates and rendering use separate processing. The `custom-lift` ID created in this chapter belongs to the sample, not the standard operations.
+
+### Specifying dependencies {#operation-dependencies}
+
+A dependency identifies an operation that must run before yours. If `A` depends on `B`, execution order is `B → A`. Regular `dependencies` and `AfterOperation` must target operations in the same Phase. Dependencies cannot cross Spawn, Update, and Render phases.
+
+| Declaration | Meaning and use |
+| --- | --- |
+| `dependencies: new[] { "motion" }` | A required predecessor. Specifies order only; declare Value reads separately. A missing target is an error |
+| `new FluxParticleValueRead("particle.position", FluxParticleReadVersion.AfterOperation, "motion")` | Reads position written by `motion`. `contribution.Operation` also adds a required dependency from this read |
+| `optionalDependencies: new[] { "gravity", "force" }` | Writer ordering constraints for targets that exist. Currently resolved only in the velocity and rendering color pipelines described below |
+
+For `AfterOperation`, the named operation must write the Value being read. Naming a custom Operation alone does not establish its order. Declare the required dependencies instead of relying on Inspector insertion order, Stage, or alphabetical ID order.
+
+### Pipelines connected automatically {#operation-pipelines}
+
+The standard build resolves writer order for **`particle.velocity` in Update** and **`render.color` in Render**. An `optionalDependencies` constraint is used only when both operations write the Value in that pipeline. It does not establish order when either operation writes a different Value or belongs to another Phase.
+
+With all standard modules present, the main sequences are as follows. Omitted modules drop out of the sequence.
+
+```text
+Update: gravity → force → noise → vortex → drag → limit-velocity → motion → velocity-over-lifetime
+Render: render.start → render.color → render.blink → render.intensity
+```
+
+The final velocity writer feeds `motion`. With no velocity writers, the sequence is `velocity.identity → motion`. Rendering size, rotation, and UV operations use required dependencies on their respective `render.*-start` operations. There is no universal order between these and the rendering color pipeline.
+
+In the velocity and rendering color pipelines, each writer's input is reconnected to the preceding writer's result. For example, Blink declares a read from `render.start`, but receives Color over Lifetime's result when that module is present. This automatic reconnection does not apply to arbitrary Values.
+
+### Ordering custom operations {#custom-operation-order}
+
+CustomLift below lists all standard velocity writers in `optionalDependencies`. The result is `… → limit-velocity → custom-lift → motion`, so the added velocity contributes to position updates. However, Drag and Limit Velocity do not affect that addition in the same update.
+
+To place another custom velocity writer after CustomLift, give that Operation `dependencies: new[] { "custom-lift" }`. This makes CustomLift required. To support configurations without CustomLift, add `custom-lift` to `optionalDependencies` and also specify order relative to the standard velocity writers.
+
+To modify position after `motion`, use the `AfterOperation` read of `particle.position` shown above and write the same Value. If Velocity over Lifetime is also used, specify order relative to that operation too. Position operations do not receive automatic connections through `optionalDependencies`.
+
+Multiple operations writing the same Value in the same Phase need an order between them. Ambiguous ordering, dependency cycles, and missing required targets produce errors. In particular, `render.intensity` runs after other rendering color writers, so making a custom rendering color writer depend on `render.intensity` creates a cycle.
+
 ## Required files {#structure}
 
 Create the following files in your project's Assets. This tutorial does not assume that a VCC installation includes the sample folder. If you already have CustomLift, use that definition instead of adding a duplicate.
@@ -259,7 +400,7 @@ The Editor automatically discovers implementations of `IFluxParticleModuleDefini
 
 ### Pay attention to execution order {#execution-order}
 
-`optionalDependencies` places the operation after each listed operation that exists. This example accelerates after Gravity, Force, Noise, Vortex, Drag, and Limit Velocity. It also works without those standard modules.
+This example's `optionalDependencies` places it after the standard writers present in the [velocity pipeline](#operation-pipelines). It accelerates after Gravity, Force, Noise, Vortex, Drag, and Limit Velocity, and also works without those standard modules.
 
 Consequently, **velocity added here is not affected by Drag or Limit Velocity in the same update**. To enforce a final speed limit, revise the dependencies between velocity-writing operations. Changing Inspector insertion order or Stage alone does not set execution order.
 

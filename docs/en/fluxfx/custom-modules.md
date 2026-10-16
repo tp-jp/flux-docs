@@ -340,26 +340,21 @@ Enum values must be contiguous from zero, with matching assignments in Contract 
 
 ## Register GPU processing {#definition}
 
-Save as `Editor/CustomLiftDefinition.cs`.
+Save as `Editor/CustomLiftDefinition.cs`. Inherit from `FluxParticleModuleDefinition<CustomLiftModule>` and override `ModuleId` and the typed `Contribute` method. The base class derives `ModuleType` from the type argument and passes settings as `CustomLiftModule`, so no manual cast is needed.
 
 ```csharp
-using System;
 using TpLab.Flux.FX.Editor.Compilation.Definitions;
 using TpLab.Flux.FX.Editor.Modules;
 using TpLab.Flux.FX.Editor.Modules.Shared;
-using TpLab.Flux.FX.Scripts.Modules;
 
 namespace TpLab.Flux.FX.CustomModules.Editor
 {
-    public sealed class CustomLiftDefinition : IFluxParticleModuleDefinition
+    public sealed class CustomLiftDefinition : FluxParticleModuleDefinition<CustomLiftModule>
     {
-        public Type ModuleType => typeof(CustomLiftModule);
+        public override string ModuleId => CustomLiftContract.Module.Id;
 
-        public string ModuleId => CustomLiftContract.Module.Id;
-
-        public void Contribute(FluxParticleModule module, FluxParticleProgramContribution context)
+        public override void Contribute(CustomLiftModule lift, FluxParticleProgramContribution context)
         {
-            var lift = (CustomLiftModule)module;
             var contribution = new FluxParticleModuleContribution(context, CustomLiftContract.Module, lift.Enabled);
             var strength = contribution.Bind(CustomLiftContract.Strength, lift.Strength);
             var direction = contribution.Bind(CustomLiftContract.Direction, lift.Direction);
@@ -386,7 +381,9 @@ namespace TpLab.Flux.FX.CustomModules.Editor
 
 | Registration | Meaning in this example |
 | --- | --- |
-| `ModuleType` | Associates the definition with its settings class |
+| `FluxParticleModuleDefinition<CustomLiftModule>` | Specifies the settings class. The base class provides `ModuleType` |
+| `ModuleId` | Returns the Contract's Module ID |
+| `Contribute(CustomLiftModule lift, ...)` | Receives typed settings and registers processing |
 | `Bind` | Assigns Inspector initial values to parameter contracts |
 | `reads` | Reads velocity, elapsed update seconds, and simulation time |
 | `writes` | Modifies `particle.velocity` |
@@ -396,7 +393,7 @@ namespace TpLab.Flux.FX.CustomModules.Editor
 
 Register the `step.time` Uniform Provider only if it is not already present. When adding a parameter to the contract, add its Bind call too. Use `UnavailableParameter` for a slot intentionally unused by the current configuration.
 
-The Editor automatically discovers implementations of `IFluxParticleModuleDefinition`. A definition must be nonabstract, nongeneric, and have a public parameterless constructor. No manual registration menu or package edits are needed.
+The base class implements `IFluxParticleModuleDefinition`, so the Editor automatically discovers derived Definitions too. A registered class must be nonabstract, have no unbound type parameters, and have a public parameterless constructor. This example's `CustomLiftDefinition` meets those requirements. No manual registration menu or package edits are needed.
 
 ### Pay attention to execution order {#execution-order}
 
@@ -524,7 +521,7 @@ Even when declarations and parameter types agree, verify that the HLSL calculati
 
 | Symptom | Check |
 | --- | --- |
-| Missing from Add Module | Definition compilation, ModuleType, Serializable, and parameterless constructors. An already-added type is excluded from the menu |
+| Missing from Add Module | Definition compilation, the Module type supplied to the base class, Serializable, and parameterless constructors. An already-added type is excluded from the menu |
 | `Duplicate Module ID` / `Duplicate Module type` | Duplicate installations of the sample or definition |
 | `Unassigned Module handle slot` | Bind or mark every contract parameter unavailable, then call Complete |
 | Missing HLSL or shader compilation failure | File path, entryPoint, Context name, field names, and types |

@@ -340,26 +340,21 @@ enumの番号は0から連続させ、ContractとHandleで同じ対応を使い�
 
 ## GPU処理を登録する {#definition}
 
-`Editor/CustomLiftDefinition.cs`に保存します。
+`Editor/CustomLiftDefinition.cs`に保存します。`FluxParticleModuleDefinition<CustomLiftModule>`を継承し、`ModuleId`と型付きの`Contribute`をoverrideします。基底クラスが`ModuleType`を型引数から決め、設定を`CustomLiftModule`として渡すため、手動のキャストは不要です。
 
 ```csharp
-using System;
 using TpLab.Flux.FX.Editor.Compilation.Definitions;
 using TpLab.Flux.FX.Editor.Modules;
 using TpLab.Flux.FX.Editor.Modules.Shared;
-using TpLab.Flux.FX.Scripts.Modules;
 
 namespace TpLab.Flux.FX.CustomModules.Editor
 {
-    public sealed class CustomLiftDefinition : IFluxParticleModuleDefinition
+    public sealed class CustomLiftDefinition : FluxParticleModuleDefinition<CustomLiftModule>
     {
-        public Type ModuleType => typeof(CustomLiftModule);
+        public override string ModuleId => CustomLiftContract.Module.Id;
 
-        public string ModuleId => CustomLiftContract.Module.Id;
-
-        public void Contribute(FluxParticleModule module, FluxParticleProgramContribution context)
+        public override void Contribute(CustomLiftModule lift, FluxParticleProgramContribution context)
         {
-            var lift = (CustomLiftModule)module;
             var contribution = new FluxParticleModuleContribution(context, CustomLiftContract.Module, lift.Enabled);
             var strength = contribution.Bind(CustomLiftContract.Strength, lift.Strength);
             var direction = contribution.Bind(CustomLiftContract.Direction, lift.Direction);
@@ -386,7 +381,9 @@ namespace TpLab.Flux.FX.CustomModules.Editor
 
 | 登録 | この例の意味 |
 | --- | --- |
-| `ModuleType` | 設定クラスとの対応 |
+| `FluxParticleModuleDefinition<CustomLiftModule>` | 対象の設定クラスを指定する。`ModuleType`は基底クラスが提供する |
+| `ModuleId` | ContractのModule IDを返す |
+| `Contribute(CustomLiftModule lift, ...)` | 型付きの設定を受け取り、処理を登録する |
 | `Bind` | ContractにInspectorの初期値を割り当てる |
 | `reads` | 速度、更新の経過秒数、シミュレーション時間を読む |
 | `writes` | `particle.velocity`を変更する |
@@ -396,7 +393,7 @@ namespace TpLab.Flux.FX.CustomModules.Editor
 
 `step.time`のUniform Providerは、まだ登録されていない場合だけ追加します。パラメーターを契約に追加したら、対応するBindも追加してください。現在の構成では使わない項目は`UnavailableParameter`で明示します。
 
-Definitionは`IFluxParticleModuleDefinition`の実装としてEditorが自動発見します。非abstract・非ジェネリックで、公開された引数なしコンストラクターが必要です。手動の登録メニューやパッケージ本体への追記は不要です。
+基底クラスは`IFluxParticleModuleDefinition`を実装しているため、継承したDefinitionもEditorが自動発見します。登録されるクラスは非abstractで、未指定の型パラメーターを持たず、公開された引数なしコンストラクターが必要です。この例の`CustomLiftDefinition`は条件を満たします。手動の登録メニューやパッケージ本体への追記は不要です。
 
 ### 処理順に注意する {#execution-order}
 
@@ -524,7 +521,7 @@ Setメソッドの戻り値を確認します。複数の変更は一括処理�
 
 | 症状 | 確認すること |
 | --- | --- |
-| Add Moduleに表示されない | Definitionのコンパイル、ModuleType、Serializable、引数なしコンストラクターを確認する。同じ型を追加済みならメニューには出ない |
+| Add Moduleに表示されない | Definitionのコンパイル、基底クラスに指定したModule型、Serializable、引数なしコンストラクターを確認する。同じ型を追加済みならメニューには出ない |
 | `Duplicate Module ID` / `Duplicate Module type` | 同じサンプルや定義を二重に導入していないか |
 | `Unassigned Module handle slot` | Contractの全項目をBindまたはUnavailableParameterで処理し、Completeを呼んでいるか |
 | HLSLが見つからない・コンパイルに失敗する | パス、entryPoint、Context名、フィールド名、型が一致しているか |

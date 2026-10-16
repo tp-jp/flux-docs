@@ -2,7 +2,11 @@
 
 カスタムモジュールを作ると、独自の粒子処理をInspectorの **Add Module** から追加できます。ここでは、FluxFX 0.0.3の実装例`CustomLift`を基に、時間で強さが変わる加速度を追加します。モジュール作者向けの章です。[モジュールの基本](./modules.md)と[実行時のパラメーター変更](./runtime-parameters.md)を先に確認してください。
 
-## 必要な構成 {#structure}
+## カスタムモジュールの全体像 {#overview}
+
+カスタムモジュールは、Inspectorに保存した設定を使って、FluxFXの粒子処理に独自の計算を組み込む仕組みです。この章のCustomLiftでは、利用者がStrength（加速度の強さ）とDirection（方向）を設定し、GPUが更新ごとに粒子の速度へ加速度を加えます。UdonSharpからは、実行中にその強さや方向を変更できます。
+
+設定を保存するクラス、処理を組み立てるEditorコード、GPUで動くHLSL、UdonSharpから操作するハンドルを分けて用意します。各部分の役割は次のとおりです。
 
 | 構成 | 役割 |
 | --- | --- |
@@ -13,6 +17,44 @@
 | Handleと拡張メソッド | UdonSharpから設定を変更するための入口 |
 
 Module自体はUdonSharpBehaviourでもGameObjectへ追加するComponentでもありません。Inspectorのモジュール一覧に保存し、ビルド時にGPU処理へ変換します。HLSLだけを置いてもモジュールとして登録されません。
+
+### 設定から実行までの流れ {#lifecycle}
+
+1. **Inspectorで設定する**：ModuleがStrengthやDirectionの値を保存します。Definitionが登録されたModuleはAdd Moduleから追加できます。
+2. **Editorで処理を組み立てる**：プレビューや実行用構成を生成するとき、DefinitionがModuleの値を読み、Contractに従って初期値を登録します。同時に、どの粒子データを読み書きし、どのHLSL関数を呼ぶかを指定します。
+3. **FluxFXが実行用データを生成する**：登録内容から処理順を解決し、シェーダーやパラメーター、ハンドル用の対応情報を生成します。
+4. **GPUで粒子を更新する**：生成された処理がHLSL関数を呼び出します。HLSLは渡された値を使って粒子の速度などを計算します。
+5. **UdonSharpから値を変える**：Handleを通じて実行用パラメーターを変更します。`Live`の値は以降の計算で使われます。これはInspectorに保存したModuleのフィールドを書き換える操作ではありません。
+
+### ContractとDefinitionの違い {#contract-and-definition}
+
+**Contract（契約）は、パラメーターのルールです。** 例えばStrengthについて、「IDは`custom-lift.strength`、型はfloat、実行中の変更を許可する」と宣言します。また、そのパラメーターをハンドルの何番で扱うかも決めます。粒子の加速方法やInspectorで設定した値そのものは、Contractには記述しません。
+
+**Definition（定義）は、そのルールを使って処理を登録するコードです。** Moduleから読み取ったStrengthを`Bind`でContractへ結び付け、計算の入力・出力とHLSLを指定します。実際の「方向 × 強さ × 更新間隔を速度へ加える」という式はHLSLに書きます。
+
+Strengthを例にすると、次のようにつながります。
+
+| 部分 | Strengthの扱い |
+| --- | --- |
+| Module | Inspectorで指定した値を保存する。初期値は2 |
+| Contract | `custom-lift.strength`をfloat・`Live`として宣言し、`CustomLiftParameter.Strength`の番号に対応させる |
+| Definition | `Bind`でModuleの値を初期値として登録し、Operationが使うパラメーターに含める |
+| HLSL | `ctx.parameterCustomLiftStrength`として受け取り、加速度を計算する |
+| Handle | `SetStrength(5f)`などの呼び出しを、対応する実行用パラメーターの変更へつなぐ |
+
+### GPU処理の登録に使う用語 {#processing-terms}
+
+| 用語 | 意味とこの例での使い方 |
+| --- | --- |
+| Parameter | 設定として渡す値。StrengthやDirectionなど。粒子ごとに別の値を持つものではない |
+| Value | 計算で読み書きする値。`particle.velocity`は粒子ごとの速度、`step.time`はシステム共通の時間 |
+| Provider | Valueを供給する仕組み。ここでは`step.time`をUniformとしてGPUへ渡す |
+| Operation | 一つの処理の登録。実行するPhase、読むValue、書くValue、使用するParameter、HLSL関数、依存関係をまとめる |
+| Context | HLSL関数に渡される構造体。Operationの宣言を基にFluxFXが生成し、必要なValueとParameterをフィールドとして持つ |
+
+CustomLiftのOperationはUpdateで動き、速度と時間を読み、速度を書き換えます。読み書きするValueと処理間の依存関係を宣言することで、FluxFXが他のモジュールと組み合わせた処理順を決められます。Inspectorの表示グループを決めるStageとは役割が異なります。
+
+## 必要なファイル {#structure}
 
 以下は利用先プロジェクトのAssets内へ作成する例です。VCCで導入したパッケージにサンプルフォルダーが存在することは前提にしていません。同名のCustomLiftを既に導入している場合は重複作成せず、既存の定義を使ってください。
 
@@ -317,7 +359,9 @@ public class CustomLiftControl : UdonSharpBehaviour
         accepted &= lift.SetDirection(Vector3.right);
         accepted &= lift.SetEnabled(true);
         if (!accepted)
+        {
             Debug.LogWarning("CustomLiftの一部の設定が受け付けられませんでした。");
+        }
     }
 }
 ```

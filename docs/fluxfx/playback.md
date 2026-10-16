@@ -26,17 +26,26 @@ public class FluxPlaybackControl : UdonSharpBehaviour
 
     public void PlayEffect()
     {
-        if (target != null) target.Play();
+        if (target != null)
+        {
+            target.Play();
+        }
     }
 
     public void PauseEffect()
     {
-        if (target != null) target.Pause();
+        if (target != null)
+        {
+            target.Pause();
+        }
     }
 
     public void StopEmission()
     {
-        if (target != null) target.Stop();
+        if (target != null)
+        {
+            target.Stop();
+        }
     }
 
     public void HideEffect()

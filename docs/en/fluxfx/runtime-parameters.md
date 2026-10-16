@@ -71,7 +71,9 @@ public class FluxRuntimeSettings : UdonSharpBehaviour
         accepted &= target.SetRenderIntensity(1.5f);
 
         if (!accepted)
+        {
             Debug.LogWarning("Some settings were rejected.");
+        }
     }
 }
 ```
@@ -89,9 +91,13 @@ var main = target.Main;
 if (main != null)
 {
     if (main.HasStartSpeed())
+    {
         main.SetStartSpeed(2f);
+    }
     else if (main.HasStartSpeedRange())
+    {
         main.SetStartSpeedRange(new Vector2(1f, 2f));
+    }
 }
 ```
 

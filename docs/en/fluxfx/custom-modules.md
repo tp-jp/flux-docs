@@ -2,7 +2,11 @@
 
 Custom modules let you add your own particle processing through **Add Module** in the Inspector. This chapter uses the `CustomLift` example from the FluxFX 0.0.3 implementation to add acceleration whose strength changes over time. This chapter is intended for module authors. Read [Module basics](./modules.md) and [Runtime parameters](./runtime-parameters.md) first.
 
-## Required structure {#structure}
+## How custom modules work {#overview}
+
+A custom module adds your own calculation to FluxFX's particle processing using settings saved in the Inspector. In this chapter's CustomLift example, the user sets Strength and Direction, and the GPU applies acceleration to particle velocity on each update. UdonSharp can change that strength and direction at runtime.
+
+You provide separate parts for stored settings, Editor code that assembles the processing, HLSL that runs on the GPU, and a handle for UdonSharp control. Each part has the following role.
 
 | Part | Purpose |
 | --- | --- |
@@ -13,6 +17,44 @@ Custom modules let you add your own particle processing through **Add Module** i
 | Handle and extension methods | Access to parameters from UdonSharp |
 
 The Module is neither a UdonSharpBehaviour nor a Component to attach to a GameObject. Its settings live in the Inspector module list and are compiled into GPU processing. An HLSL file alone does not register a module.
+
+### From settings to execution {#lifecycle}
+
+1. **Configure in the Inspector**: The Module stores values such as Strength and Direction. A Module with a registered Definition is available through Add Module.
+2. **Assemble processing in the Editor**: When generating a preview or runtime configuration, the Definition reads Module values and registers initial values according to the Contract. It also specifies which particle data to read and write and which HLSL function to call.
+3. **FluxFX generates runtime data**: It resolves execution order from the registrations and generates shaders, parameters, and mappings for handles.
+4. **Update particles on the GPU**: The generated processing calls the HLSL function, which uses the supplied values to calculate particle velocity or other data.
+5. **Change values from UdonSharp**: The Handle updates runtime parameters. `Live` values are used in subsequent calculations. This does not modify the Module fields saved in the Inspector.
+
+### Contract versus Definition {#contract-and-definition}
+
+**A Contract specifies the rules for parameters.** For Strength, it declares the ID `custom-lift.strength`, the float type, and permission to change the value at runtime. It also assigns the parameter to a handle slot. The Contract does not specify how to accelerate particles or store the value chosen in the Inspector.
+
+**A Definition registers processing using those rules.** It uses `Bind` to associate the Strength read from the Module with the Contract, and specifies calculation inputs, outputs, and HLSL. The actual formula that adds direction × strength × update interval to velocity belongs in HLSL.
+
+For Strength, the parts connect as follows:
+
+| Part | How it handles Strength |
+| --- | --- |
+| Module | Stores the value chosen in the Inspector, with a default of 2 |
+| Contract | Declares `custom-lift.strength` as a float with the `Live` policy and assigns it to the `CustomLiftParameter.Strength` slot |
+| Definition | Uses `Bind` to register the Module value as the initial value and includes it in the Operation's parameters |
+| HLSL | Receives `ctx.parameterCustomLiftStrength` and uses it to calculate acceleration |
+| Handle | Maps calls such as `SetStrength(5f)` to changes to the corresponding runtime parameter |
+
+### Terms used to register GPU processing {#processing-terms}
+
+| Term | Meaning and use in this example |
+| --- | --- |
+| Parameter | A setting supplied to processing, such as Strength or Direction. It does not hold a separate value for each particle |
+| Value | Data read or written by a calculation. `particle.velocity` is per-particle velocity; `step.time` is time shared by the system |
+| Provider | A mechanism that supplies a Value. Here it supplies `step.time` to the GPU as a Uniform |
+| Operation | A processing registration that specifies the Phase, Values read and written, Parameters used, HLSL function, and dependencies |
+| Context | A struct passed to the HLSL function. FluxFX generates it from the Operation's declarations, with fields for the required Values and Parameters |
+
+The CustomLift Operation runs during Update, reads velocity and time, and writes velocity. Declaring the Values read and written and the dependencies between operations lets FluxFX determine execution order alongside other modules. This is separate from Stage, which determines the Inspector display group.
+
+## Required files {#structure}
 
 Create the following files in your project's Assets. This tutorial does not assume that a VCC installation includes the sample folder. If you already have CustomLift, use that definition instead of adding a duplicate.
 
@@ -317,7 +359,9 @@ public class CustomLiftControl : UdonSharpBehaviour
         accepted &= lift.SetDirection(Vector3.right);
         accepted &= lift.SetEnabled(true);
         if (!accepted)
+        {
             Debug.LogWarning("Some CustomLift settings were rejected.");
+        }
     }
 }
 ```

@@ -8,14 +8,14 @@ VRChat Creator Companion（VCC）に配布リポジトリを登録し、ワー�
 
 ## 必要な環境
 
-| 項目 | 必要なバージョン（FluxFX 0.0.3） |
+| 項目 | 必要なバージョン |
 | --- | --- |
 | Unity | 2022.3 |
 | VRChat Worlds SDK | 3.10.5以上、4.0.0未満 |
 | SceneFlow | 2.1.0以上、3.0.0未満 |
 | Flux | 0.0.4 |
 
-FluxFX 0.0.3のFlux依存指定は0.0.4に対応します。別のFluxFXバージョンを導入する場合は、そのパッケージが要求する依存関係に従ってください。
+依存関係はFluxFXのバージョンによって変わる場合があります。導入するパッケージが要求する依存関係に従ってください。
 
 <span id="add-the-repository-to-vcc"></span>
 

@@ -8,7 +8,7 @@ Fluxは、VRChat Creator Companion（VCC）に配布リポジトリを登録し�
 
 ## 必要な環境
 
-| 項目 | 必要なバージョン（Flux 0.0.4） |
+| 項目 | 必要なバージョン |
 | --- | --- |
 | Unity | 2022.3 |
 | VRChat Worlds SDK | 3.10.5以上、4.0.0未満 |

@@ -1,6 +1,6 @@
 # カスタムモジュール {#custom-modules}
 
-カスタムモジュールを作ると、独自の粒子処理をInspectorの **Add Module** から追加できます。ここでは、FluxFX 0.0.3の実装例`CustomLift`を基に、時間で強さが変わる加速度を追加します。モジュール作者向けの章です。[モジュールの基本](./modules.md)と[実行時のパラメーター変更](./runtime-parameters.md)を先に確認してください。
+カスタムモジュールを作ると、独自の粒子処理をInspectorの **Add Module** から追加できます。ここでは、FluxFXの実装例`CustomLift`を基に、時間で強さが変わる加速度を追加します。モジュール作者向けの章です。[モジュールの基本](./modules.md)と[実行時のパラメーター変更](./runtime-parameters.md)を先に確認してください。
 
 ## この章の進め方 {#reading-guide}
 
@@ -409,7 +409,7 @@ CustomLiftが動いたら、変更したい内容に応じて次の部分を揃�
 
 ### Coreが定義する値 {#core-values}
 
-FluxFX 0.0.3のCoreは、次の13個のValueを定義します。型名は`FluxParticleValueType`の値です。「変更可」は`SharedMutable`を表し、書き込みにはOperationの宣言と適切な処理順が必要です。
+FluxFXのCoreは、次の13個のValueを定義します。型名は`FluxParticleValueType`の値です。「変更可」は`SharedMutable`を表し、書き込みにはOperationの宣言と適切な処理順が必要です。
 
 | Value ID | 型 | 用途 | カスタムOperationからの書き込み |
 | --- | --- | --- | --- |
@@ -437,7 +437,7 @@ Valueが定義されていることと、値を供給するProviderが登録さ�
 
 | Value ID | 型・書き込み方針 | 追加される条件と用途 |
 | --- | --- | --- |
-| `emitter.row0`・`emitter.row1`・`emitter.row2` | Float4・ReadOnly | Simulation SpaceがWorld。エミッターのlocal-to-world行列の先頭3行 |
+| `emitter.row0`<br>`emitter.row1`<br>`emitter.row2` | Float4・ReadOnly | Simulation SpaceがWorld。エミッターのlocal-to-world行列の先頭3行 |
 | `spawn.direction` | Float3・ReadOnly | ShapeがSphere・Hemisphere・Circle・Cone。生成方向を供給する |
 | `render.rotation` | Float3・SharedMutable | Start Rotationがランダム、定数がゼロ以外、またはこのValueへ書くOperationがある。描画時の回転 |
 | `particle.start-rotation` | Float3・ReadOnly | Start RotationがRandom Between Two Constants。粒子ごとの初期回転 |
@@ -468,7 +468,7 @@ Value IDだけでなく、`FluxParticleValueRead`の第2引数で読み取り方
 
 ## 標準のOperation IDと実行順 {#standard-operation-ids}
 
-Operation IDは、処理そのものを識別するIDです。Value IDやModule IDとは別で、依存関係にはこのOperation IDを指定します。例えばGravityのOperation IDは`gravity`です。同じOperation IDの重複登録はできません。以下はFluxFX 0.0.3の標準構成が登録する処理です。
+Operation IDは、処理そのものを識別するIDです。Value IDやModule IDとは別で、依存関係にはこのOperation IDを指定します。例えばGravityのOperation IDは`gravity`です。同じOperation IDの重複登録はできません。以下はFluxFXの標準構成が登録する処理です。
 
 ### Coreと設定から追加される処理 {#core-operations}
 

@@ -8,7 +8,7 @@ Install Flux by adding its package repository to VRChat Creator Companion (VCC).
 
 ## Requirements
 
-| Item | Required version for Flux 0.0.4 |
+| Item | Required version |
 | --- | --- |
 | Unity | 2022.3 |
 | VRChat Worlds SDK | 3.10.5 or later, below 4.0.0 |

@@ -2,7 +2,7 @@
 
 # Limitations and performance
 
-This page describes the FluxFX 0.0.3 implementation. Technical limits are not practical performance targets. Cost depends on capacity, meshes, modules, trails, screen overlap, and the target environment.
+This page describes FluxFX limits and performance. Technical limits are not practical performance targets. Cost depends on capacity, meshes, modules, trails, screen overlap, and the target environment.
 
 <span id="粒子の容量"></span>
 

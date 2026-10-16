@@ -2,7 +2,7 @@
 
 # 制約
 
-このページはFlux 0.0.4の実装における制約をまとめています。必要な環境と導入手順は[導入](./installation.md)、エラーへの対処は[トラブルシューティング](./troubleshooting.md)を参照してください。
+このページはFluxの制約をまとめています。必要な環境と導入手順は[導入](./installation.md)、エラーへの対処は[トラブルシューティング](./troubleshooting.md)を参照してください。
 
 <span id="buffer-format-and-capacity"></span>
 

@@ -2,7 +2,7 @@
 
 # Limitations
 
-This page describes limits in Flux 0.0.4. See [Installation](./installation.md) for setup and [Troubleshooting](./troubleshooting.md) for errors.
+This page describes limits in Flux. See [Installation](./installation.md) for setup and [Troubleshooting](./troubleshooting.md) for errors.
 
 <span id="bufferの形式と容量"></span>
 

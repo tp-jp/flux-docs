@@ -8,14 +8,14 @@ Add the package repository to VRChat Creator Companion (VCC), then install FluxF
 
 ## Requirements
 
-| Item | Required version for FluxFX 0.0.3 |
+| Item | Required version |
 | --- | --- |
 | Unity | 2022.3 |
 | VRChat Worlds SDK | 3.10.5 or later, below 4.0.0 |
 | SceneFlow | 2.1.0 or later, below 3.0.0 |
 | Flux | 0.0.4 |
 
-FluxFX 0.0.3's Flux dependency corresponds to 0.0.4. When installing another FluxFX version, follow that version's dependency requirements.
+Dependencies may vary by FluxFX version. Follow the dependency requirements of the package you install.
 
 <span id="vccへリポジトリを登録する"></span>
 

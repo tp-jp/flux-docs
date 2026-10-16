@@ -1,6 +1,6 @@
 # Custom modules {#custom-modules}
 
-Custom modules let you add your own particle processing through **Add Module** in the Inspector. This chapter uses the `CustomLift` example from the FluxFX 0.0.3 implementation to add acceleration whose strength changes over time. This chapter is intended for module authors. Read [Module basics](./modules.md) and [Runtime parameters](./runtime-parameters.md) first.
+Custom modules let you add your own particle processing through **Add Module** in the Inspector. This chapter uses the `CustomLift` example from the FluxFX implementation to add acceleration whose strength changes over time. This chapter is intended for module authors. Read [Module basics](./modules.md) and [Runtime parameters](./runtime-parameters.md) first.
 
 ## How to use this chapter {#reading-guide}
 
@@ -409,7 +409,7 @@ Do not reuse the standard IDs below for your own values. To read a standard Valu
 
 ### Values defined by Core {#core-values}
 
-FluxFX 0.0.3 Core defines the following 13 Values. Types are members of `FluxParticleValueType`. “Writable” means `SharedMutable`; writes still require an Operation declaration and appropriate execution order.
+FluxFX Core defines the following 13 Values. Types are members of `FluxParticleValueType`. “Writable” means `SharedMutable`; writes still require an Operation declaration and appropriate execution order.
 
 | Value ID | Type | Purpose | Writes from custom Operations |
 | --- | --- | --- | --- |
@@ -437,7 +437,7 @@ The following Values are not present in every configuration.
 
 | Value ID | Type and write policy | Condition and purpose |
 | --- | --- | --- |
-| `emitter.row0`, `emitter.row1`, `emitter.row2` | Float4, ReadOnly | World Simulation Space. The first three rows of the emitter's local-to-world matrix |
+| `emitter.row0`<br>`emitter.row1`<br>`emitter.row2` | Float4, ReadOnly | World Simulation Space. The first three rows of the emitter's local-to-world matrix |
 | `spawn.direction` | Float3, ReadOnly | Sphere, Hemisphere, Circle, or Cone Shape. Supplies the spawn direction |
 | `render.rotation` | Float3, SharedMutable | Random Start Rotation, a nonzero constant Start Rotation, or an Operation writing this Value. Rotation for rendering |
 | `particle.start-rotation` | Float3, ReadOnly | Random Between Two Constants Start Rotation. Per-particle initial rotation |
@@ -468,7 +468,7 @@ For example, CustomLift reads `particle.velocity` with `StepPrevious`, and `step
 
 ## Standard Operation IDs and execution order {#standard-operation-ids}
 
-An Operation ID identifies a processing operation. It is separate from a Value ID or Module ID, and is the ID used in dependencies. For example, Gravity's Operation ID is `gravity`. Duplicate Operation IDs are rejected. The following operations are registered by standard FluxFX 0.0.3 configurations.
+An Operation ID identifies a processing operation. It is separate from a Value ID or Module ID, and is the ID used in dependencies. For example, Gravity's Operation ID is `gravity`. Duplicate Operation IDs are rejected. The following operations are registered by standard FluxFX configurations.
 
 ### Operations added by Core and settings {#core-operations}
 

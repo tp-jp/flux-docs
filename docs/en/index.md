@@ -16,6 +16,6 @@ features:
     details: A framework for storing, processing, and aggregating GPU data using RenderTextures and shaders.
     link: /en/flux/
   - title: FluxFX
-    details: A GPU particle and effects system built on Flux. Learn how to install it and create effects in the Inspector.
+    details: A GPU particle and effects system built on Flux.
     link: /en/fluxfx/
 ---

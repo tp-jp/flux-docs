@@ -16,6 +16,6 @@ features:
     details: RenderTextureとシェーダーを使い、GPU上でデータの保持・計算・集約を行う基盤です。
     link: /flux/
   - title: FluxFX
-    details: Fluxを使ったGPUパーティクル・エフェクトシステムです。導入からInspectorでのエフェクト作成を案内します。
+    details: Fluxを使ったGPUパーティクル・エフェクトシステムです。
     link: /fluxfx/
 ---

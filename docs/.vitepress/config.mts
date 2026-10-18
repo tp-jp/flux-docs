@@ -48,13 +48,19 @@ const jaTheme: DefaultTheme.Config = {
           { text: '動きの変化', link: '/fluxfx/motion' },
           { text: '寿命に応じた見た目', link: '/fluxfx/lifetime-appearance' },
           { text: 'テクスチャアニメーションと点滅', link: '/fluxfx/texture-animation-blink' },
-          { text: 'Trails', link: '/fluxfx/trails' },
-          { text: 'カスタムモジュール', link: '/fluxfx/custom-modules' }
+          { text: 'Trails', link: '/fluxfx/trails' }
         ] },
         { text: 'UdonSharpからの制御', items: [
           { text: '再生と停止', link: '/fluxfx/playback' },
           { text: '実行時のパラメーター変更', link: '/fluxfx/runtime-parameters' },
           { text: '状態と粒子数の取得', link: '/fluxfx/state-and-count' }
+        ] },
+        { text: 'カスタムモジュール開発', items: [
+          { text: '全体構成', link: '/fluxfx/architecture' },
+          { text: 'カスタムモジュール', link: '/fluxfx/custom-modules' },
+          { text: 'データと実行モデル', link: '/fluxfx/data-and-execution' },
+          { text: 'リファレンス', link: '/fluxfx/custom-module-reference' },
+          { text: '検証と性能', link: '/fluxfx/validation-and-performance' }
         ] },
         { text: '困ったとき', items: [
           { text: 'トラブルシューティング', link: '/fluxfx/troubleshooting' },
@@ -109,6 +115,11 @@ const labels: Record<string, string> = {
   "モジュール": "Modules",
   "モジュールの基本": "Module basics",
   "カスタムモジュール": "Custom modules",
+  "カスタムモジュール開発": "Custom module development",
+  "全体構成": "Architecture",
+  "データと実行モデル": "Data and execution model",
+  "リファレンス": "Reference",
+  "検証と性能": "Validation and performance",
   "力と速度": "Forces and velocity",
   "動きの変化": "Motion effects",
   "寿命に応じた見た目": "Appearance over lifetime",

@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="480" height="738" viewBox="0 0 480 738" role="img" aria-labelledby="title">
+<title id="title">Custom module parts and relationships</title>
+<defs><marker id="arrow" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" orient="auto"><path d="M1 1L7 4L1 7" fill="none" stroke="#858b9e" stroke-width="1.5"/></marker></defs>
+<g font-family="Arial, Noto Sans JP, sans-serif">
+<rect x="20" y="12" width="4" height="20" rx="2" fill="#5954b5"/>
+<text x="36" y="27" text-anchor="start" fill="#5954b5" font-size="15" font-weight="700">EDITOR / ASSEMBLY</text>
+<rect x="20" y="48" width="212" height="92" rx="10" fill="none" stroke="#c7c9dc"/>
+<text x="126" y="75" text-anchor="middle" fill="#242638" font-size="19" font-weight="600">Module</text>
+<text x="126" y="97" text-anchor="middle" fill="#555b70" font-size="16" font-weight="400">Inspector settings</text>
+<text x="126" y="119" text-anchor="middle" fill="#555b70" font-size="16" font-weight="400">Strength / Direction</text>
+<rect x="248" y="48" width="212" height="92" rx="10" fill="none" stroke="#c7c9dc"/>
+<text x="354" y="75" text-anchor="middle" fill="#242638" font-size="19" font-weight="600">Contract</text>
+<text x="354" y="97" text-anchor="middle" fill="#555b70" font-size="16" font-weight="400">IDs, types, policies</text>
+<text x="354" y="119" text-anchor="middle" fill="#555b70" font-size="16" font-weight="400">Handle slots</text>
+<path d="M126 144 V167 H240 V188" fill="none" stroke="#858b9e" stroke-width="1.5" marker-end="url(#arrow)"/>
+<path d="M354 144 V167 H240" fill="none" stroke="#858b9e" stroke-width="1.5" />
+<rect x="20" y="196" width="440" height="92" rx="10" fill="#f0f0fa" stroke="#5954b5"/>
+<text x="240" y="223" text-anchor="middle" fill="#242638" font-size="19" font-weight="600">Definition</text>
+<text x="240" y="245" text-anchor="middle" fill="#555b70" font-size="16" font-weight="400">Bind settings to the Contract</text>
+<text x="240" y="267" text-anchor="middle" fill="#555b70" font-size="16" font-weight="400">Register reads, writes, HLSL, dependencies</text>
+<path d="M240 292 V328" fill="none" stroke="#858b9e" stroke-width="1.5" marker-end="url(#arrow)"/>
+<text x="260" y="315" text-anchor="start" fill="#555b70" font-size="15" font-weight="400">Select function</text>
+<rect x="20" y="336" width="440" height="70" rx="10" fill="none" stroke="#c7c9dc"/>
+<text x="240" y="363" text-anchor="middle" fill="#242638" font-size="19" font-weight="600">HLSL</text>
+<text x="240" y="385" text-anchor="middle" fill="#555b70" font-size="16" font-weight="400">Calculate using the generated Context</text>
+<path d="M240 410 V496" fill="none" stroke="#858b9e" stroke-width="1.5" marker-end="url(#arrow)"/>
+<text x="260" y="433" text-anchor="start" fill="#555b70" font-size="15" font-weight="400">Compile / generate</text>
+<rect x="20" y="468" width="4" height="20" rx="2" fill="#197e70"/>
+<text x="36" y="483" text-anchor="start" fill="#197e70" font-size="15" font-weight="700">RUNTIME</text>
+<rect x="20" y="504" width="440" height="92" rx="10" fill="#f0f0fa" stroke="#5954b5"/>
+<text x="240" y="531" text-anchor="middle" fill="#242638" font-size="19" font-weight="600">Parameters and GPU processing</text>
+<text x="240" y="553" text-anchor="middle" fill="#555b70" font-size="16" font-weight="400">Execute HLSL with parameter values</text>
+<text x="240" y="575" text-anchor="middle" fill="#555b70" font-size="16" font-weight="400">Update particle state</text>
+<path d="M240 652 V604" fill="none" stroke="#858b9e" stroke-width="1.5" marker-end="url(#arrow)"/>
+<text x="260" y="632" text-anchor="start" fill="#555b70" font-size="15" font-weight="400">Change parameters</text>
+<rect x="20" y="660" width="440" height="70" rx="10" fill="none" stroke="#c7c9dc"/>
+<text x="240" y="687" text-anchor="middle" fill="#242638" font-size="19" font-weight="600">Handle</text>
+<text x="240" y="709" text-anchor="middle" fill="#555b70" font-size="16" font-weight="400">Called from UdonSharp</text>
+</g></svg>

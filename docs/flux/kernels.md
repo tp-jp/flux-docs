@@ -27,6 +27,13 @@ Materialは[導入時に設定したSceneFlow](./installation.md#sceneflowによ
 
 入力用と出力用には別のBufferを使ってください。入力を読みながら同じテクスチャへ書く構成は避けます。繰り返し計算では、2つのBufferの役割を交互に切り替えます。
 
+以下は、このページの2倍にするシェーダーを使った流れです。
+
+<div class="development-figure">
+  <a class="diagram-light" href="../diagrams/flux-kernel-dispatch-ja-light.svg" target="_blank" rel="noopener" title="図を別タブで拡大表示"><img src="/diagrams/flux-kernel-dispatch-ja-light.svg" alt="入力BufferをDispatchへ渡し、Countとサイズを設定してBlitを実行。シェーダーが_MainTexを読み、2倍した戻り値を別の出力Bufferへ書き込む" width="480" height="664" /></a>
+  <a class="diagram-dark" href="../diagrams/flux-kernel-dispatch-ja-dark.svg" target="_blank" rel="noopener" title="図を別タブで拡大表示"><img src="/diagrams/flux-kernel-dispatch-ja-dark.svg" alt="入力BufferをDispatchへ渡し、Countとサイズを設定してBlitを実行。シェーダーが_MainTexを読み、2倍した戻り値を別の出力Bufferへ書き込む" width="480" height="664" /></a>
+</div>
+
 <span id="set-the-output-count"></span>
 
 ### 出力先のCountを設定する

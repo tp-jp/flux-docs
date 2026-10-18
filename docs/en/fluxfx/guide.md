@@ -38,7 +38,6 @@ Start with installation and the quick start, then explore Inspector settings, mo
 | [Appearance over lifetime](./lifetime-appearance.md) | Color, Size, and Rotation over Lifetime |
 | [Texture animation and blinking](./texture-animation-blink.md) | Texture Sheet Animation and Blink |
 | [Trails](./trails.md) | Trail settings and display |
-| [Custom modules](./custom-modules.md) | Creating custom settings, GPU operations, and UdonSharp handles |
 
 <span id="udonsharpからの制御"></span>
 
@@ -49,6 +48,16 @@ Start with installation and the quick start, then explore Inspector settings, mo
 | [Playback controls](./playback.md) | Play, Stop, Pause, Restart, and Clear |
 | [Runtime parameters](./runtime-parameters.md) | Changing values and when they take effect |
 | [Status and particle counts](./state-and-count.md) | Playback state, elapsed time, and alive counts |
+
+## Custom module development {#custom-module-development}
+
+| Chapter | Topics |
+| --- | --- |
+| [Architecture](./architecture.md) | Settings, compilation, execution, rendering, and component responsibilities |
+| [Custom modules](./custom-modules.md) | Creating custom settings, GPU operations, and UdonSharp handles |
+| [Data and execution model](./data-and-execution.md) | Phases, Values, Providers, reads/writes, and Parameter design |
+| [Reference](./custom-module-reference.md) | Standard IDs, dependencies, HLSL signatures, and naming rules |
+| [Validation and performance](./validation-and-performance.md) | Debugging, behavior checks, generated results, and performance comparisons |
 
 <span id="困ったとき"></span>
 

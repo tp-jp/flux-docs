@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="480" height="780" viewBox="0 0 480 780" role="img" aria-labelledby="title">
+<title id="title">FluxFX：設定から描画まで</title>
+<defs><marker id="arrow" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" orient="auto"><path d="M1 1L7 4L1 7" fill="none" stroke="#656779" stroke-width="1.5"/></marker></defs>
+<g font-family="Arial, Noto Sans JP, sans-serif">
+<rect x="20" y="16" width="4" height="20" rx="2" fill="#aaa6ff"/>
+<text x="36" y="31" fill="#aaa6ff" font-size="15" font-weight="700" letter-spacing="1">EDITOR / 設定と生成</text>
+<rect x="20" y="468" width="4" height="20" rx="2" fill="#65cbb9"/>
+<text x="36" y="483" fill="#65cbb9" font-size="15" font-weight="700" letter-spacing="1">RUNTIME / 実行</text>
+<rect x="20" y="52" width="440" height="70" rx="10" fill="none" stroke="#525366"/>
+<text x="240" y="79" text-anchor="middle" fill="#eeeeF3" font-size="19" font-weight="600">Inspectorの設定</text>
+<text x="240" y="101" text-anchor="middle" fill="#b9bac8" font-size="16" font-weight="400">Authoring / Module</text>
+<path d="M240 126 V139" fill="none" stroke="#656779" stroke-width="1.5" marker-end="url(#arrow)"/>
+<rect x="20" y="146" width="440" height="70" rx="10" fill="none" stroke="#525366"/>
+<text x="240" y="173" text-anchor="middle" fill="#eeeeF3" font-size="19" font-weight="600">定義の収集</text>
+<text x="240" y="195" text-anchor="middle" fill="#b9bac8" font-size="16" font-weight="400">Value・Provider・Parameter・Operation</text>
+<path d="M240 220 V233" fill="none" stroke="#656779" stroke-width="1.5" marker-end="url(#arrow)"/>
+<rect x="20" y="240" width="440" height="70" rx="10" fill="none" stroke="#525366"/>
+<text x="240" y="267" text-anchor="middle" fill="#eeeeF3" font-size="19" font-weight="600">コンパイルと生成</text>
+<text x="240" y="289" text-anchor="middle" fill="#b9bac8" font-size="16" font-weight="400">処理順・データ配置・シェーダー</text>
+<path d="M240 314 V343" fill="none" stroke="#656779" stroke-width="1.5" marker-end="url(#arrow)"/>
+<rect x="20" y="350" width="440" height="88" rx="10" fill="#292a35" stroke="#aaa6ff"/>
+<text x="240" y="377" text-anchor="middle" fill="#eeeeF3" font-size="19" font-weight="600">実行用構成</text>
+<text x="240" y="399" text-anchor="middle" fill="#b9bac8" font-size="16" font-weight="400">Buffer・Kernel・Material</text>
+<text x="240" y="421" text-anchor="middle" fill="#b9bac8" font-size="16" font-weight="400">ハンドルの対応情報</text>
+<path d="M240 442 V497" fill="none" stroke="#656779" stroke-width="1.5" marker-end="url(#arrow)"/>
+<rect x="20" y="504" width="440" height="70" rx="10" fill="none" stroke="#525366"/>
+<text x="240" y="531" text-anchor="middle" fill="#eeeeF3" font-size="19" font-weight="600">UdonSharpによる制御</text>
+<text x="240" y="553" text-anchor="middle" fill="#b9bac8" font-size="16" font-weight="400">発生要求・パラメーター</text>
+<path d="M240 578 V591" fill="none" stroke="#656779" stroke-width="1.5" marker-end="url(#arrow)"/>
+<rect x="20" y="598" width="440" height="70" rx="10" fill="none" stroke="#525366"/>
+<text x="240" y="625" text-anchor="middle" fill="#eeeeF3" font-size="19" font-weight="600">GPUで生成・更新</text>
+<text x="240" y="647" text-anchor="middle" fill="#b9bac8" font-size="16" font-weight="400">粒子状態をBufferに保持</text>
+<path d="M240 672 V685" fill="none" stroke="#656779" stroke-width="1.5" marker-end="url(#arrow)"/>
+<rect x="20" y="692" width="440" height="70" rx="10" fill="none" stroke="#525366"/>
+<text x="240" y="719" text-anchor="middle" fill="#eeeeF3" font-size="19" font-weight="600">描画・履歴</text>
+<text x="240" y="741" text-anchor="middle" fill="#b9bac8" font-size="16" font-weight="400">Billboard / Mesh / Trails</text>
+</g></svg>

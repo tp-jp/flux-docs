@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="480" height="780" viewBox="0 0 480 780" role="img" aria-labelledby="title">
+<title id="title">FluxFX: from settings to rendering</title>
+<defs><marker id="arrow" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" orient="auto"><path d="M1 1L7 4L1 7" fill="none" stroke="#9a9fb1" stroke-width="1.5"/></marker></defs>
+<g font-family="Arial, Noto Sans JP, sans-serif">
+<rect x="20" y="16" width="4" height="20" rx="2" fill="#5954b5"/>
+<text x="36" y="31" fill="#5954b5" font-size="15" font-weight="700" letter-spacing="1">EDITOR / CONFIGURATION</text>
+<rect x="20" y="468" width="4" height="20" rx="2" fill="#197e70"/>
+<text x="36" y="483" fill="#197e70" font-size="15" font-weight="700" letter-spacing="1">RUNTIME</text>
+<rect x="20" y="52" width="440" height="70" rx="10" fill="none" stroke="#c7c9dc"/>
+<text x="240" y="79" text-anchor="middle" fill="#242638" font-size="19" font-weight="600">Inspector settings</text>
+<text x="240" y="101" text-anchor="middle" fill="#555b70" font-size="16" font-weight="400">Authoring / Modules</text>
+<path d="M240 126 V139" fill="none" stroke="#9a9fb1" stroke-width="1.5" marker-end="url(#arrow)"/>
+<rect x="20" y="146" width="440" height="70" rx="10" fill="none" stroke="#c7c9dc"/>
+<text x="240" y="173" text-anchor="middle" fill="#242638" font-size="19" font-weight="600">Collect definitions</text>
+<text x="240" y="195" text-anchor="middle" fill="#555b70" font-size="16" font-weight="400">Values, Providers, Parameters, Operations</text>
+<path d="M240 220 V233" fill="none" stroke="#9a9fb1" stroke-width="1.5" marker-end="url(#arrow)"/>
+<rect x="20" y="240" width="440" height="70" rx="10" fill="none" stroke="#c7c9dc"/>
+<text x="240" y="267" text-anchor="middle" fill="#242638" font-size="19" font-weight="600">Compile and generate</text>
+<text x="240" y="289" text-anchor="middle" fill="#555b70" font-size="16" font-weight="400">Order, data layout, shaders</text>
+<path d="M240 314 V343" fill="none" stroke="#9a9fb1" stroke-width="1.5" marker-end="url(#arrow)"/>
+<rect x="20" y="350" width="440" height="88" rx="10" fill="#f0f0fa" stroke="#5954b5"/>
+<text x="240" y="377" text-anchor="middle" fill="#242638" font-size="19" font-weight="600">Runtime configuration</text>
+<text x="240" y="399" text-anchor="middle" fill="#555b70" font-size="16" font-weight="400">Buffers, Kernels, Materials</text>
+<text x="240" y="421" text-anchor="middle" fill="#555b70" font-size="16" font-weight="400">Handle mappings</text>
+<path d="M240 442 V497" fill="none" stroke="#9a9fb1" stroke-width="1.5" marker-end="url(#arrow)"/>
+<rect x="20" y="504" width="440" height="70" rx="10" fill="none" stroke="#c7c9dc"/>
+<text x="240" y="531" text-anchor="middle" fill="#242638" font-size="19" font-weight="600">UdonSharp control</text>
+<text x="240" y="553" text-anchor="middle" fill="#555b70" font-size="16" font-weight="400">Spawn requests and parameters</text>
+<path d="M240 578 V591" fill="none" stroke="#9a9fb1" stroke-width="1.5" marker-end="url(#arrow)"/>
+<rect x="20" y="598" width="440" height="70" rx="10" fill="none" stroke="#c7c9dc"/>
+<text x="240" y="625" text-anchor="middle" fill="#242638" font-size="19" font-weight="600">Spawn and update on GPU</text>
+<text x="240" y="647" text-anchor="middle" fill="#555b70" font-size="16" font-weight="400">Particle state in Buffers</text>
+<path d="M240 672 V685" fill="none" stroke="#9a9fb1" stroke-width="1.5" marker-end="url(#arrow)"/>
+<rect x="20" y="692" width="440" height="70" rx="10" fill="none" stroke="#c7c9dc"/>
+<text x="240" y="719" text-anchor="middle" fill="#242638" font-size="19" font-weight="600">Rendering and history</text>
+<text x="240" y="741" text-anchor="middle" fill="#555b70" font-size="16" font-weight="400">Billboards / Meshes / Trails</text>
+</g></svg>

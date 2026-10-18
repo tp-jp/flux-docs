@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="480" height="664" viewBox="0 0 480 664" role="img" aria-labelledby="title">
+<title id="title">入力Bufferからシェーダーを経て出力Bufferへ</title>
+<defs><marker id="arrow" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" orient="auto"><path d="M1 1L7 4L1 7" fill="none" stroke="#858b9e" stroke-width="1.5"/></marker></defs>
+<g font-family="Arial, Noto Sans JP, sans-serif">
+<rect x="20" y="12" width="4" height="20" rx="2" fill="#5954b5"/>
+<text x="36" y="27" text-anchor="start" fill="#5954b5" font-size="15" font-weight="700">例：SetFloat("_Scale", 2f) を設定して実行</text>
+<rect x="60" y="50" width="360" height="70" rx="10" fill="none" stroke="#c7c9dc"/>
+<text x="240" y="77" text-anchor="middle" fill="#242638" font-size="19" font-weight="600">source / FluxBuffer</text>
+<text x="240" y="99" text-anchor="middle" fill="#555b70" font-size="16" font-weight="400">要素iの値：(1, 2, 3, 4)</text>
+<path d="M240 124 V154" fill="none" stroke="#858b9e" stroke-width="1.5" marker-end="url(#arrow)"/>
+<rect x="20" y="162" width="440" height="92" rx="10" fill="#f0f0fa" stroke="#5954b5"/>
+<text x="240" y="189" text-anchor="middle" fill="#242638" font-size="19" font-weight="600">Dispatch(source, destination)</text>
+<text x="240" y="211" text-anchor="middle" fill="#555b70" font-size="16" font-weight="400">入出力のCount・幅・高さをMaterialへ設定</text>
+<text x="240" y="233" text-anchor="middle" fill="#555b70" font-size="16" font-weight="400">VRCGraphics.Blit(source.Texture, …)</text>
+<path d="M240 258 V288" fill="none" stroke="#858b9e" stroke-width="1.5" marker-end="url(#arrow)"/>
+<text x="258" y="278" text-anchor="start" fill="#555b70" font-size="16" font-weight="400">source.Texture → _MainTex</text>
+<rect x="20" y="296" width="440" height="136" rx="10" fill="#f0f0fa" stroke="#5954b5"/>
+<text x="240" y="323" text-anchor="middle" fill="#242638" font-size="19" font-weight="600">フラグメントシェーダー（この例）</text>
+<text x="240" y="345" text-anchor="middle" fill="#555b70" font-size="16" font-weight="400">出力UV → index → 入出力の有効範囲を確認</text>
+<text x="240" y="367" text-anchor="middle" fill="#555b70" font-size="16" font-weight="400">Count外なら0を返す</text>
+<text x="240" y="389" text-anchor="middle" fill="#555b70" font-size="16" font-weight="400">_MainTexから同じindexのfloat4を読む</text>
+<text x="240" y="411" text-anchor="middle" fill="#555b70" font-size="16" font-weight="400">return value * _Scale;</text>
+<path d="M240 436 V466" fill="none" stroke="#858b9e" stroke-width="1.5" marker-end="url(#arrow)"/>
+<text x="258" y="456" text-anchor="start" fill="#555b70" font-size="16" font-weight="400">戻り値を書き込む</text>
+<rect x="60" y="474" width="360" height="70" rx="10" fill="none" stroke="#c7c9dc"/>
+<text x="240" y="501" text-anchor="middle" fill="#242638" font-size="19" font-weight="600">destination / FluxBuffer</text>
+<text x="240" y="523" text-anchor="middle" fill="#555b70" font-size="16" font-weight="400">要素iの結果：(2, 4, 6, 8)</text>
+<text x="240" y="580" text-anchor="middle" fill="#555b70" font-size="17" font-weight="400">入力と出力は別のBuffer</text>
+<text x="240" y="608" text-anchor="middle" fill="#555b70" font-size="16" font-weight="400">出力Countと容量は呼び出し前に準備する</text>
+<text x="240" y="636" text-anchor="middle" fill="#555b70" font-size="16" font-weight="400">DispatchはCountを変更せず、範囲判定もしない</text>
+</g></svg>

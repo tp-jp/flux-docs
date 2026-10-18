@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="480" height="538" viewBox="0 0 480 538" role="img" aria-labelledby="title">
+<title id="title">Emissionの開始遅延と周期</title>
+<defs><marker id="arrow" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" orient="auto"><path d="M1 1L7 4L1 7" fill="none" stroke="#858b9e" stroke-width="1.5"/></marker></defs>
+<g font-family="Arial, Noto Sans JP, sans-serif">
+<rect x="20" y="12" width="4" height="20" rx="2" fill="#5954b5"/>
+<text x="36" y="27" text-anchor="start" fill="#5954b5" font-size="15" font-weight="700">Start Delay = 1 s / Duration = 2 s</text>
+<rect x="20" y="49" width="4" height="20" rx="2" fill="#197e70"/>
+<text x="36" y="64" text-anchor="start" fill="#197e70" font-size="15" font-weight="700">Loop = ON</text>
+<rect x="30" y="86" width="84" height="92" rx="10" fill="none" stroke="#c7c9dc"/>
+<text x="72" y="113" text-anchor="middle" fill="#242638" font-size="19" font-weight="600">待機</text>
+<text x="72" y="135" text-anchor="middle" fill="#555b70" font-size="16" font-weight="400">1 s</text>
+<rect x="114" y="86" width="168" height="92" rx="10" fill="#f0f0fa" stroke="#5954b5"/>
+<text x="198" y="113" text-anchor="middle" fill="#242638" font-size="19" font-weight="600">周期1</text>
+<text x="198" y="135" text-anchor="middle" fill="#555b70" font-size="16" font-weight="400">2 s</text>
+<text x="198" y="157" text-anchor="middle" fill="#555b70" font-size="16" font-weight="400">Time 0 Burst</text>
+<rect x="282" y="86" width="168" height="92" rx="10" fill="#f0f0fa" stroke="#5954b5"/>
+<text x="366" y="113" text-anchor="middle" fill="#242638" font-size="19" font-weight="600">周期2</text>
+<text x="366" y="135" text-anchor="middle" fill="#555b70" font-size="16" font-weight="400">2 s</text>
+<text x="366" y="157" text-anchor="middle" fill="#555b70" font-size="16" font-weight="400">Time 0 Burst</text>
+<path d="M30 208 H462" fill="none" stroke="#858b9e" stroke-width="1.5" marker-end="url(#arrow)"/>
+<path d="M30 202 V214" fill="none" stroke="#858b9e" stroke-width="1.5" />
+<text x="30" y="237" text-anchor="middle" fill="#555b70" font-size="16" font-weight="400">0 s</text>
+<path d="M114 202 V214" fill="none" stroke="#858b9e" stroke-width="1.5" />
+<text x="114" y="237" text-anchor="middle" fill="#555b70" font-size="16" font-weight="400">1 s</text>
+<path d="M282 202 V214" fill="none" stroke="#858b9e" stroke-width="1.5" />
+<text x="282" y="237" text-anchor="middle" fill="#555b70" font-size="16" font-weight="400">3 s</text>
+<path d="M450 202 V214" fill="none" stroke="#858b9e" stroke-width="1.5" />
+<text x="450" y="237" text-anchor="middle" fill="#555b70" font-size="16" font-weight="400">5 s</text>
+<rect x="20" y="253" width="4" height="20" rx="2" fill="#5954b5"/>
+<text x="36" y="268" text-anchor="start" fill="#5954b5" font-size="15" font-weight="700">Loop = OFF</text>
+<rect x="30" y="290" width="84" height="92" rx="10" fill="none" stroke="#c7c9dc"/>
+<text x="72" y="317" text-anchor="middle" fill="#242638" font-size="19" font-weight="600">待機</text>
+<text x="72" y="339" text-anchor="middle" fill="#555b70" font-size="16" font-weight="400">1 s</text>
+<rect x="114" y="290" width="168" height="92" rx="10" fill="#f0f0fa" stroke="#5954b5"/>
+<text x="198" y="317" text-anchor="middle" fill="#242638" font-size="19" font-weight="600">周期1</text>
+<text x="198" y="339" text-anchor="middle" fill="#555b70" font-size="16" font-weight="400">2 s</text>
+<text x="198" y="361" text-anchor="middle" fill="#555b70" font-size="16" font-weight="400">Time 0 Burst</text>
+<rect x="282" y="290" width="168" height="92" rx="10" fill="none" stroke="#c7c9dc"/>
+<text x="366" y="317" text-anchor="middle" fill="#242638" font-size="19" font-weight="600">発生終了</text>
+<text x="366" y="339" text-anchor="middle" fill="#555b70" font-size="16" font-weight="400">新たな生成なし</text>
+<path d="M30 412 H462" fill="none" stroke="#858b9e" stroke-width="1.5" marker-end="url(#arrow)"/>
+<path d="M30 406 V418" fill="none" stroke="#858b9e" stroke-width="1.5" />
+<text x="30" y="441" text-anchor="middle" fill="#555b70" font-size="16" font-weight="400">0 s</text>
+<path d="M114 406 V418" fill="none" stroke="#858b9e" stroke-width="1.5" />
+<text x="114" y="441" text-anchor="middle" fill="#555b70" font-size="16" font-weight="400">1 s</text>
+<path d="M282 406 V418" fill="none" stroke="#858b9e" stroke-width="1.5" />
+<text x="282" y="441" text-anchor="middle" fill="#555b70" font-size="16" font-weight="400">3 s</text>
+<path d="M450 406 V418" fill="none" stroke="#858b9e" stroke-width="1.5" />
+<text x="450" y="441" text-anchor="middle" fill="#555b70" font-size="16" font-weight="400">5 s</text>
+<text x="240" y="470" text-anchor="middle" fill="#555b70" font-size="16" font-weight="400">ON：待機を挟まず、周期3以降も繰り返す</text>
+<text x="240" y="494" text-anchor="middle" fill="#555b70" font-size="16" font-weight="400">OFF：既存粒子は寿命まで更新を続ける</text>
+<text x="240" y="516" text-anchor="middle" fill="#555b70" font-size="16" font-weight="400">Time 0 Burstは各周期が始まった後の更新で処理</text>
+</g></svg>

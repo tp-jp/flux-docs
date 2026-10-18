@@ -59,6 +59,11 @@ buffer.SetCount(3); // Count is 3; Capacity remains 9
 buffer.SetCount(8); // Fits within the allocated capacity
 ```
 
+<div class="development-figure">
+  <a class="diagram-light" href="../../diagrams/flux-buffer-count-en-light.svg" target="_blank" rel="noopener" title="Open full-size diagram"><img src="/diagrams/flux-buffer-count-en-light.svg" alt="With Initial Count 5, changing Count from 5 to 3 to 8 keeps Capacity at 9. Only the valid range changes; data is not initialized" width="480" height="452" /></a>
+  <a class="diagram-dark" href="../../diagrams/flux-buffer-count-en-dark.svg" target="_blank" rel="noopener" title="Open full-size diagram"><img src="/diagrams/flux-buffer-count-en-dark.svg" alt="With Initial Count 5, changing Count from 5 to 3 to 8 keeps Capacity at 9. Only the valid range changes; data is not initialized" width="480" height="452" /></a>
+</div>
+
 SetCount accepts values from 0 through Capacity. An out-of-range value logs an error and leaves Count unchanged. Increasing Count does not initialize the newly valid elements; write them before reading them.
 
 SetCount does not resize the texture. Set Initial Count for the largest capacity you need before running. Changing the Inspector value after allocation does not immediately reallocate it.
@@ -69,12 +74,10 @@ SetCount does not resize the texture. Set Initial Count for the largest capacity
 
 Elements advance along X, then continue on the next Y row. For width 3 and Count 5:
 
-```text
-         x=0     x=1     x=2
-y=0       0       1       2
-y=1       3       4     invalid
-y=2     invalid invalid invalid
-```
+<div class="development-figure">
+  <a class="diagram-light" href="../../diagrams/flux-buffer-layout-en-light.svg" target="_blank" rel="noopener" title="Open full-size diagram"><img src="/diagrams/flux-buffer-layout-en-light.svg" alt="A 3 by 3 texture stores indices 0 through 8 along X, then Y. Count 5 makes indices 0 through 4 valid. Each pixel stores four components" width="480" height="564" /></a>
+  <a class="diagram-dark" href="../../diagrams/flux-buffer-layout-en-dark.svg" target="_blank" rel="noopener" title="Open full-size diagram"><img src="/diagrams/flux-buffer-layout-en-dark.svg" alt="A 3 by 3 texture stores indices 0 through 8 along X, then Y. Count 5 makes indices 0 through 4 valid. Each pixel stores four components" width="480" height="564" /></a>
+</div>
 
 The index is `y * width + x`. Use the [FluxCommon.hlsl helpers](./kernels.md#indices-and-bounds) to convert indices and pixel-center UVs.
 

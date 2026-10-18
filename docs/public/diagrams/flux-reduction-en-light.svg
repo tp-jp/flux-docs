@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="480" height="632" viewBox="0 0 480 632" role="img" aria-labelledby="title">
+<title id="title">Reduce 250 elements in groups of four</title>
+<defs><marker id="arrow" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" orient="auto"><path d="M1 1L7 4L1 7" fill="none" stroke="#858b9e" stroke-width="1.5"/></marker></defs>
+<g font-family="Arial, Noto Sans JP, sans-serif">
+<rect x="20" y="12" width="4" height="20" rx="2" fill="#5954b5"/>
+<text x="36" y="27" text-anchor="start" fill="#5954b5" font-size="15" font-weight="700">Reduction Factor = 4</text>
+<rect x="80" y="50" width="320" height="70" rx="10" fill="none" stroke="#c7c9dc"/>
+<text x="240" y="77" text-anchor="middle" fill="#242638" font-size="19" font-weight="600">Source</text>
+<text x="240" y="99" text-anchor="middle" fill="#555b70" font-size="16" font-weight="400">Count = 250</text>
+<path d="M240 124 V154" fill="none" stroke="#858b9e" stroke-width="1.5" marker-end="url(#arrow)"/>
+<text x="258" y="146" text-anchor="start" fill="#555b70" font-size="16" font-weight="400">Dispatch 1</text>
+<rect x="80" y="162" width="320" height="70" rx="10" fill="none" stroke="#c7c9dc"/>
+<text x="240" y="189" text-anchor="middle" fill="#242638" font-size="19" font-weight="600">Workspace A</text>
+<text x="240" y="211" text-anchor="middle" fill="#555b70" font-size="16" font-weight="400">Count = 63</text>
+<path d="M240 236 V266" fill="none" stroke="#858b9e" stroke-width="1.5" marker-end="url(#arrow)"/>
+<text x="258" y="258" text-anchor="start" fill="#555b70" font-size="16" font-weight="400">Dispatch 2</text>
+<rect x="80" y="274" width="320" height="70" rx="10" fill="none" stroke="#c7c9dc"/>
+<text x="240" y="301" text-anchor="middle" fill="#242638" font-size="19" font-weight="600">Workspace B</text>
+<text x="240" y="323" text-anchor="middle" fill="#555b70" font-size="16" font-weight="400">Count = 16</text>
+<path d="M240 348 V378" fill="none" stroke="#858b9e" stroke-width="1.5" marker-end="url(#arrow)"/>
+<text x="258" y="370" text-anchor="start" fill="#555b70" font-size="16" font-weight="400">Dispatch 3</text>
+<rect x="80" y="386" width="320" height="70" rx="10" fill="none" stroke="#c7c9dc"/>
+<text x="240" y="413" text-anchor="middle" fill="#242638" font-size="19" font-weight="600">Workspace A</text>
+<text x="240" y="435" text-anchor="middle" fill="#555b70" font-size="16" font-weight="400">Count = 4</text>
+<path d="M240 460 V490" fill="none" stroke="#858b9e" stroke-width="1.5" marker-end="url(#arrow)"/>
+<text x="258" y="482" text-anchor="start" fill="#555b70" font-size="16" font-weight="400">Final Dispatch</text>
+<rect x="80" y="498" width="320" height="70" rx="10" fill="#f0f0fa" stroke="#5954b5"/>
+<text x="240" y="525" text-anchor="middle" fill="#242638" font-size="19" font-weight="600">Destination</text>
+<text x="240" y="547" text-anchor="middle" fill="#555b70" font-size="16" font-weight="400">Count = 1</text>
+<text x="240" y="600" text-anchor="middle" fill="#555b70" font-size="16" font-weight="400">Alternate workspaces; write the final result to Destination</text>
+<text x="240" y="624" text-anchor="middle" fill="#555b70" font-size="16" font-weight="400">Each output Count = ceil(input Count / 4)</text>
+</g></svg>

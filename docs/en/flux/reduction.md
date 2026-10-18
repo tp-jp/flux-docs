@@ -10,12 +10,10 @@ FluxReduction combines Buffer elements in stages and writes a single result to a
 
 Reduction Factor is the number of input elements combined per output element in one pass. For 250 inputs and a factor of 4:
 
-| Pass | Input | Output | Output Count |
-| --- | --- | --- | --- |
-| First | Source | Workspace A | 63 |
-| Second | Workspace A | Workspace B | 16 |
-| Third | Workspace B | Workspace A | 4 |
-| Final | Workspace A | Destination | 1 |
+<div class="development-figure">
+  <a class="diagram-light" href="../../diagrams/flux-reduction-en-light.svg" target="_blank" rel="noopener" title="Open full-size diagram"><img src="/diagrams/flux-reduction-en-light.svg" alt="Reduce Source Count 250 through Workspace A 63, Workspace B 16, Workspace A 4, then write one result to Destination" width="480" height="632" /></a>
+  <a class="diagram-dark" href="../../diagrams/flux-reduction-en-dark.svg" target="_blank" rel="noopener" title="Open full-size diagram"><img src="/diagrams/flux-reduction-en-dark.svg" alt="Reduce Source Count 250 through Workspace A 63, Workspace B 16, Workspace A 4, then write one result to Destination" width="480" height="632" /></a>
+</div>
 
 Each stage uses `ceil(input Count / Reduction Factor)`. Partial groups still produce one element. FluxReduction changes intermediate counts, swaps workspaces, and sets destination Count to 1 for the final pass.
 

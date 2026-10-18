@@ -17,6 +17,11 @@ Add FluxReadback to a GameObject. Supply the Buffer and the UdonSharpBehaviour t
 
 A request is rejected if this Readback is busy, or if the Buffer or receiver is null. Rejected requests are not queued and do not trigger completion callbacks. They do not change the current request or previous result. Rejection is distinct from a GPU transfer failure.
 
+<div class="development-figure">
+  <a class="diagram-light" href="../../diagrams/flux-readback-en-light.svg" target="_blank" rel="noopener" title="Open full-size diagram"><img src="/diagrams/flux-readback-en-light.svg" alt="TryRequest false means rejection with no callback. If true, wait for completion and check Succeeded. Consume Count elements of Data only on success." width="480" height="654" /></a>
+  <a class="diagram-dark" href="../../diagrams/flux-readback-en-dark.svg" target="_blank" rel="noopener" title="Open full-size diagram"><img src="/diagrams/flux-readback-en-dark.svg" alt="TryRequest false means rejection with no callback. If true, wait for completion and check Succeeded. Consume Count elements of Data only on success." width="480" height="654" /></a>
+</div>
+
 <span id="完了イベントで結果を読む"></span>
 
 ## Read the result in the callback

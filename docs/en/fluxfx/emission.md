@@ -31,6 +31,11 @@ For Start Delay 1, Duration 2, Loop on, and a Time 0 burst, the first cycle begi
 
 Loop off runs one emission cycle. Existing particle lifetimes are independent; they do not all end when Duration expires.
 
+<div class="development-figure">
+  <a class="diagram-light" href="../../diagrams/fluxfx-emission-cycles-en-light.svg" target="_blank" rel="noopener" title="Open full-size diagram"><img src="/diagrams/fluxfx-emission-cycles-en-light.svg" alt="After a one-second start delay, run a two-second cycle. Loop on starts the next cycle without delay; loop off ends emission after one cycle" width="480" height="538" /></a>
+  <a class="diagram-dark" href="../../diagrams/fluxfx-emission-cycles-en-dark.svg" target="_blank" rel="noopener" title="Open full-size diagram"><img src="/diagrams/fluxfx-emission-cycles-en-dark.svg" alt="After a one-second start delay, run a two-second cycle. Loop on starts the next cycle without delay; loop off ends emission after one cycle" width="480" height="538" /></a>
+</div>
+
 <span id="発生パターンの例"></span>
 
 ## Example patterns

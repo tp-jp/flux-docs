@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="480" height="514" viewBox="0 0 480 514" role="img" aria-labelledby="title">
+<title id="title">Spawn, Update, Render, and particle state</title>
+<defs><marker id="arrow" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" orient="auto"><path d="M1 1L7 4L1 7" fill="none" stroke="#85879a" stroke-width="1.5"/></marker></defs>
+<g font-family="Arial, Noto Sans JP, sans-serif">
+<rect x="20" y="12" width="4" height="20" rx="2" fill="#aaa6ff"/>
+<text x="36" y="27" text-anchor="start" fill="#aaa6ff" font-size="15" font-weight="700">SIMULATION / CURRENT STEP</text>
+<rect x="20" y="50" width="212" height="92" rx="10" fill="none" stroke="#525366"/>
+<text x="126" y="77" text-anchor="middle" fill="#eeeef3" font-size="19" font-weight="600">Spawn</text>
+<text x="126" y="99" text-anchor="middle" fill="#b9bac8" font-size="16" font-weight="400">New spawn targets</text>
+<text x="126" y="121" text-anchor="middle" fill="#b9bac8" font-size="16" font-weight="400">Initialize state</text>
+<rect x="248" y="50" width="212" height="92" rx="10" fill="none" stroke="#525366"/>
+<text x="354" y="77" text-anchor="middle" fill="#eeeef3" font-size="19" font-weight="600">Update</text>
+<text x="354" y="99" text-anchor="middle" fill="#b9bac8" font-size="16" font-weight="400">Other living particles</text>
+<text x="354" y="121" text-anchor="middle" fill="#b9bac8" font-size="16" font-weight="400">Update state</text>
+<path d="M126 146 V194 H240 V222" fill="none" stroke="#85879a" stroke-width="1.5" marker-end="url(#arrow)"/>
+<path d="M354 146 V194 H240" fill="none" stroke="#85879a" stroke-width="1.5" />
+<rect x="20" y="230" width="440" height="92" rx="10" fill="#292a35" stroke="#aaa6ff"/>
+<text x="240" y="257" text-anchor="middle" fill="#eeeef3" font-size="19" font-weight="600">State Values stored in Buffers</text>
+<text x="240" y="279" text-anchor="middle" fill="#b9bac8" font-size="16" font-weight="400">Updated position, velocity, etc.</text>
+<text x="240" y="301" text-anchor="middle" fill="#b9bac8" font-size="16" font-weight="400">Retained for the next step</text>
+<path d="M240 326 V406" fill="none" stroke="#85879a" stroke-width="1.5" marker-end="url(#arrow)"/>
+<text x="260" y="348" text-anchor="start" fill="#b9bac8" font-size="15" font-weight="400">Committed</text>
+<rect x="20" y="378" width="4" height="20" rx="2" fill="#65cbb9"/>
+<text x="36" y="393" text-anchor="start" fill="#65cbb9" font-size="15" font-weight="700">RENDER</text>
+<rect x="20" y="414" width="440" height="92" rx="10" fill="none" stroke="#525366"/>
+<text x="240" y="441" text-anchor="middle" fill="#eeeef3" font-size="19" font-weight="600">Render</text>
+<text x="240" y="463" text-anchor="middle" fill="#b9bac8" font-size="16" font-weight="400">Read state; calculate color, size, UVs</text>
+<text x="240" y="485" text-anchor="middle" fill="#b9bac8" font-size="16" font-weight="400">No writes back to particle state</text>
+</g></svg>

@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="480" height="738" viewBox="0 0 480 738" role="img" aria-labelledby="title">
+<title id="title">カスタムモジュールの構成と役割</title>
+<defs><marker id="arrow" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" orient="auto"><path d="M1 1L7 4L1 7" fill="none" stroke="#85879a" stroke-width="1.5"/></marker></defs>
+<g font-family="Arial, Noto Sans JP, sans-serif">
+<rect x="20" y="12" width="4" height="20" rx="2" fill="#aaa6ff"/>
+<text x="36" y="27" text-anchor="start" fill="#aaa6ff" font-size="15" font-weight="700">EDITOR / 処理の組み立て</text>
+<rect x="20" y="48" width="212" height="92" rx="10" fill="none" stroke="#525366"/>
+<text x="126" y="75" text-anchor="middle" fill="#eeeef3" font-size="19" font-weight="600">Module</text>
+<text x="126" y="97" text-anchor="middle" fill="#b9bac8" font-size="16" font-weight="400">Inspectorの設定値</text>
+<text x="126" y="119" text-anchor="middle" fill="#b9bac8" font-size="16" font-weight="400">Strength / Direction</text>
+<rect x="248" y="48" width="212" height="92" rx="10" fill="none" stroke="#525366"/>
+<text x="354" y="75" text-anchor="middle" fill="#eeeef3" font-size="19" font-weight="600">Contract</text>
+<text x="354" y="97" text-anchor="middle" fill="#b9bac8" font-size="16" font-weight="400">ID・型・変更方針</text>
+<text x="354" y="119" text-anchor="middle" fill="#b9bac8" font-size="16" font-weight="400">ハンドル番号</text>
+<path d="M126 144 V167 H240 V188" fill="none" stroke="#85879a" stroke-width="1.5" marker-end="url(#arrow)"/>
+<path d="M354 144 V167 H240" fill="none" stroke="#85879a" stroke-width="1.5" />
+<rect x="20" y="196" width="440" height="92" rx="10" fill="#292a35" stroke="#aaa6ff"/>
+<text x="240" y="223" text-anchor="middle" fill="#eeeef3" font-size="19" font-weight="600">Definition</text>
+<text x="240" y="245" text-anchor="middle" fill="#b9bac8" font-size="16" font-weight="400">設定値をContractへBind</text>
+<text x="240" y="267" text-anchor="middle" fill="#b9bac8" font-size="16" font-weight="400">読み書き・HLSL・依存関係を登録</text>
+<path d="M240 292 V328" fill="none" stroke="#85879a" stroke-width="1.5" marker-end="url(#arrow)"/>
+<text x="260" y="315" text-anchor="start" fill="#b9bac8" font-size="15" font-weight="400">関数を指定</text>
+<rect x="20" y="336" width="440" height="70" rx="10" fill="none" stroke="#525366"/>
+<text x="240" y="363" text-anchor="middle" fill="#eeeef3" font-size="19" font-weight="600">HLSL</text>
+<text x="240" y="385" text-anchor="middle" fill="#b9bac8" font-size="16" font-weight="400">生成されたContextで粒子を計算</text>
+<path d="M240 410 V496" fill="none" stroke="#85879a" stroke-width="1.5" marker-end="url(#arrow)"/>
+<text x="260" y="433" text-anchor="start" fill="#b9bac8" font-size="15" font-weight="400">コンパイル・生成</text>
+<rect x="20" y="468" width="4" height="20" rx="2" fill="#65cbb9"/>
+<text x="36" y="483" text-anchor="start" fill="#65cbb9" font-size="15" font-weight="700">RUNTIME / 実行時</text>
+<rect x="20" y="504" width="440" height="92" rx="10" fill="#292a35" stroke="#aaa6ff"/>
+<text x="240" y="531" text-anchor="middle" fill="#eeeef3" font-size="19" font-weight="600">Parameter と GPU処理</text>
+<text x="240" y="553" text-anchor="middle" fill="#b9bac8" font-size="16" font-weight="400">設定値を使ってHLSLを実行</text>
+<text x="240" y="575" text-anchor="middle" fill="#b9bac8" font-size="16" font-weight="400">粒子の状態を更新</text>
+<path d="M240 652 V604" fill="none" stroke="#85879a" stroke-width="1.5" marker-end="url(#arrow)"/>
+<text x="260" y="632" text-anchor="start" fill="#b9bac8" font-size="15" font-weight="400">Parameterを変更</text>
+<rect x="20" y="660" width="440" height="70" rx="10" fill="none" stroke="#525366"/>
+<text x="240" y="687" text-anchor="middle" fill="#eeeef3" font-size="19" font-weight="600">Handle</text>
+<text x="240" y="709" text-anchor="middle" fill="#b9bac8" font-size="16" font-weight="400">UdonSharpから呼び出す入口</text>
+</g></svg>

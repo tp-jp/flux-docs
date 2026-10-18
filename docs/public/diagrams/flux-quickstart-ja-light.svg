@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="480" height="740" viewBox="0 0 480 740" role="img" aria-labelledby="title">
+<title id="title">アップロードから読み戻しと結果確認まで</title>
+<defs><marker id="arrow" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" orient="auto"><path d="M1 1L7 4L1 7" fill="none" stroke="#858b9e" stroke-width="1.5"/></marker></defs>
+<g font-family="Arial, Noto Sans JP, sans-serif">
+<rect x="20" y="12" width="4" height="20" rx="2" fill="#5954b5"/>
+<text x="36" y="27" text-anchor="start" fill="#5954b5" font-size="15" font-weight="700">4要素をGPUへ送り、CPUで元の値と比較</text>
+<rect x="20" y="50" width="440" height="92" rx="10" fill="none" stroke="#c7c9dc"/>
+<text x="240" y="77" text-anchor="middle" fill="#242638" font-size="19" font-weight="600">CPU / Start()</text>
+<text x="240" y="99" text-anchor="middle" fill="#555b70" font-size="16" font-weight="400">_expectedに4つのVector4を用意して保持</text>
+<text x="240" y="121" text-anchor="middle" fill="#555b70" font-size="16" font-weight="400">upload.Upload(_expected, buffer);</text>
+<path d="M240 146 V176" fill="none" stroke="#858b9e" stroke-width="1.5" marker-end="url(#arrow)"/>
+<rect x="60" y="184" width="360" height="70" rx="10" fill="#f0f0fa" stroke="#5954b5"/>
+<text x="240" y="211" text-anchor="middle" fill="#242638" font-size="19" font-weight="600">GPU / FluxBuffer</text>
+<text x="240" y="233" text-anchor="middle" fill="#555b70" font-size="16" font-weight="400">Count = 4 / Texture = 2 × 2</text>
+<path d="M240 258 V288" fill="none" stroke="#858b9e" stroke-width="1.5" marker-end="url(#arrow)"/>
+<rect x="20" y="296" width="440" height="70" rx="10" fill="none" stroke="#c7c9dc"/>
+<text x="240" y="323" text-anchor="middle" fill="#242638" font-size="19" font-weight="600">readback.TryRequest(buffer, this)</text>
+<text x="240" y="345" text-anchor="middle" fill="#555b70" font-size="16" font-weight="400">false：受付拒否。この要求の完了通知なし</text>
+<path d="M240 370 V412" fill="none" stroke="#858b9e" stroke-width="1.5" marker-end="url(#arrow)"/>
+<text x="258" y="395" text-anchor="start" fill="#555b70" font-size="16" font-weight="400">true：非同期で完了を待つ</text>
+<rect x="20" y="420" width="440" height="92" rx="10" fill="#f0f0fa" stroke="#5954b5"/>
+<text x="240" y="447" text-anchor="middle" fill="#242638" font-size="19" font-weight="600">CPU / _OnFluxReadbackComplete()</text>
+<text x="240" y="469" text-anchor="middle" fill="#555b70" font-size="16" font-weight="400">まずreadback.Succeededを確認</text>
+<text x="240" y="491" text-anchor="middle" fill="#555b70" font-size="16" font-weight="400">falseならエラーを出して終了</text>
+<path d="M240 516 V546" fill="none" stroke="#858b9e" stroke-width="1.5" marker-end="url(#arrow)"/>
+<rect x="20" y="554" width="440" height="114" rx="10" fill="none" stroke="#c7c9dc"/>
+<text x="240" y="581" text-anchor="middle" fill="#242638" font-size="19" font-weight="600">成功したDataを元の値と比較</text>
+<text x="240" y="603" text-anchor="middle" fill="#555b70" font-size="16" font-weight="400">readback.Countが4か確認</text>
+<text x="240" y="625" text-anchor="middle" fill="#555b70" font-size="16" font-weight="400">(Vector4)readback.Data[i] ↔ _expected[i]</text>
+<text x="240" y="647" text-anchor="middle" fill="#555b70" font-size="16" font-weight="400">各成分の誤差が0.01以内か確認</text>
+<text x="240" y="697" text-anchor="middle" fill="#555b70" font-size="17" font-weight="400">すべて一致 → ConsoleにPASSを表示</text>
+<text x="240" y="721" text-anchor="middle" fill="#555b70" font-size="16" font-weight="400">要求の受付成功と、結果の一致は別の確認</text>
+</g></svg>

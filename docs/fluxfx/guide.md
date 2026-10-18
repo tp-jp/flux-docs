@@ -38,7 +38,6 @@
 | [寿命に応じた見た目](./lifetime-appearance.md) | Color・Size・Rotation over Lifetime |
 | [テクスチャアニメーションと点滅](./texture-animation-blink.md) | Texture Sheet Animation、Blink |
 | [Trails](./trails.md) | 軌跡の設定と表示 |
-| [カスタムモジュール](./custom-modules.md) | 独自の設定・GPU処理・UdonSharp用ハンドルの作成 |
 
 <span id="controlling-fluxfx-from-udonsharp"></span>
 
@@ -49,6 +48,16 @@
 | [再生と停止](./playback.md) | Play、Stop、Pause、Restart、Clear |
 | [実行時のパラメーター変更](./runtime-parameters.md) | 操作方法と変更が反映されるタイミング |
 | [状態と粒子数の取得](./state-and-count.md) | 再生状態、経過時間、生存粒子数 |
+
+## カスタムモジュール開発 {#custom-module-development}
+
+| 章 | 扱う内容 |
+| --- | --- |
+| [全体構成](./architecture.md) | 設定からコンパイル・実行・描画までの流れと役割分担 |
+| [カスタムモジュール](./custom-modules.md) | 独自の設定・GPU処理・UdonSharp用ハンドルの作成 |
+| [データと実行モデル](./data-and-execution.md) | Phase、Value、Provider、読み書き、Parameterの設計 |
+| [リファレンス](./custom-module-reference.md) | 標準ID、依存関係、HLSLの関数形式と命名規則 |
+| [検証と性能](./validation-and-performance.md) | デバッグ手順、動作確認、生成結果と性能の比較 |
 
 <span id="help"></span>
 

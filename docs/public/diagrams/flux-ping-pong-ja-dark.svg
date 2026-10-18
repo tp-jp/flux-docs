@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="480" height="488" viewBox="0 0 480 488" role="img" aria-labelledby="title">
+<title id="title">Ping-pongの入力と出力</title>
+<defs><marker id="arrow" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" orient="auto"><path d="M1 1L7 4L1 7" fill="none" stroke="#85879a" stroke-width="1.5"/></marker></defs>
+<g font-family="Arial, Noto Sans JP, sans-serif">
+<rect x="20" y="12" width="4" height="20" rx="2" fill="#aaa6ff"/>
+<text x="36" y="27" text-anchor="start" fill="#aaa6ff" font-size="15" font-weight="700">1 / Dispatch(A, B)</text>
+<rect x="20" y="50" width="180" height="70" rx="10" fill="none" stroke="#525366"/>
+<text x="110" y="77" text-anchor="middle" fill="#eeeef3" font-size="19" font-weight="600">Buffer A</text>
+<text x="110" y="99" text-anchor="middle" fill="#b9bac8" font-size="16" font-weight="400">入力</text>
+<rect x="280" y="50" width="180" height="70" rx="10" fill="#292a35" stroke="#aaa6ff"/>
+<text x="370" y="77" text-anchor="middle" fill="#eeeef3" font-size="19" font-weight="600">Buffer B</text>
+<text x="370" y="99" text-anchor="middle" fill="#b9bac8" font-size="16" font-weight="400">最新の出力</text>
+<path d="M204 85 H272" fill="none" stroke="#85879a" stroke-width="1.5" marker-end="url(#arrow)"/>
+<rect x="20" y="142" width="4" height="20" rx="2" fill="#aaa6ff"/>
+<text x="36" y="157" text-anchor="start" fill="#aaa6ff" font-size="15" font-weight="700">2 / Dispatch(B, A)</text>
+<rect x="20" y="180" width="180" height="70" rx="10" fill="#292a35" stroke="#aaa6ff"/>
+<text x="110" y="207" text-anchor="middle" fill="#eeeef3" font-size="19" font-weight="600">Buffer A</text>
+<text x="110" y="229" text-anchor="middle" fill="#b9bac8" font-size="16" font-weight="400">最新の出力</text>
+<rect x="280" y="180" width="180" height="70" rx="10" fill="none" stroke="#525366"/>
+<text x="370" y="207" text-anchor="middle" fill="#eeeef3" font-size="19" font-weight="600">Buffer B</text>
+<text x="370" y="229" text-anchor="middle" fill="#b9bac8" font-size="16" font-weight="400">入力</text>
+<path d="M276 215 H208" fill="none" stroke="#85879a" stroke-width="1.5" marker-end="url(#arrow)"/>
+<rect x="20" y="272" width="4" height="20" rx="2" fill="#aaa6ff"/>
+<text x="36" y="287" text-anchor="start" fill="#aaa6ff" font-size="15" font-weight="700">3 / Dispatch(A, B)</text>
+<rect x="20" y="310" width="180" height="70" rx="10" fill="none" stroke="#525366"/>
+<text x="110" y="337" text-anchor="middle" fill="#eeeef3" font-size="19" font-weight="600">Buffer A</text>
+<text x="110" y="359" text-anchor="middle" fill="#b9bac8" font-size="16" font-weight="400">入力</text>
+<rect x="280" y="310" width="180" height="70" rx="10" fill="#292a35" stroke="#aaa6ff"/>
+<text x="370" y="337" text-anchor="middle" fill="#eeeef3" font-size="19" font-weight="600">Buffer B</text>
+<text x="370" y="359" text-anchor="middle" fill="#b9bac8" font-size="16" font-weight="400">最新の出力</text>
+<path d="M204 345 H272" fill="none" stroke="#85879a" stroke-width="1.5" marker-end="url(#arrow)"/>
+<text x="240" y="419" text-anchor="middle" fill="#b9bac8" font-size="16" font-weight="400">各Dispatch後に current と next の参照を交換</text>
+<text x="240" y="447" text-anchor="middle" fill="#b9bac8" font-size="17" font-weight="400">current が最新の出力を指す</text>
+<text x="240" y="475" text-anchor="middle" fill="#b9bac8" font-size="16" font-weight="400">初期値はAへ。交換時のTextureコピーは不要</text>
+</g></svg>

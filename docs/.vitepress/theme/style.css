@@ -1,0 +1,31 @@
+.architecture-figure,
+.development-figure {
+  margin: 24px 0;
+}
+.architecture-figure img,
+.development-figure img {
+  width: 100%;
+  max-width: 480px;
+  height: auto;
+  margin: 0 auto;
+}
+.architecture-figure .diagram-dark,
+.dark .architecture-figure .diagram-light,
+.development-figure .diagram-dark,
+.dark .development-figure .diagram-light {
+  display: none;
+}
+.dark .architecture-figure .diagram-dark,
+.dark .development-figure .diagram-dark {
+  display: block;
+}
+.architecture-figure a,
+.development-figure a {
+  display: block;
+  cursor: zoom-in;
+}
+.architecture-figure a:focus-visible,
+.development-figure a:focus-visible {
+  outline: 2px solid var(--vp-c-brand-1);
+  outline-offset: 4px;
+}

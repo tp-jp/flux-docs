@@ -10,12 +10,10 @@ To use the previous result as the next input, alternate two Buffers between inpu
 
 Do not use the same Buffer as both input and output.
 
-| Stage | Input | Output | Latest result |
-| --- | --- | --- | --- |
-| Initialize | CPU array or other source | A | A |
-| First pass | A | B | B |
-| Second pass | B | A | A |
-| Third pass | A | B | B |
+<div class="development-figure">
+  <a class="diagram-light" href="../../diagrams/flux-ping-pong-en-light.svg" target="_blank" rel="noopener" title="Open full-size diagram"><img src="/diagrams/flux-ping-pong-en-light.svg" alt="Initialize A, then compute A to B, B to A, and A to B. Swap current and next after each pass so current points to the latest result." width="480" height="488" /></a>
+  <a class="diagram-dark" href="../../diagrams/flux-ping-pong-en-dark.svg" target="_blank" rel="noopener" title="Open full-size diagram"><img src="/diagrams/flux-ping-pong-en-dark.svg" alt="Initialize A, then compute A to B, B to A, and A to B. Swap current and next after each pass so current points to the latest result." width="480" height="488" /></a>
+</div>
 
 No CPU readback is necessary between passes. Pass each output directly to the next Dispatch.
 

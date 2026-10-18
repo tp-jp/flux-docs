@@ -31,6 +31,11 @@ MainのStart Delay、Duration、Loopと組み合わせて使います。
 
 Loopをオフにすると1周期で発生が終了します。生成済み粒子の寿命とは独立しており、Duration終了時にすべて消えるわけではありません。
 
+<div class="development-figure">
+  <a class="diagram-light" href="../diagrams/fluxfx-emission-cycles-ja-light.svg" target="_blank" rel="noopener" title="図を別タブで拡大表示"><img src="/diagrams/fluxfx-emission-cycles-ja-light.svg" alt="Start Delayの1秒後に2秒の周期を開始。Loopオンは待機なしで次の周期へ進み、オフは1周期で発生を終える" width="480" height="538" /></a>
+  <a class="diagram-dark" href="../diagrams/fluxfx-emission-cycles-ja-dark.svg" target="_blank" rel="noopener" title="図を別タブで拡大表示"><img src="/diagrams/fluxfx-emission-cycles-ja-dark.svg" alt="Start Delayの1秒後に2秒の周期を開始。Loopオンは待機なしで次の周期へ進み、オフは1周期で発生を終える" width="480" height="538" /></a>
+</div>
+
 <span id="example-patterns"></span>
 
 ## 発生パターンの例

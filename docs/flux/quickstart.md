@@ -6,6 +6,11 @@
 
 [導入](./installation.md)を済ませたワールドプロジェクトで進めてください。結果はConsoleに表示するため、描画用オブジェクトは不要です。
 
+<div class="development-figure">
+  <a class="diagram-light" href="../diagrams/flux-quickstart-ja-light.svg" target="_blank" rel="noopener" title="図を別タブで拡大表示"><img src="/diagrams/flux-quickstart-ja-light.svg" alt="4つのVector4を保持してGPUへUploadし、TryRequestで非同期読み戻しを要求。完了通知で成功を確認してからCountと各成分を比較し、すべて一致すればConsoleにPASSを表示する" width="480" height="740" /></a>
+  <a class="diagram-dark" href="../diagrams/flux-quickstart-ja-dark.svg" target="_blank" rel="noopener" title="図を別タブで拡大表示"><img src="/diagrams/flux-quickstart-ja-dark.svg" alt="4つのVector4を保持してGPUへUploadし、TryRequestで非同期読み戻しを要求。完了通知で成功を確認してからCountと各成分を比較し、すべて一致すればConsoleにPASSを表示する" width="480" height="740" /></a>
+</div>
+
 <span id="add-components-to-the-scene"></span>
 
 ## シーンにコンポーネントを配置する

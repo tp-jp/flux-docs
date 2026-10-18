@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="480" height="662" viewBox="0 0 480 662" role="img" aria-labelledby="title">
+<title id="title">標準の速度と描画色の処理列</title>
+<defs><marker id="arrow" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" orient="auto"><path d="M1 1L7 4L1 7" fill="none" stroke="#858b9e" stroke-width="1.5"/></marker></defs>
+<g font-family="Arial, Noto Sans JP, sans-serif">
+<rect x="20" y="12" width="4" height="20" rx="2" fill="#5954b5"/>
+<text x="36" y="27" text-anchor="start" fill="#5954b5" font-size="15" font-weight="700">UPDATE / 速度から位置へ</text>
+<rect x="20" y="50" width="440" height="114" rx="10" fill="#f0f0fa" stroke="#5954b5"/>
+<text x="240" y="77" text-anchor="middle" fill="#242638" font-size="19" font-weight="600">Value: particle.velocity</text>
+<text x="240" y="99" text-anchor="middle" fill="#555b70" font-size="16" font-weight="400">gravity → force → noise</text>
+<text x="240" y="121" text-anchor="middle" fill="#555b70" font-size="16" font-weight="400">→ vortex → drag → limit-velocity</text>
+<text x="240" y="143" text-anchor="middle" fill="#555b70" font-size="16" font-weight="400">存在する速度Writerを順に接続</text>
+<path d="M240 168 V210" fill="none" stroke="#858b9e" stroke-width="1.5" marker-end="url(#arrow)"/>
+<text x="260" y="194" text-anchor="start" fill="#555b70" font-size="15" font-weight="400">最後の速度</text>
+<rect x="20" y="218" width="440" height="70" rx="10" fill="none" stroke="#c7c9dc"/>
+<text x="240" y="245" text-anchor="middle" fill="#242638" font-size="19" font-weight="600">motion</text>
+<text x="240" y="267" text-anchor="middle" fill="#555b70" font-size="16" font-weight="400">位置と年齢を更新</text>
+<path d="M240 292 V328" fill="none" stroke="#858b9e" stroke-width="1.5" marker-end="url(#arrow)"/>
+<text x="260" y="315" text-anchor="start" fill="#555b70" font-size="15" font-weight="400">particle.position</text>
+<rect x="20" y="336" width="440" height="70" rx="10" fill="none" stroke="#c7c9dc"/>
+<text x="240" y="363" text-anchor="middle" fill="#242638" font-size="19" font-weight="600">velocity-over-lifetime</text>
+<text x="240" y="385" text-anchor="middle" fill="#555b70" font-size="16" font-weight="400">さらに位置を変更</text>
+<rect x="20" y="452" width="4" height="20" rx="2" fill="#197e70"/>
+<text x="36" y="467" text-anchor="start" fill="#197e70" font-size="15" font-weight="700">RENDER / 描画色の処理列</text>
+<rect x="20" y="490" width="440" height="114" rx="10" fill="#f0f0fa" stroke="#5954b5"/>
+<text x="240" y="517" text-anchor="middle" fill="#242638" font-size="19" font-weight="600">Value: render.color</text>
+<text x="240" y="539" text-anchor="middle" fill="#555b70" font-size="16" font-weight="400">render.start → render.color → render.blink</text>
+<text x="240" y="561" text-anchor="middle" fill="#555b70" font-size="16" font-weight="400">直前のWriterの結果を次へ渡す</text>
+<text x="240" y="583" text-anchor="middle" fill="#555b70" font-size="16" font-weight="400">Updateとは別のPhase</text>
+<text x="240" y="637" text-anchor="middle" fill="#555b70" font-size="15" font-weight="400">描画サイズ・回転・UVは、それぞれ別の依存関係</text>
+</g></svg>

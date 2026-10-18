@@ -22,6 +22,11 @@ GameObjectにFluxReadbackを追加し、読み戻すBufferと、完了通知を�
 
 拒否された要求はキューに入りません。その要求に対する完了通知も発生せず、進行中の要求や前回の結果は変更されません。`TryRequest`のfalseは、GPU転送の失敗とは区別して扱います。
 
+<div class="development-figure">
+  <a class="diagram-light" href="../diagrams/flux-readback-ja-light.svg" target="_blank" rel="noopener" title="図を別タブで拡大表示"><img src="/diagrams/flux-readback-ja-light.svg" alt="TryRequestのfalseは受付拒否で通知はありません。trueなら完了を待ち、通知時にSucceededを確認します。成功時だけDataのCount要素を使います。" width="480" height="654" /></a>
+  <a class="diagram-dark" href="../diagrams/flux-readback-ja-dark.svg" target="_blank" rel="noopener" title="図を別タブで拡大表示"><img src="/diagrams/flux-readback-ja-dark.svg" alt="TryRequestのfalseは受付拒否で通知はありません。trueなら完了を待ち、通知時にSucceededを確認します。成功時だけDataのCount要素を使います。" width="480" height="654" /></a>
+</div>
+
 <span id="read-the-result-in-the-callback"></span>
 
 ## 完了イベントで結果を読む

@@ -1,0 +1,72 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="480" height="452" viewBox="0 0 480 452" role="img" aria-labelledby="title">
+<title id="title">Countを変えてもCapacityは変わらない</title>
+<defs><marker id="arrow" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" orient="auto"><path d="M1 1L7 4L1 7" fill="none" stroke="#85879a" stroke-width="1.5"/></marker></defs>
+<g font-family="Arial, Noto Sans JP, sans-serif">
+<rect x="20" y="12" width="4" height="20" rx="2" fill="#aaa6ff"/>
+<text x="36" y="27" text-anchor="start" fill="#aaa6ff" font-size="15" font-weight="700">Initial Count = 5 → Texture 3 × 3 → Capacity = 9</text>
+<rect x="20" y="52" width="4" height="20" rx="2" fill="#aaa6ff"/>
+<text x="36" y="67" text-anchor="start" fill="#aaa6ff" font-size="15" font-weight="700">確保直後 / Count = 5</text>
+<rect x="20" y="85" width="44" height="42" rx="10" fill="#292a35" stroke="#aaa6ff"/>
+<text x="42" y="112" text-anchor="middle" fill="#eeeef3" font-size="19" font-weight="600">0</text>
+<rect x="69" y="85" width="44" height="42" rx="10" fill="#292a35" stroke="#aaa6ff"/>
+<text x="91" y="112" text-anchor="middle" fill="#eeeef3" font-size="19" font-weight="600">1</text>
+<rect x="118" y="85" width="44" height="42" rx="10" fill="#292a35" stroke="#aaa6ff"/>
+<text x="140" y="112" text-anchor="middle" fill="#eeeef3" font-size="19" font-weight="600">2</text>
+<rect x="167" y="85" width="44" height="42" rx="10" fill="#292a35" stroke="#aaa6ff"/>
+<text x="189" y="112" text-anchor="middle" fill="#eeeef3" font-size="19" font-weight="600">3</text>
+<rect x="216" y="85" width="44" height="42" rx="10" fill="#292a35" stroke="#aaa6ff"/>
+<text x="238" y="112" text-anchor="middle" fill="#eeeef3" font-size="19" font-weight="600">4</text>
+<rect x="265" y="85" width="44" height="42" rx="10" fill="none" stroke="#525366"/>
+<text x="287" y="112" text-anchor="middle" fill="#eeeef3" font-size="19" font-weight="600">5</text>
+<rect x="314" y="85" width="44" height="42" rx="10" fill="none" stroke="#525366"/>
+<text x="336" y="112" text-anchor="middle" fill="#eeeef3" font-size="19" font-weight="600">6</text>
+<rect x="363" y="85" width="44" height="42" rx="10" fill="none" stroke="#525366"/>
+<text x="385" y="112" text-anchor="middle" fill="#eeeef3" font-size="19" font-weight="600">7</text>
+<rect x="412" y="85" width="44" height="42" rx="10" fill="none" stroke="#525366"/>
+<text x="434" y="112" text-anchor="middle" fill="#eeeef3" font-size="19" font-weight="600">8</text>
+<text x="240" y="153" text-anchor="middle" fill="#b9bac8" font-size="16" font-weight="400">有効：0〜4 / 容量：9要素のまま</text>
+<rect x="20" y="164" width="4" height="20" rx="2" fill="#aaa6ff"/>
+<text x="36" y="179" text-anchor="start" fill="#aaa6ff" font-size="15" font-weight="700">SetCount(3) / Count = 3</text>
+<rect x="20" y="197" width="44" height="42" rx="10" fill="#292a35" stroke="#aaa6ff"/>
+<text x="42" y="224" text-anchor="middle" fill="#eeeef3" font-size="19" font-weight="600">0</text>
+<rect x="69" y="197" width="44" height="42" rx="10" fill="#292a35" stroke="#aaa6ff"/>
+<text x="91" y="224" text-anchor="middle" fill="#eeeef3" font-size="19" font-weight="600">1</text>
+<rect x="118" y="197" width="44" height="42" rx="10" fill="#292a35" stroke="#aaa6ff"/>
+<text x="140" y="224" text-anchor="middle" fill="#eeeef3" font-size="19" font-weight="600">2</text>
+<rect x="167" y="197" width="44" height="42" rx="10" fill="none" stroke="#525366"/>
+<text x="189" y="224" text-anchor="middle" fill="#eeeef3" font-size="19" font-weight="600">3</text>
+<rect x="216" y="197" width="44" height="42" rx="10" fill="none" stroke="#525366"/>
+<text x="238" y="224" text-anchor="middle" fill="#eeeef3" font-size="19" font-weight="600">4</text>
+<rect x="265" y="197" width="44" height="42" rx="10" fill="none" stroke="#525366"/>
+<text x="287" y="224" text-anchor="middle" fill="#eeeef3" font-size="19" font-weight="600">5</text>
+<rect x="314" y="197" width="44" height="42" rx="10" fill="none" stroke="#525366"/>
+<text x="336" y="224" text-anchor="middle" fill="#eeeef3" font-size="19" font-weight="600">6</text>
+<rect x="363" y="197" width="44" height="42" rx="10" fill="none" stroke="#525366"/>
+<text x="385" y="224" text-anchor="middle" fill="#eeeef3" font-size="19" font-weight="600">7</text>
+<rect x="412" y="197" width="44" height="42" rx="10" fill="none" stroke="#525366"/>
+<text x="434" y="224" text-anchor="middle" fill="#eeeef3" font-size="19" font-weight="600">8</text>
+<text x="240" y="265" text-anchor="middle" fill="#b9bac8" font-size="16" font-weight="400">有効：0〜2 / 容量：9要素のまま</text>
+<rect x="20" y="276" width="4" height="20" rx="2" fill="#aaa6ff"/>
+<text x="36" y="291" text-anchor="start" fill="#aaa6ff" font-size="15" font-weight="700">SetCount(8) / Count = 8</text>
+<rect x="20" y="309" width="44" height="42" rx="10" fill="#292a35" stroke="#aaa6ff"/>
+<text x="42" y="336" text-anchor="middle" fill="#eeeef3" font-size="19" font-weight="600">0</text>
+<rect x="69" y="309" width="44" height="42" rx="10" fill="#292a35" stroke="#aaa6ff"/>
+<text x="91" y="336" text-anchor="middle" fill="#eeeef3" font-size="19" font-weight="600">1</text>
+<rect x="118" y="309" width="44" height="42" rx="10" fill="#292a35" stroke="#aaa6ff"/>
+<text x="140" y="336" text-anchor="middle" fill="#eeeef3" font-size="19" font-weight="600">2</text>
+<rect x="167" y="309" width="44" height="42" rx="10" fill="#292a35" stroke="#aaa6ff"/>
+<text x="189" y="336" text-anchor="middle" fill="#eeeef3" font-size="19" font-weight="600">3</text>
+<rect x="216" y="309" width="44" height="42" rx="10" fill="#292a35" stroke="#aaa6ff"/>
+<text x="238" y="336" text-anchor="middle" fill="#eeeef3" font-size="19" font-weight="600">4</text>
+<rect x="265" y="309" width="44" height="42" rx="10" fill="#292a35" stroke="#aaa6ff"/>
+<text x="287" y="336" text-anchor="middle" fill="#eeeef3" font-size="19" font-weight="600">5</text>
+<rect x="314" y="309" width="44" height="42" rx="10" fill="#292a35" stroke="#aaa6ff"/>
+<text x="336" y="336" text-anchor="middle" fill="#eeeef3" font-size="19" font-weight="600">6</text>
+<rect x="363" y="309" width="44" height="42" rx="10" fill="#292a35" stroke="#aaa6ff"/>
+<text x="385" y="336" text-anchor="middle" fill="#eeeef3" font-size="19" font-weight="600">7</text>
+<rect x="412" y="309" width="44" height="42" rx="10" fill="none" stroke="#525366"/>
+<text x="434" y="336" text-anchor="middle" fill="#eeeef3" font-size="19" font-weight="600">8</text>
+<text x="240" y="377" text-anchor="middle" fill="#b9bac8" font-size="16" font-weight="400">有効：0〜7 / 容量：9要素のまま</text>
+<text x="240" y="412" text-anchor="middle" fill="#b9bac8" font-size="16" font-weight="400">色付き＝有効範囲 / 数字＝要素インデックス</text>
+<text x="240" y="440" text-anchor="middle" fill="#b9bac8" font-size="16" font-weight="400">SetCountはサイズ変更もデータの初期化もしない</text>
+</g></svg>

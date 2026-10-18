@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="480" height="664" viewBox="0 0 480 664" role="img" aria-labelledby="title">
+<title id="title">From input Buffer through a shader to output Buffer</title>
+<defs><marker id="arrow" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" orient="auto"><path d="M1 1L7 4L1 7" fill="none" stroke="#85879a" stroke-width="1.5"/></marker></defs>
+<g font-family="Arial, Noto Sans JP, sans-serif">
+<rect x="20" y="12" width="4" height="20" rx="2" fill="#aaa6ff"/>
+<text x="36" y="27" text-anchor="start" fill="#aaa6ff" font-size="15" font-weight="700">EXAMPLE / SetFloat("_Scale", 2f) before Dispatch</text>
+<rect x="60" y="50" width="360" height="70" rx="10" fill="none" stroke="#525366"/>
+<text x="240" y="77" text-anchor="middle" fill="#eeeef3" font-size="19" font-weight="600">source / FluxBuffer</text>
+<text x="240" y="99" text-anchor="middle" fill="#b9bac8" font-size="16" font-weight="400">Element i: (1, 2, 3, 4)</text>
+<path d="M240 124 V154" fill="none" stroke="#85879a" stroke-width="1.5" marker-end="url(#arrow)"/>
+<rect x="20" y="162" width="440" height="92" rx="10" fill="#292a35" stroke="#aaa6ff"/>
+<text x="240" y="189" text-anchor="middle" fill="#eeeef3" font-size="19" font-weight="600">Dispatch(source, destination)</text>
+<text x="240" y="211" text-anchor="middle" fill="#b9bac8" font-size="16" font-weight="400">Set input/output Count, width, height on Material</text>
+<text x="240" y="233" text-anchor="middle" fill="#b9bac8" font-size="16" font-weight="400">VRCGraphics.Blit(source.Texture, …)</text>
+<path d="M240 258 V288" fill="none" stroke="#85879a" stroke-width="1.5" marker-end="url(#arrow)"/>
+<text x="258" y="278" text-anchor="start" fill="#b9bac8" font-size="16" font-weight="400">source.Texture → _MainTex</text>
+<rect x="20" y="296" width="440" height="136" rx="10" fill="#292a35" stroke="#aaa6ff"/>
+<text x="240" y="323" text-anchor="middle" fill="#eeeef3" font-size="19" font-weight="600">Fragment shader (this example)</text>
+<text x="240" y="345" text-anchor="middle" fill="#b9bac8" font-size="16" font-weight="400">Output UV → index → check input/output bounds</text>
+<text x="240" y="367" text-anchor="middle" fill="#b9bac8" font-size="16" font-weight="400">If outside Count, return 0</text>
+<text x="240" y="389" text-anchor="middle" fill="#b9bac8" font-size="16" font-weight="400">Read float4 at the same index from _MainTex</text>
+<text x="240" y="411" text-anchor="middle" fill="#b9bac8" font-size="16" font-weight="400">return value * _Scale;</text>
+<path d="M240 436 V466" fill="none" stroke="#85879a" stroke-width="1.5" marker-end="url(#arrow)"/>
+<text x="258" y="456" text-anchor="start" fill="#b9bac8" font-size="16" font-weight="400">Write the return value</text>
+<rect x="60" y="474" width="360" height="70" rx="10" fill="none" stroke="#525366"/>
+<text x="240" y="501" text-anchor="middle" fill="#eeeef3" font-size="19" font-weight="600">destination / FluxBuffer</text>
+<text x="240" y="523" text-anchor="middle" fill="#b9bac8" font-size="16" font-weight="400">Element i result: (2, 4, 6, 8)</text>
+<text x="240" y="580" text-anchor="middle" fill="#b9bac8" font-size="17" font-weight="400">Use separate input and output Buffers</text>
+<text x="240" y="608" text-anchor="middle" fill="#b9bac8" font-size="16" font-weight="400">Prepare output Count and capacity before calling</text>
+<text x="240" y="636" text-anchor="middle" fill="#b9bac8" font-size="16" font-weight="400">Dispatch does not change Count or check bounds</text>
+</g></svg>

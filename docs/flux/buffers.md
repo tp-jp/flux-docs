@@ -59,6 +59,11 @@ buffer.SetCount(3); // Countは3、Capacityは9のまま
 buffer.SetCount(8); // 確保済みの容量内なので変更できる
 ```
 
+<div class="development-figure">
+  <a class="diagram-light" href="../diagrams/flux-buffer-count-ja-light.svg" target="_blank" rel="noopener" title="図を別タブで拡大表示"><img src="/diagrams/flux-buffer-count-ja-light.svg" alt="Initial Countが5のBufferでCountを5、3、8と変えてもCapacityは9のまま。有効範囲のみが変わり、データは初期化されない" width="480" height="452" /></a>
+  <a class="diagram-dark" href="../diagrams/flux-buffer-count-ja-dark.svg" target="_blank" rel="noopener" title="図を別タブで拡大表示"><img src="/diagrams/flux-buffer-count-ja-dark.svg" alt="Initial Countが5のBufferでCountを5、3、8と変えてもCapacityは9のまま。有効範囲のみが変わり、データは初期化されない" width="480" height="452" /></a>
+</div>
+
 `SetCount`で指定できるのは0以上Capacity以下です。範囲外ではエラーを出力し、Countは変更しません。Countを増やしてもデータの初期化は行われないため、新しく有効にした要素へ値を書き込んでから読み取ります。
 
 `SetCount`はテクスチャの拡張や縮小を行いません。必要な最大要素数に合わせて、実行前にInitial Countを設定してください。確保後にInspectorの値を変更しても、その場で再確保されるわけではありません。
@@ -69,12 +74,10 @@ buffer.SetCount(8); // 確保済みの容量内なので変更できる
 
 データはX方向に並び、行の終わりで次のYへ進みます。幅3、Countが5の例は次のとおりです。
 
-```text
-         x=0     x=1     x=2
-y=0       0       1       2
-y=1       3       4      無効
-y=2      無効    無効    無効
-```
+<div class="development-figure">
+  <a class="diagram-light" href="../diagrams/flux-buffer-layout-ja-light.svg" target="_blank" rel="noopener" title="図を別タブで拡大表示"><img src="/diagrams/flux-buffer-layout-ja-light.svg" alt="3×3のテクスチャにインデックス0から8をX方向、次にY方向へ配置。Countが5なら0から4が有効。1ピクセルには4成分を保存する" width="480" height="564" /></a>
+  <a class="diagram-dark" href="../diagrams/flux-buffer-layout-ja-dark.svg" target="_blank" rel="noopener" title="図を別タブで拡大表示"><img src="/diagrams/flux-buffer-layout-ja-dark.svg" alt="3×3のテクスチャにインデックス0から8をX方向、次にY方向へ配置。Countが5なら0から4が有効。1ピクセルには4成分を保存する" width="480" height="564" /></a>
+</div>
 
 インデックスは`y * width + x`です。シェーダーでは[FluxCommon.hlslの補助関数](./kernels.md#indices-and-bounds)を使って、インデックスとピクセル中心のUVを変換できます。
 

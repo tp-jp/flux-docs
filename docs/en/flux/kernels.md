@@ -27,6 +27,13 @@ With an input Buffer, its texture is passed as `_MainTex`. Internally, VRCGraphi
 
 Use different input and output Buffers. Do not read from and write to the same texture. For repeated computation, alternate the roles of two Buffers.
 
+The following flow uses the doubling shader shown on this page.
+
+<div class="development-figure">
+  <a class="diagram-light" href="../../diagrams/flux-kernel-dispatch-en-light.svg" target="_blank" rel="noopener" title="Open full-size diagram"><img src="/diagrams/flux-kernel-dispatch-en-light.svg" alt="Pass the input Buffer to Dispatch, set counts and dimensions, and run Blit. The shader reads _MainTex and writes the doubled return value to a separate output Buffer" width="480" height="664" /></a>
+  <a class="diagram-dark" href="../../diagrams/flux-kernel-dispatch-en-dark.svg" target="_blank" rel="noopener" title="Open full-size diagram"><img src="/diagrams/flux-kernel-dispatch-en-dark.svg" alt="Pass the input Buffer to Dispatch, set counts and dimensions, and run Blit. The shader reads _MainTex and writes the doubled return value to a separate output Buffer" width="480" height="664" /></a>
+</div>
+
 <span id="出力先のcountを設定する"></span>
 
 ### Set the output Count

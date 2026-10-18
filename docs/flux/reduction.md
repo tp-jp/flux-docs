@@ -12,12 +12,10 @@
 
 入力が250要素、Reduction Factorが4の場合は、次のように縮小します。
 
-| 実行 | 入力 | 出力 | 出力のCount |
-| --- | --- | --- | --- |
-| 1回目 | Source | Workspace A | 63 |
-| 2回目 | Workspace A | Workspace B | 16 |
-| 3回目 | Workspace B | Workspace A | 4 |
-| 最後 | Workspace A | Destination | 1 |
+<div class="development-figure">
+  <a class="diagram-light" href="../diagrams/flux-reduction-ja-light.svg" target="_blank" rel="noopener" title="図を別タブで拡大表示"><img src="/diagrams/flux-reduction-ja-light.svg" alt="Sourceの250要素をWorkspace Aの63、Workspace Bの16、Workspace Aの4へ集約し、最後にDestinationへ1要素を書き込む" width="480" height="632" /></a>
+  <a class="diagram-dark" href="../diagrams/flux-reduction-ja-dark.svg" target="_blank" rel="noopener" title="図を別タブで拡大表示"><img src="/diagrams/flux-reduction-ja-dark.svg" alt="Sourceの250要素をWorkspace Aの63、Workspace Bの16、Workspace Aの4へ集約し、最後にDestinationへ1要素を書き込む" width="480" height="632" /></a>
+</div>
 
 各段階の要素数は`ceil(入力のCount / Reduction Factor)`です。端数も1要素として残し、最後の段階ではDestinationのCountを1に設定します。途中のCount変更とBufferの切り替えはFluxReductionが行います。
 

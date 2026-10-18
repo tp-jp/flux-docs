@@ -6,6 +6,11 @@ Upload four `Vector4` values to the GPU, read them back asynchronously, and comp
 
 Complete [Installation](./installation.md) first. Results appear in the Console, so no rendering object is needed.
 
+<div class="development-figure">
+  <a class="diagram-light" href="../../diagrams/flux-quickstart-en-light.svg" target="_blank" rel="noopener" title="Open full-size diagram"><img src="/diagrams/flux-quickstart-en-light.svg" alt="Keep four Vector4 values, upload them to the GPU, and request asynchronous readback. On completion, check success, then compare Count and every component. Log PASS only if all values match" width="480" height="740" /></a>
+  <a class="diagram-dark" href="../../diagrams/flux-quickstart-en-dark.svg" target="_blank" rel="noopener" title="Open full-size diagram"><img src="/diagrams/flux-quickstart-en-dark.svg" alt="Keep four Vector4 values, upload them to the GPU, and request asynchronous readback. On completion, check success, then compare Count and every component. Log PASS only if all values match" width="480" height="740" /></a>
+</div>
+
 <span id="シーンにコンポーネントを配置する"></span>
 
 ## Add components to the scene

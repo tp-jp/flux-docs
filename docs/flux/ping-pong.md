@@ -10,12 +10,10 @@
 
 同じBufferを同時に入力と出力に指定せず、次のように書き込み先を交互に変えます。
 
-| 段階 | 入力 | 出力 | 最新の結果 |
-| --- | --- | --- | --- |
-| 初期化 | CPUの配列など | A | A |
-| 1回目 | A | B | B |
-| 2回目 | B | A | A |
-| 3回目 | A | B | B |
+<div class="development-figure">
+  <a class="diagram-light" href="../diagrams/flux-ping-pong-ja-light.svg" target="_blank" rel="noopener" title="図を別タブで拡大表示"><img src="/diagrams/flux-ping-pong-ja-light.svg" alt="Aを初期化して、1回目はAからB、2回目はBからA、3回目はAからBへ計算します。各回でcurrentとnextを交換し、currentを最新の結果にします。" width="480" height="488" /></a>
+  <a class="diagram-dark" href="../diagrams/flux-ping-pong-ja-dark.svg" target="_blank" rel="noopener" title="図を別タブで拡大表示"><img src="/diagrams/flux-ping-pong-ja-dark.svg" alt="Aを初期化して、1回目はAからB、2回目はBからA、3回目はAからBへ計算します。各回でcurrentとnextを交換し、currentを最新の結果にします。" width="480" height="488" /></a>
+</div>
 
 計算結果をCPUへ戻す必要はありません。出力したBufferをそのまま次のDispatchへ渡せます。
 

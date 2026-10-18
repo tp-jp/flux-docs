@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="480" height="654" viewBox="0 0 480 654" role="img" aria-labelledby="title">
+<title id="title">Readback acceptance and completion</title>
+<defs><marker id="arrow" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" orient="auto"><path d="M1 1L7 4L1 7" fill="none" stroke="#858b9e" stroke-width="1.5"/></marker></defs>
+<g font-family="Arial, Noto Sans JP, sans-serif">
+<rect x="20" y="12" width="4" height="20" rx="2" fill="#5954b5"/>
+<text x="36" y="27" text-anchor="start" fill="#5954b5" font-size="15" font-weight="700">REQUEST / START</text>
+<rect x="20" y="50" width="440" height="70" rx="10" fill="#f0f0fa" stroke="#5954b5"/>
+<text x="240" y="77" text-anchor="middle" fill="#242638" font-size="19" font-weight="600">TryRequest(buffer, receiver)</text>
+<text x="240" y="99" text-anchor="middle" fill="#555b70" font-size="16" font-weight="400">The return value indicates acceptance</text>
+<path d="M180 124 V153 H126 V184" fill="none" stroke="#858b9e" stroke-width="1.5" marker-end="url(#arrow)"/>
+<path d="M300 124 V153 H354 V184" fill="none" stroke="#858b9e" stroke-width="1.5" marker-end="url(#arrow)"/>
+<text x="166" y="175" text-anchor="middle" fill="#555b70" font-size="16" font-weight="400">false</text>
+<text x="394" y="175" text-anchor="middle" fill="#555b70" font-size="16" font-weight="400">true</text>
+<rect x="20" y="192" width="212" height="92" rx="10" fill="none" stroke="#c7c9dc"/>
+<text x="126" y="219" text-anchor="middle" fill="#242638" font-size="19" font-weight="600">Rejected</text>
+<text x="126" y="241" text-anchor="middle" fill="#555b70" font-size="16" font-weight="400">Not queued</text>
+<text x="126" y="263" text-anchor="middle" fill="#555b70" font-size="16" font-weight="400">No callback for this call</text>
+<rect x="248" y="192" width="212" height="92" rx="10" fill="none" stroke="#c7c9dc"/>
+<text x="354" y="219" text-anchor="middle" fill="#242638" font-size="19" font-weight="600">Wait for completion</text>
+<text x="354" y="241" text-anchor="middle" fill="#555b70" font-size="16" font-weight="400">IsRequesting = true</text>
+<text x="354" y="263" text-anchor="middle" fill="#555b70" font-size="16" font-weight="400">Do not read results yet</text>
+<path d="M354 288 V317 H240 V342" fill="none" stroke="#858b9e" stroke-width="1.5" marker-end="url(#arrow)"/>
+<rect x="20" y="350" width="440" height="92" rx="10" fill="#f0f0fa" stroke="#5954b5"/>
+<text x="240" y="377" text-anchor="middle" fill="#242638" font-size="19" font-weight="600">_OnFluxReadbackComplete</text>
+<text x="240" y="399" text-anchor="middle" fill="#555b70" font-size="16" font-weight="400">IsRequesting = false</text>
+<text x="240" y="421" text-anchor="middle" fill="#555b70" font-size="16" font-weight="400">Check Succeeded here</text>
+<path d="M180 446 V477 H126 V508" fill="none" stroke="#858b9e" stroke-width="1.5" marker-end="url(#arrow)"/>
+<path d="M300 446 V477 H354 V508" fill="none" stroke="#858b9e" stroke-width="1.5" marker-end="url(#arrow)"/>
+<text x="166" y="499" text-anchor="middle" fill="#555b70" font-size="16" font-weight="400">false</text>
+<text x="394" y="499" text-anchor="middle" fill="#555b70" font-size="16" font-weight="400">true</text>
+<rect x="20" y="516" width="212" height="92" rx="10" fill="none" stroke="#c7c9dc"/>
+<text x="126" y="543" text-anchor="middle" fill="#242638" font-size="19" font-weight="600">Readback failed</text>
+<text x="126" y="565" text-anchor="middle" fill="#555b70" font-size="16" font-weight="400">Do not consume Data</text>
+<text x="126" y="587" text-anchor="middle" fill="#555b70" font-size="16" font-weight="400">Not a rejection</text>
+<rect x="248" y="516" width="212" height="92" rx="10" fill="none" stroke="#c7c9dc"/>
+<text x="354" y="543" text-anchor="middle" fill="#242638" font-size="19" font-weight="600">Consume the result</text>
+<text x="354" y="565" text-anchor="middle" fill="#555b70" font-size="16" font-weight="400">Data[0 .. Count - 1]</text>
+<text x="354" y="587" text-anchor="middle" fill="#555b70" font-size="16" font-weight="400">Read valid elements</text>
+<text x="240" y="638" text-anchor="middle" fill="#555b70" font-size="16" font-weight="400">Acceptance and transfer success are separate checks</text>
+</g></svg>

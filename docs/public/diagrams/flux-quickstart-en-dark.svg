@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="480" height="740" viewBox="0 0 480 740" role="img" aria-labelledby="title">
+<title id="title">Upload, asynchronous readback, and verification</title>
+<defs><marker id="arrow" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" orient="auto"><path d="M1 1L7 4L1 7" fill="none" stroke="#85879a" stroke-width="1.5"/></marker></defs>
+<g font-family="Arial, Noto Sans JP, sans-serif">
+<rect x="20" y="12" width="4" height="20" rx="2" fill="#aaa6ff"/>
+<text x="36" y="27" text-anchor="start" fill="#aaa6ff" font-size="15" font-weight="700">SEND FOUR ELEMENTS TO GPU, THEN COMPARE ON CPU</text>
+<rect x="20" y="50" width="440" height="92" rx="10" fill="none" stroke="#525366"/>
+<text x="240" y="77" text-anchor="middle" fill="#eeeef3" font-size="19" font-weight="600">CPU / Start()</text>
+<text x="240" y="99" text-anchor="middle" fill="#b9bac8" font-size="16" font-weight="400">Create and keep four Vector4 values in _expected</text>
+<text x="240" y="121" text-anchor="middle" fill="#b9bac8" font-size="16" font-weight="400">upload.Upload(_expected, buffer);</text>
+<path d="M240 146 V176" fill="none" stroke="#85879a" stroke-width="1.5" marker-end="url(#arrow)"/>
+<rect x="60" y="184" width="360" height="70" rx="10" fill="#292a35" stroke="#aaa6ff"/>
+<text x="240" y="211" text-anchor="middle" fill="#eeeef3" font-size="19" font-weight="600">GPU / FluxBuffer</text>
+<text x="240" y="233" text-anchor="middle" fill="#b9bac8" font-size="16" font-weight="400">Count = 4 / Texture = 2 × 2</text>
+<path d="M240 258 V288" fill="none" stroke="#85879a" stroke-width="1.5" marker-end="url(#arrow)"/>
+<rect x="20" y="296" width="440" height="70" rx="10" fill="none" stroke="#525366"/>
+<text x="240" y="323" text-anchor="middle" fill="#eeeef3" font-size="19" font-weight="600">readback.TryRequest(buffer, this)</text>
+<text x="240" y="345" text-anchor="middle" fill="#b9bac8" font-size="16" font-weight="400">false: rejected; no completion event for this call</text>
+<path d="M240 370 V412" fill="none" stroke="#85879a" stroke-width="1.5" marker-end="url(#arrow)"/>
+<text x="258" y="395" text-anchor="start" fill="#b9bac8" font-size="16" font-weight="400">true: wait for completion</text>
+<rect x="20" y="420" width="440" height="92" rx="10" fill="#292a35" stroke="#aaa6ff"/>
+<text x="240" y="447" text-anchor="middle" fill="#eeeef3" font-size="19" font-weight="600">CPU / _OnFluxReadbackComplete()</text>
+<text x="240" y="469" text-anchor="middle" fill="#b9bac8" font-size="16" font-weight="400">Check readback.Succeeded first</text>
+<text x="240" y="491" text-anchor="middle" fill="#b9bac8" font-size="16" font-weight="400">If false, log an error and return</text>
+<path d="M240 516 V546" fill="none" stroke="#85879a" stroke-width="1.5" marker-end="url(#arrow)"/>
+<rect x="20" y="554" width="440" height="114" rx="10" fill="none" stroke="#525366"/>
+<text x="240" y="581" text-anchor="middle" fill="#eeeef3" font-size="19" font-weight="600">Compare successful Data with the originals</text>
+<text x="240" y="603" text-anchor="middle" fill="#b9bac8" font-size="16" font-weight="400">Check readback.Count is 4</text>
+<text x="240" y="625" text-anchor="middle" fill="#b9bac8" font-size="16" font-weight="400">(Vector4)readback.Data[i] ↔ _expected[i]</text>
+<text x="240" y="647" text-anchor="middle" fill="#b9bac8" font-size="16" font-weight="400">Check each component differs by at most 0.01</text>
+<text x="240" y="697" text-anchor="middle" fill="#b9bac8" font-size="17" font-weight="400">All values match → log PASS to the Console</text>
+<text x="240" y="721" text-anchor="middle" fill="#b9bac8" font-size="16" font-weight="400">Request acceptance does not verify the result</text>
+</g></svg>

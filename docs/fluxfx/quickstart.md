@@ -65,6 +65,7 @@ Particle Countは「毎秒生成する数」ではありません。発生頻度
 | Mode | Billboard |
 | Blend Mode | Alpha |
 | Intensity | 1 |
+| Intensity Mask | 未指定 |
 | Texture | 未指定 |
 | Tiling | `(1, 1)` |
 | Offset | `(0, 0)` |

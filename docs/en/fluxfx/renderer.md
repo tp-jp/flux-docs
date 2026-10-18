@@ -45,9 +45,28 @@ Additive makes overlaps brighter. Compare Alpha for surfaces such as smoke and A
 
 ## Intensity
 
-Intensity multiplies RGB and must be nonnegative. It does not directly modify Alpha.
+**Intensity** controls the RGB multiplier and must be nonnegative. Use **Intensity Mask** to control where it applies. Neither setting directly changes Alpha.
 
 Adjust Start Color for color, and color/texture Alpha plus Blend Mode for transparency. Increasing Intensity alone does not automatically create bloom around particles.
+
+### Intensity Mask {#intensity-mask}
+
+Assign a Texture2D to **Intensity Mask** in Renderer to apply Intensity only to parts of the particle image. For example, a white center with black surroundings lets you brighten only the center.
+
+| Mask red channel | Effect on RGB |
+| --- | --- |
+| White (1) | Multiply by Intensity |
+| Black (0) | Multiply by 1; preserve brightness before Intensity |
+| Intermediate value | Interpolate between a multiplier of 1 and Intensity |
+| Unassigned | Use a white mask, applying Intensity everywhere |
+
+The shader uses the sampled **red channel**, clamped to 0–1, and ignores the mask's Alpha. The RGB multiplier is `1 + (Intensity - 1) × mask`. For example, Intensity 3 and mask 0.5 produce a multiplier of 2. At Intensity 1, the mask makes no difference. Below 1, white areas become darker. Black areas are not made transparent.
+
+1. Assign a mask with white areas where you want Intensity to apply.
+2. Set Intensity above 1 and compare white and black areas in the preview.
+3. Check alignment between Texture and the mask, then verify in Play Mode.
+
+The mask uses **the same UVs as Texture**. Tiling, Offset, and [Texture Sheet Animation](./texture-animation-blink.md) affect both textures; there are no separate mask Tiling or Offset settings. For an atlas, use the same frame layout in the mask. Both Billboard and Mesh modes support it.
 
 <span id="描画範囲を設定する"></span>
 
@@ -67,7 +86,8 @@ Bounds that are too small can make the entire effect disappear even while partic
 | --- | --- |
 | Mesh mode fails generation | Mesh reference, readability, vertices, and triangles |
 | Transparency is wrong | Blend Mode and texture/Start Color Alpha |
-| Too dark or bright | Start Color, Intensity, and additive overlap |
+| Too dark or bright | Start Color, Intensity, the mask red channel, and additive overlap |
+| Mask has no effect or is misaligned | Intensity differs from 1; mask red channel; shared UVs and atlas layout |
 | Disappears at certain angles | Culling Bounds and movement region |
 | Billboard too large | Start Size |
 

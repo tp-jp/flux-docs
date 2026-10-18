@@ -223,5 +223,5 @@ To place another custom velocity writer after CustomLift, give that Operation `d
 
 To modify position after `motion`, use the `AfterOperation` read of `particle.position` shown above and write the same Value. If Velocity over Lifetime is also used, specify order relative to that operation too. Position operations do not receive automatic connections through `optionalDependencies`.
 
-Multiple operations writing the same Value in the same Phase need an order between them. Ambiguous ordering, dependency cycles, and missing required targets produce errors. `render.intensity` is a Parameter, not an Operation dependency target. The rendering shader applies Intensity to RGB according to the Intensity Mask.
+Multiple operations writing the same Value in the same Phase need an order between them. Ambiguous ordering, dependency cycles, and missing required targets produce errors. `render.intensity` is a Parameter, not an Operation dependency target. The rendering shader applies Intensity to RGB according to the [Intensity Mask](./renderer.md#intensity-mask).
 

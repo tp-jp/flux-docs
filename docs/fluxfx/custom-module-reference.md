@@ -223,5 +223,5 @@ CustomLiftの例では、標準の速度Writerをすべて`optionalDependencies`
 
 位置を`motion`の後に変更する処理では、上表の`AfterOperation`で`particle.position`を読み、同じValueを書きます。Velocity over Lifetimeも使うなら、その処理との前後関係も指定してください。位置の処理には`optionalDependencies`による自動接続はありません。
 
-同じPhaseで同じValueを書く複数の処理には、互いの順序が必要です。順序が一意に決まらない、依存が循環する、必須の対象がない場合はエラーになります。`render.intensity`はParameterであり、Operationの依存先には指定できません。Intensityは描画シェーダーでIntensity Maskに応じてRGBへ適用されます。
+同じPhaseで同じValueを書く複数の処理には、互いの順序が必要です。順序が一意に決まらない、依存が循環する、必須の対象がない場合はエラーになります。`render.intensity`はParameterであり、Operationの依存先には指定できません。Intensityは描画シェーダーで[Intensity Mask](./renderer.md#intensity-mask)に応じてRGBへ適用されます。
 

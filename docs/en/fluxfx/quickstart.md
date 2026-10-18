@@ -63,6 +63,7 @@ Open **RENDERER** and configure the following settings.
 | Mode | Billboard |
 | Blend Mode | Alpha |
 | Intensity | 1 |
+| Intensity Mask | Unassigned |
 | Texture | Unassigned |
 | Tiling | `(1, 1)` |
 | Offset | `(0, 0)` |

@@ -18,6 +18,8 @@
 | `target.Modules.Gravity`など | `SetGravity`、`SetEnabled` | `TpLab.Flux.FX.Udon.Modules` |
 | `target` | `SetRenderIntensity` | `TpLab.Flux.FX.Udon` |
 
+`SetRenderIntensity`で変更した強度にも、Rendererに設定した[Intensity Mask](./renderer.md#intensity-mask)が適用されます。マスク画像はInspectorで設定します。現在、マスク画像を差し替える専用のUdonSharp APIはありません。
+
 ハンドルは対象システムから取得します。`new`で作成したり、内部のリストを直接書き換えたりしません。未構成のMain・Shapeや、追加していないモジュールはnullになることがあるため、操作前に確認してください。無効化した状態で組み込まれたモジュールは取得でき、`SetEnabled(true)`で有効にできます。
 
 <span id="when-changes-take-effect"></span>

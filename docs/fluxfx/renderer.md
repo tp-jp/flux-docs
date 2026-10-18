@@ -45,9 +45,28 @@ Additiveは重なる部分が明るくなります。煙などの面として見
 
 ## Intensity
 
-**Intensity** は描画色のRGBへ掛ける強度です。0以上を指定します。Alphaを直接変更する設定ではありません。
+**Intensity** は描画色のRGBへ掛ける強度です。0以上を指定し、適用する範囲は **Intensity Mask** で調整します。どちらもAlphaを直接変更する設定ではありません。
 
 色を変える場合はMainのStart Color、透明度を調整する場合は色やテクスチャのAlphaとBlend Modeを確認します。Intensityを上げるだけで周囲に光がにじむ効果が自動的に付くわけではありません。
+
+### Intensity Mask {#intensity-mask}
+
+Rendererの **Intensity Mask** にTexture2Dを割り当てると、粒子画像の一部だけにIntensityを適用できます。例えば、中央を白、周囲を黒にしたマスクを使うと、中央だけを明るくできます。
+
+| マスクの赤チャンネル | RGBへの適用 |
+| --- | --- |
+| 白（1） | Intensityをそのまま掛ける |
+| 黒（0） | 倍率1。Intensityによる明るさの変更を受けない |
+| 中間値 | 倍率1とIntensityの間を補間する |
+| 未指定 | 白いマスクとして扱い、全体にIntensityを適用する |
+
+使用するのはサンプリングした**赤チャンネル**を0〜1に制限した値です。マスクのAlphaは使いません。RGBの倍率は `1 + (Intensity - 1) × mask` です。例えばIntensityが3、maskが0.5なら倍率は2になります。Intensityが1ならマスクによる違いはなく、1未満では白い部分ほど暗くなります。黒い部分を透明にするマスクではありません。
+
+1. RendererのIntensity Maskに、強度を変えたい範囲を白くしたマスクを割り当てます。
+2. Intensityを1より大きくして、白と黒の部分の違いをプレビューで確認します。
+3. Textureとマスクの位置が合っているか確認し、最後にPlay Modeでも確認します。
+
+マスクは**Textureと同じUV**で読み取られます。Tiling・Offsetと[Texture Sheet Animation](./texture-animation-blink.md)によるUV変換が両方に適用され、マスク専用のTiling・Offsetはありません。アトラスを使う場合は、マスクも同じフレーム配置に合わせます。BillboardとMeshの両方で使用できます。
 
 <span id="set-rendering-bounds"></span>
 
@@ -67,7 +86,8 @@ Additiveは重なる部分が明るくなります。煙などの面として見
 | --- | --- |
 | Meshを選ぶと生成エラーになる | Meshの割り当て、読み取り可否、頂点・三角形 |
 | 透明部分が期待どおりにならない | Blend Mode、テクスチャとStart ColorのAlpha |
-| 極端に暗い、明るい | Start Color、Intensity、Additiveでの重なり |
+| 極端に暗い、明るい | Start Color、Intensity、Intensity Maskの赤チャンネル、Additiveでの重なり |
+| Intensity Maskの効果が出ない、位置がずれる | Intensityが1でないか、マスクの赤チャンネル、Textureと共通のUV・アトラス配置 |
 | 視点によって全体が消える | Culling Boundsと粒子の移動範囲 |
 | 板が大きすぎる | MainのStart Size |
 

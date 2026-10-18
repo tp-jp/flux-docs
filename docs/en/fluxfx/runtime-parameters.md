@@ -18,6 +18,8 @@ To implement a handle for your own module, see [Custom modules](./custom-modules
 | `target.Modules.Gravity`, etc. | `SetGravity`, `SetEnabled` | `TpLab.Flux.FX.Udon.Modules` |
 | `target` | `SetRenderIntensity` | `TpLab.Flux.FX.Udon` |
 
+Changes made with `SetRenderIntensity` also use the [Intensity Mask](./renderer.md#intensity-mask) configured in Renderer. Assign the mask in the Inspector; there is currently no dedicated UdonSharp API for replacing it.
+
 Obtain handles from the target; do not construct them with `new` or edit internal lists. Unconfigured Main/Shape or absent modules can be null; check each handle before using it. Modules included but disabled remain accessible and can be enabled with `SetEnabled(true)`.
 
 <span id="反映されるタイミング"></span>

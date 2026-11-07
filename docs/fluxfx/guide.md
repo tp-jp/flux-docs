@@ -12,6 +12,7 @@
 | --- | --- |
 | [概要](./index.md) | できることと制作の流れ |
 | [導入](./installation.md) | VCC、依存パッケージ、導入確認 |
+| [移行](./migration.md) | 旧設定をAuthoringへ移行、PrefabとSceneの保存 |
 | [クイックスタート](./quickstart.md) | Prefab配置、粒子の表示、初期設定の調整 |
 
 <span id="basics"></span>
@@ -20,7 +21,7 @@
 
 | 章 | 扱う内容 |
 | --- | --- |
-| [Inspectorとプレビュー](./inspector-preview.md) | 設定画面、言語、Editorでの確認 |
+| [Inspectorとプレビュー](./inspector-preview.md) | AuthoringとSystem、設定コピー、プレビュー、ベイクとLive編集 |
 | [Main](./main.md) | 容量、寿命、初速、初期値、シミュレーション空間、再生条件 |
 | [Emission](./emission.md) | 発生頻度とBurst、再生周期との関係 |
 | [Shape](./shape.md) | 発生形状と領域 |

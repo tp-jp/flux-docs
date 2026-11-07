@@ -32,6 +32,7 @@ const jaTheme: DefaultTheme.Config = {
         { text: 'FluxFX', items: [
           { text: '概要', link: '/fluxfx/' },
           { text: '導入', link: '/fluxfx/installation' },
+          { text: '移行', link: '/fluxfx/migration' },
           { text: 'クイックスタート', link: '/fluxfx/quickstart' },
           { text: 'ガイドの目次', link: '/fluxfx/guide' }
         ] },
@@ -98,6 +99,7 @@ const jaTheme: DefaultTheme.Config = {
 const labels: Record<string, string> = {
   "概要": "Overview",
   "導入": "Installation",
+  "移行": "Migration",
   "クイックスタート": "Quick start",
   "ガイドの目次": "Guide contents",
   "基本操作": "Basics",

@@ -12,6 +12,7 @@ Start with installation and the quick start, then explore Inspector settings, mo
 | --- | --- |
 | [Overview](./index.md) | Features and workflow |
 | [Installation](./installation.md) | VCC, dependencies, and verification |
+| [Migration](./migration.md) | Move legacy settings to Authoring; migrate and save Prefabs and Scenes |
 | [Quick start](./quickstart.md) | Add a Prefab, display particles, and adjust initial settings |
 
 <span id="基本操作"></span>
@@ -20,7 +21,7 @@ Start with installation and the quick start, then explore Inspector settings, mo
 
 | Chapter | Topics |
 | --- | --- |
-| [Inspector and preview](./inspector-preview.md) | Settings, language, and Editor preview |
+| [Inspector and preview](./inspector-preview.md) | Authoring and System, copying settings, preview, baking, and Live editing |
 | [Main](./main.md) | Capacity, lifetime, initial speed and other initial values, simulation space, and playback |
 | [Emission](./emission.md) | Rate, bursts, and playback cycles |
 | [Shape](./shape.md) | Spawn shapes and regions |

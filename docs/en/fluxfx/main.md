@@ -1,6 +1,6 @@
 # Main
 
-Main controls particle capacity, playback, and initial values. Set emission frequency in [Emission](./emission.md), and spawn regions and directions in [Shape](./shape.md).
+Main in the FluxParticleAuthoring Inspector controls particle capacity, playback, and initial values. Particle Count and Play On Awake are saved on Authoring and baked into System on entering Play Mode or building a world. Set emission frequency in [Emission](./emission.md), and spawn regions and directions in [Shape](./shape.md).
 
 <span id="容量とシミュレーション空間"></span>
 

@@ -21,7 +21,9 @@ If the fresh Prefab also fails, check dependencies and generation. If only the o
 
 | Symptom | Check |
 | --- | --- |
-| Custom Inspector missing | Select the Prefab root; resolve C# compilation errors |
+| Custom Inspector missing | Open FluxParticleAuthoring (Flux FX Settings) on the Prefab root; resolve C# compilation errors. System uses the standard UdonSharp Inspector |
+| Migration requested | Follow [migration](./migration.md) before editing settings |
+| A field is disabled in Play Mode | Only supported Live fields are editable; edit saved settings after exiting Play Mode |
 | Preview overlay missing | Show the target Inspector in Edit Mode and the FluxFX Preview overlay in Scene view |
 | Preview preparation fails | Inspect preview errors and Console for invalid values, meshes, or missing module definitions |
 | Preview works but Play Mode fails | Check SceneFlow generation, dependencies, and Prefab references |

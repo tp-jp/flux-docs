@@ -388,7 +388,7 @@ Check Set return values. Multiple changes are not atomic; accepted changes remai
 
 1. Save the files and resolve Unity C# compilation errors.
 2. Place a FluxParticleSystem following the [Quick start](./quickstart.md).
-3. Choose **MODULES → Velocity Update → Add Module → Custom → Custom Lift Module**. The display name is generated from the class name.
+3. In the FluxParticleAuthoring Inspector, choose **MODULES → Velocity Update → Add Module → Custom → Custom Lift Module**. The display name is generated from the class name.
 4. In Main, set **Simulation Space** to Local, Start Speed to 0, and Start Lifetime to 3. In Custom Lift Module, set Strength to 2 and Direction to `(0, 1, 0)`. Remove other movement modules for comparison.
 5. Restart the preview and observe upward acceleration. Turn Custom Lift Module's Enabled off and restart again to compare.
 6. Enter Play Mode with normal scene reload enabled and check for generation errors. Call `ApplyLift` after startup and verify the change in strength and direction.

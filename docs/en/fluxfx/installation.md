@@ -13,7 +13,7 @@ Add the package repository to VRChat Creator Companion (VCC), then install FluxF
 | Unity | 2022.3 |
 | VRChat Worlds SDK | 3.10.5 or later, below 4.0.0 |
 | SceneFlow | 2.1.0 or later, below 3.0.0 |
-| Flux | 0.0.4 |
+| Flux | 0.0.5 |
 
 Dependencies may vary by FluxFX version. Follow the dependency requirements of the package you install.
 
@@ -57,6 +57,10 @@ Use this Prefab for effects. Other Prefabs such as Buffer and Step are internal 
 In **Tools → SceneFlow → Debug Window**, verify that FluxFXCompileBuildPass and FluxBuildPass are detected. FluxFX generates the runtime configuration first, then Flux prepares Kernel Materials.
 
 Use normal scene reload for Play Mode. If fast Play Mode settings were changed under **Edit → Project Settings → Editor**, first test with Enter Play Mode Options disabled.
+
+## Updating an existing project {#updating}
+
+Authoring consolidation was released in 0.1.0. When updating older effects, follow [the migration procedure](./migration.md) before editing. The migration saves affected Prefabs under Assets; save changed open Scenes yourself.
 
 <span id="次に読む"></span>
 

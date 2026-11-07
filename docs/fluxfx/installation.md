@@ -13,7 +13,7 @@ VRChat Creator Companion（VCC）に配布リポジトリを登録し、ワー�
 | Unity | 2022.3 |
 | VRChat Worlds SDK | 3.10.5以上、4.0.0未満 |
 | SceneFlow | 2.1.0以上、3.0.0未満 |
-| Flux | 0.0.4 |
+| Flux | 0.0.5 |
 
 依存関係はFluxFXのバージョンによって変わる場合があります。導入するパッケージが要求する依存関係に従ってください。
 
@@ -57,6 +57,10 @@ Packages/com.tplab.flux.fx/Runtime/Prefabs/FluxParticleSystem.prefab
 **Tools → SceneFlow → Debug Window** では、`FluxFXCompileBuildPass`と`FluxBuildPass`が検出されることを確認します。FluxFXの設定から実行用構成を生成した後、Flux側のKernel用Materialを準備する順序になっています。
 
 Play Modeで確認するときは、通常のシーンリロードを有効にします。**Edit → Project Settings → Editor** でEnter Play Modeの高速化設定を変更している場合は、まずEnter Play Mode Optionsを無効にして確認してください。
+
+## 既存プロジェクトを更新する {#updating}
+
+0.1.0で編集設定がAuthoringへ集約されました。以前の構成のエフェクトを更新する場合は、編集前に[移行手順](./migration.md)を実施してください。Assets配下の対象Prefabは移行時に保存されますが、変更された開いているSceneは自分で保存します。
 
 <span id="next-steps"></span>
 

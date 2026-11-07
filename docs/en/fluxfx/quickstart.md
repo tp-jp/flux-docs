@@ -13,7 +13,7 @@ Create a continuous stream of small white particles using the included Prefab. N
 3. Select its root and give it a recognizable name, such as MyFirstFluxFX.
 4. Set Position to `(0, 1, 0)`, Rotation to `(0, 0, 0)`, and Scale to `(1, 1, 1)`.
 
-Adjust the position for your scene, avoiding floors and walls. Keep the Prefab's children and internal references intact. Configure the root FluxParticleSystem through its custom Inspector.
+Adjust the position for your scene, avoiding floors and walls. Keep the Prefab's children and internal references intact. Configure the root FluxParticleAuthoring through its custom Inspector (Flux FX Settings). FluxParticleSystem is the reference used by external Udon for Runtime control.
 
 <span id="inspectorで初期値を設定する"></span>
 
@@ -80,7 +80,7 @@ This example displays white particles without an image texture. Billboard needs 
 3. Click Play if stopped, or Restart to begin again.
 4. Verify that white particles continuously spawn and move away.
 
-The overlay is available while the target Inspector is displayed in Edit Mode. If missing, check Scene view overlay visibility. It provides Play/Pause, Restart, Stop, and elapsed-time information. These Editor controls are separate from similarly named runtime UdonSharp APIs.
+The overlay is available while the target Authoring Inspector is displayed in Edit Mode. If missing, check Scene view overlay visibility. It provides Play/Pause, Restart, Stop, and elapsed-time information. These Editor controls are separate from similarly named runtime UdonSharp APIs.
 
 <span id="play-modeで確認する"></span>
 
@@ -114,8 +114,9 @@ Higher rates and longer lifetimes increase the number of simultaneously alive pa
 
 | Symptom | Check |
 | --- | --- |
-| No custom Inspector | Select the Prefab root and resolve compilation errors |
-| Authoring-required error | Keep FluxParticleAuthoring on the same GameObject; try a fresh Prefab |
+| No custom Inspector | Open FluxParticleAuthoring on the Prefab root and resolve compilation errors |
+| System-required error | Keep FluxParticleSystem on the same GameObject as Authoring; try a fresh Prefab |
+| Settings migration requested | [Migrate legacy data](./migration.md) before editing |
 | No emission | Play On Awake, Rate, lifetime, and preview state |
 | Particles exist but are invisible | Size, color Alpha, Intensity, camera, and position |
 | Preview preparation fails | Console and preview error messages |

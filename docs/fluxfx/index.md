@@ -33,7 +33,7 @@ FluxFXは、VRChat向けのGPUパーティクル・エフェクトシステム�
 
 ## 設定する場所
 
-PrefabのルートにあるFluxParticleSystemを選ぶと、専用Inspectorが表示されます。
+PrefabのルートにあるFluxParticleAuthoringの専用Inspector（Flux FX Settings）で設定します。FluxParticleSystemは外部Udonが参照するRuntimeの入口です。
 
 | セクション | 主な用途 |
 | --- | --- |

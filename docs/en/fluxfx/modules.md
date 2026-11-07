@@ -2,7 +2,7 @@
 
 # Module basics
 
-Modules add movement or appearance changes to the basic particle settings. Select the Prefab root and open MODULES in the FluxParticleSystem Inspector.
+Modules add movement or appearance changes to the basic particle settings. Select the Prefab root and open MODULES in the FluxParticleAuthoring Inspector.
 
 <span id="追加して調整する"></span>
 

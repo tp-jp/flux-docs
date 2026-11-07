@@ -2,7 +2,7 @@
 
 # Inspectorとプレビュー
 
-FluxFXは、FluxParticleSystemの専用Inspectorで設定します。[クイックスタート](./quickstart.md)で配置したPrefabのルートGameObjectを選択してください。子オブジェクトの内部コンポーネントを個別に編集する必要はありません。
+FluxFXの編集設定は、`FluxParticleAuthoring`の専用Inspector（**Flux FX Settings**）で行います。[クイックスタート](./quickstart.md)で配置したPrefabのルートGameObjectを選択してください。子オブジェクトの内部コンポーネントを個別に編集する必要はありません。
 
 <span id="use-the-settings-panel"></span>
 
@@ -19,15 +19,31 @@ FluxFXは、FluxParticleSystemの専用Inspectorで設定します。[クイッ�
 | [Renderer](./renderer.md) | 描画方式、テクスチャ、ブレンド、描画範囲 |
 | Backend | 生成される構成と容量・メモリの参考情報 |
 
-見出しを開いて必要な項目を編集します。設定画面には同じGameObjectのFluxParticleAuthoringが必要です。Authoringが必要というエラーが出た場合は、同梱Prefabの構成を確認してください。
+見出しを開いて必要な項目を編集します。同じGameObjectに`FluxParticleSystem`が必要です。構成が欠けている場合は同梱Prefabと比較してください。Inspectorに移行要求が表示された場合は、[旧データの移行](./migration.md)を済ませてから編集します。
 
-通常の制作ではPlay Modeを終了してから設定を編集し、シーンを保存します。実行時の変更は、対応するUdonSharp APIを使う別の操作です。
+### AuthoringとSystemの役割 {#authoring-and-system}
+
+| コンポーネント | 役割 |
+| --- | --- |
+| `FluxParticleAuthoring` | Particle Count・Play On Awakeを含む全編集設定を保持。Curve・Gradient、標準・カスタムModuleもここで編集する |
+| `FluxParticleSystem` | 外部Udonが参照するRuntimeの入口。再生・停止やパラメーター変更を行う |
+
+SystemのInspectorはUdonSharp標準表示で、設定用のSerializeFieldは非表示です。エフェクトはAuthoringで設定し、外部スクリプトの参照フィールドにはSystemを割り当てます。
+
+### 設定をコピーする {#copy-settings}
+
+1. Play Modeを終了し、コピー元とコピー先を必要に応じて[移行](./migration.md)します。
+2. コピー元の **FluxParticleAuthoring** コンポーネントのメニューから **Copy Component** を選びます。
+3. コピー先Prefabのルートにある **FluxParticleAuthoring** のメニューから **Paste Component Values** を選びます。
+4. Particle Count・Play On Awake、Curve／Gradient、Moduleの設定を確認して、SceneまたはPrefabを保存します。
+
+標準のコピーで編集設定全体を複製できます。Systemに対して設定のコピーを行う必要はありません。貼り付け先は既存のFluxFX Prefabを使い、子オブジェクトとRuntimeの接続を維持してください。
 
 <span id="preview-in-the-scene-view"></span>
 
 ## Sceneビューで確認する
 
-編集モードで対象のInspectorを表示すると、Sceneビューでプレビューできます。対象を選択し、**FluxFX Preview** オーバーレイを表示してください。非アクティブなGameObjectやSceneビューで非表示にしたオブジェクトのプレビューは描画されません。
+編集モードで対象のAuthoring Inspectorを表示すると、Sceneビューでプレビューできます。対象を選択し、**FluxFX Preview** オーバーレイを表示してください。非アクティブなGameObjectやSceneビューで非表示にしたオブジェクトのプレビューは描画されません。
 
 | プレビューのボタン | 動作 |
 | --- | --- |
@@ -49,6 +65,16 @@ Authoringの設定やParticle Countが変わると、プレビュー用の構成
 Unityが非アクティブな間はプレビューの時間更新が止まります。戻ったときに離れていた時間分を一度に計算する動作ではありません。Editorプレビューは更新頻度と時間刻みに上限を設けているため、実機のフレームレート計測には使いません。
 
 Play Modeへ移行するとEditor用プレビューは破棄され、実行時の描画へ切り替わります。プレビューで見た目を調整した後は、Play Modeでも動作を確認してください。
+
+## ベイクとPlay中のLive編集 {#baking-and-live-editing}
+
+Play開始・ワールドビルド時に、Authoringの設定からRuntime用の構成を生成し、Particle Count・Play On AwakeもSystemへベイクします。保存する初期設定は、Play Modeを終了してAuthoringで編集してください。
+
+Play中もAuthoring Inspectorを使います。対応するLive項目は元のセクションに表示され、Runtimeの値を読み書きします。外部UdonがRuntime APIで変更した値にも表示が追従します。**Play中の変更はPlay終了時に破棄されます。**
+
+再生成が必要な項目やInspector更新に未対応の項目は編集できません。Sceneビューの形状ハンドルも編集不可です。未生成・未初期化のLive項目も読み取り専用になるため、表示が無効な項目をSystem側で直接変更しないでください。APIの変更方針がLiveでも、Inspector用の対応がなければ編集できません。
+
+外部Udonからの操作は引き続き[FluxParticleSystemのRuntime API](./runtime-parameters.md)を使用します。
 
 <span id="inspect-the-backend"></span>
 

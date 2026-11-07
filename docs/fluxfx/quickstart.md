@@ -15,7 +15,7 @@
 
 位置はシーンに合わせて変更できます。床や壁の内部を避け、確認しやすい空間に配置してください。
 
-Prefabの子オブジェクトと内部参照はそのまま使います。ルートのFluxParticleSystemコンポーネントに表示される専用Inspectorから設定します。
+Prefabの子オブジェクトと内部参照はそのまま使います。ルートのFluxParticleAuthoringコンポーネントの専用Inspector（Flux FX Settings）から設定します。FluxParticleSystemは外部Udonから操作するときの参照先です。
 
 <span id="configure-initial-settings"></span>
 
@@ -82,7 +82,7 @@ Particle Countは「毎秒生成する数」ではありません。発生頻度
 3. 停止中なら **Play**、最初から確認するなら **Restart** を押します。
 4. 周囲へ移動する白い粒子が継続して発生することを確認します。
 
-オーバーレイは、対象のInspectorを表示している編集時に利用できます。見つからない場合は、Sceneビューのオーバーレイ表示設定でFluxFX Previewを確認してください。
+オーバーレイは、対象のAuthoring Inspectorを表示している編集時に利用できます。見つからない場合は、Sceneビューのオーバーレイ表示設定でFluxFX Previewを確認してください。
 
 プレビューにはPlay／Pause、Restart、Stopと経過時間などの表示があります。Editor用のプレビュー操作と、UdonSharpから呼ぶ同名の再生APIは別のものです。
 
@@ -118,8 +118,9 @@ Play Modeを終了してから次の項目を1つずつ変更し、プレビュ�
 
 | 症状 | 確認すること |
 | --- | --- |
-| 専用Inspectorが出ない | Prefabのルートを選んでいるか、コンパイルエラーがないか確認する |
-| Authoringが必要というエラー | 同じGameObjectのFluxParticleAuthoringを削除していないか確認する。最初はPrefabを新しく配置して試す |
+| 専用Inspectorが出ない | PrefabのルートのFluxParticleAuthoringを開いているか、コンパイルエラーがないか確認する |
+| Systemが必要というエラー | Authoringと同じGameObjectのFluxParticleSystemを削除していないか確認する。最初はPrefabを新しく配置して試す |
+| 設定の移行を求められる | [旧データを移行](./migration.md)してから編集する |
 | 粒子が発生しない | Play On Awake、Rate over Time、Start Lifetime、プレビューの再生状態を確認する |
 | 発生しているが見えない | Start Size、Start ColorのAlpha、Intensity、視点と配置位置を確認する |
 | プレビューの準備で止まる | Consoleとプレビューのエラー表示を確認する |

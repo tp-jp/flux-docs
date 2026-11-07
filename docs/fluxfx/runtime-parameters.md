@@ -4,6 +4,8 @@
 
 `FluxParticleSystem`からMain・Emission・Shape・各モジュールの操作ハンドルを取得し、型付きのメソッドで値を変更します。Inspectorで用意した構成を、実行中に調整するためのAPIです。
 
+保存する初期設定はFluxParticleAuthoringで用意します。外部Udonからは同じGameObjectのFluxParticleSystemを参照してください。Play中はAuthoring Inspectorの対応項目もRuntime APIによる変更に追従します。[ベイクとLive編集](./inspector-preview.md#baking-and-live-editing)も参照してください。
+
 独自モジュールのハンドルを実装する方法は[カスタムモジュール](./custom-modules.md#runtime-handle)を参照してください。
 
 <span id="api-entry-points"></span>

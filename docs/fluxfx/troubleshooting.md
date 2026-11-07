@@ -21,7 +21,9 @@
 
 | 症状 | 確認すること |
 | --- | --- |
-| 専用Inspectorが表示されない | Prefabのルートを選んでいるか、C#のコンパイルエラーがないか |
+| 専用Inspectorが表示されない | PrefabルートのFluxParticleAuthoring（Flux FX Settings）を開き、C#のコンパイルエラーを確認する。SystemはUdonSharp標準Inspectorを使用する |
+| 移行要求が表示される | 設定を編集する前に[移行](./migration.md)を行う |
+| Play中に項目を編集できない | 対応するLive項目だけが編集可能。保存する初期設定はPlayを終了して編集する |
 | Previewオーバーレイが見つからない | 編集時に対象Inspectorを表示しているか、SceneビューでFluxFX Previewが表示されているか |
 | プレビューの準備に失敗する | プレビューのエラー表示とConsoleを確認する。非対応の値、Mesh、モジュールの定義不足を調べる |
 | プレビューでは表示できるがPlay Modeで失敗する | SceneFlowの生成処理と依存関係、Prefabの内部参照を確認する |

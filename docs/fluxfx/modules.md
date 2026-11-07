@@ -2,7 +2,7 @@
 
 # モジュールの基本
 
-モジュールは、粒子の基本設定に動きや見た目の変化を追加する機能です。Prefabのルートを選び、FluxParticleSystemのInspectorにある **MODULES** から設定します。
+モジュールは、粒子の基本設定に動きや見た目の変化を追加する機能です。Prefabのルートを選び、FluxParticleAuthoringのInspectorにある **MODULES** から設定します。
 
 <span id="add-and-adjust-a-module"></span>
 

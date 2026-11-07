@@ -23,7 +23,7 @@ Flux provides GPU computing using RenderTextures and shaders. FluxFX builds part
 
 ## Inspector settings and Modules {#authoring}
 
-`FluxParticleAuthoring` holds settings needed to generate the runtime configuration, including Main, Shape, Renderer, and the module list. Each Module is a settings object stored in that list. For example, CustomLift holds Strength and Direction.
+`FluxParticleAuthoring` owns the custom Inspector and all editable settings, including Particle Count, Play On Awake, Main, Emission, Shape, Renderer, curves, gradients, and the module list. These settings are baked into Runtime on Play/world build. Each Module is a settings object stored in that list. For example, CustomLift holds Strength and Direction.
 
 A Module is not an individual UdonSharpBehaviour running every frame. The Editor reads its settings and incorporates its processing through the corresponding Definition. Stage determines the Inspector display group; Operation dependencies determine execution order.
 

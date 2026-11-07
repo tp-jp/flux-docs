@@ -33,7 +33,7 @@ You can create your first effect without writing C# or shaders. Add UdonSharp co
 
 ## Where to configure it
 
-Select FluxParticleSystem on the Prefab root to open its custom Inspector.
+Use the custom FluxParticleAuthoring Inspector (Flux FX Settings) on the Prefab root for settings. FluxParticleSystem is the Runtime entry point referenced by external Udon.
 
 | Section | Purpose |
 | --- | --- |

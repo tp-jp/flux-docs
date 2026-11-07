@@ -1,6 +1,6 @@
 # Main
 
-Mainでは、粒子の容量、再生条件、生成時の初期値を設定します。発生頻度は[Emission](./emission.md)、方向と発生領域は[Shape](./shape.md)で指定します。
+FluxParticleAuthoringのMainで、粒子の容量、再生条件、生成時の初期値を設定します。Particle CountとPlay On AwakeもAuthoringに保存され、Play開始・ビルド時にSystemへベイクされます。発生頻度は[Emission](./emission.md)、方向と発生領域は[Shape](./shape.md)で指定します。
 
 <span id="capacity-and-simulation-space"></span>
 

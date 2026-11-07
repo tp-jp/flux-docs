@@ -388,7 +388,7 @@ Setメソッドの戻り値を確認します。複数の変更は一括処理�
 
 1. ファイルを保存し、UnityのC#コンパイルエラーを解消します。
 2. [クイックスタート](./quickstart.md)のFluxParticleSystemを配置します。
-3. **MODULES → Velocity Update → Add Module → Custom → Custom Lift Module** を選びます。表示名は型名から生成されます。
+3. FluxParticleAuthoringのInspectorで **MODULES → Velocity Update → Add Module → Custom → Custom Lift Module** を選びます。表示名は型名から生成されます。
 4. Mainの **Simulation Space** をLocal、Start Speedを0、Start Lifetimeを3にし、Custom Lift ModuleのStrengthを2、Directionを`(0, 1, 0)`にします。他の動きのモジュールは外して比較します。
 5. プレビューをRestartし、上向きに加速する粒子を確認します。Custom Lift ModuleのEnabledをオフにし、もう一度Restartして差を確認します。
 6. 通常のシーンリロードを有効にしてPlay Modeへ入り、生成エラーがないことを確認します。実行開始後に`ApplyLift`を呼び、強さと方向が変わることを確認します。

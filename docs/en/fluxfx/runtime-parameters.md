@@ -4,6 +4,8 @@
 
 Get handles for Main, Emission, Shape, and modules from `FluxParticleSystem`, then use typed methods to adjust the configuration prepared in the Inspector.
 
+Prepare saved settings in FluxParticleAuthoring. External Udon scripts reference FluxParticleSystem on the same GameObject. During Play Mode, supported fields in the Authoring Inspector follow Runtime API changes. See [baking and Live editing](./inspector-preview.md#baking-and-live-editing).
+
 To implement a handle for your own module, see [Custom modules](./custom-modules.md#runtime-handle).
 
 <span id="操作の入口"></span>

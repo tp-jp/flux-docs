@@ -10,6 +10,8 @@ Edit FluxFX settings in the custom `FluxParticleAuthoring` Inspector (**Flux FX 
 
 Language / 言語 switches between English and Japanese. This guide uses the English field names.
 
+Custom modules can provide their own translations for headings and fields. Module authors can follow [Inspector language switching](./custom-modules.md#localization).
+
 | Section | Contents |
 | --- | --- |
 | [Main](./main.md) | Capacity, playback, and initial lifetime/speed values |

@@ -222,14 +222,33 @@ Save as `Editor/CustomLiftDefinition.cs`. Inherit from `FluxParticleModuleDefini
 
 ```csharp
 using TpLab.Flux.FX.Editor.Compilation.Definitions;
+using TpLab.Flux.FX.Editor.Localization;
 using TpLab.Flux.FX.Editor.Modules;
 using TpLab.Flux.FX.Editor.Modules.Shared;
 
 namespace TpLab.Flux.FX.CustomModules.Editor
 {
-    public sealed class CustomLiftDefinition : FluxParticleModuleDefinition<CustomLiftModule>
+    public sealed class CustomLiftDefinition : FluxParticleModuleDefinition<CustomLiftModule>, IFluxParticleModuleLocalization
     {
         public override string ModuleId => CustomLiftContract.Module.Id;
+
+        /// <summary>
+        /// Translates Custom Lift labels for the selected Inspector language.
+        /// </summary>
+        /// <param name="text">Original display text</param>
+        /// <param name="language">Selected Inspector language</param>
+        /// <returns>Japanese translation, or null for standard fallback</returns>
+        public string Translate(string text, Language language)
+        {
+            if (language != Language.Japanese) return null;
+            return text switch
+            {
+                "Custom Lift Module" => "カスタムリフト",
+                "Strength" => "強さ",
+                "Direction" => "方向",
+                _ => null
+            };
+        }
 
         public override void Contribute(CustomLiftModule lift, FluxParticleProgramContribution context)
         {
@@ -280,6 +299,38 @@ This example's `optionalDependencies` places it after the standard writers prese
 Consequently, **velocity added here is not affected by Drag or Limit Velocity in the same update**. To enforce a final speed limit, revise the dependencies between velocity-writing operations. Changing Inspector insertion order or Stage alone does not set execution order.
 
 For the velocity pipeline, the compiler connects reads to the preceding writer's result. Declaring `StepPrevious` does not mean standard module results are always ignored. When multiple custom modules write the same value, explicitly establish their order and avoid dependency cycles.
+
+## Support Inspector language switching {#localization}
+
+The Definition above implements the optional `IFluxParticleModuleLocalization` interface. Its `Translate(string text, Language language)` method, in `TpLab.Flux.FX.Editor.Localization`, receives the original display text and the selected Inspector language: `Language.English` or `Language.Japanese`. Implement it on the Editor-side Definition, rather than the Runtime Module class or Contract. No separate registration or edits to FluxFX's translation files are required.
+
+The bundled Custom Lift and the code above translate three strings: `Custom Lift Module`, `Strength`, and `Direction`. Custom Lift has no `[Tooltip]` attributes on its fields.
+
+The table below lists the strings FluxFX passes for translation during normal automatic drawing. Keys are display strings for each UI element, not Parameter IDs.
+
+| Target | Translation key |
+| --- | --- |
+| Module heading and name in Add Module | Nicified Module class name: `Custom Lift Module` in this example |
+| Automatically drawn field label | SerializedProperty displayName: `Strength` and `Direction` here |
+| Field tooltip | `SerializedProperty.tooltip`: the attribute text when `[Tooltip("...")]` is specified |
+| Automatically drawn enum option | `SerializedProperty.enumDisplayNames`, which may contain spaces absent from the code member name |
+
+**Illustrative extension: adding a tooltip**
+
+This example demonstrates tooltip translation and is not included in the bundled sample. Adding `[Tooltip("Acceleration strength.")]` on its own line above the Module's strength field passes `"Acceleration strength."` when translating the tooltip. Add `"Acceleration strength." => "加速度の強さ。",` to the Translate switch to translate it. Translating the field label separately passes its `displayName`, `"Strength"`.
+
+Resolution follows **module-specific translation → FluxFX standard translation → original text**. Return `null` or an empty string to fall back to standard translation. The example translates only three Japanese strings, leaving English and undefined entries to the standard display. Returning the original text accepts that text as the result and bypasses standard translation.
+
+If you cache translations, resolve them per language. Caching only the first translation prevents the display from following Inspector language changes. Translating labels does not change Module IDs, Parameter IDs, Operation IDs, or saved setting values.
+
+Text drawn internally by a custom PropertyDrawer is not automatically translated by this interface; handle it in the Drawer. Supported Live fields also translate labels and enum options during Play Mode, but use a shared tooltip describing Runtime values and discarded changes. Localization does not itself add support for Live editing.
+
+### Verify language switching {#localization-checks}
+
+1. Switch **Language / 言語** between English and Japanese in the Authoring Inspector.
+2. Check the Add Module name, added module heading, field labels, and any tooltips and enum options you defined. Here, Custom Lift Module / Strength / Direction become カスタムリフト / 強さ / 方向.
+3. Confirm undefined keys fall back to standard translations or original text, and switching back restores the display.
+4. If your fields support Live editing, check their display during Play Mode too. Switching languages should not change setting values or Runtime operations.
 
 ## Write the HLSL {#hlsl}
 

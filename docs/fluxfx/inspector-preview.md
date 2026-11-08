@@ -10,6 +10,8 @@ FluxFXの編集設定は、`FluxParticleAuthoring`の専用Inspector（**Flux FX
 
 **Language / 言語** でEnglishと日本語を切り替えられます。このガイドでは、対応する項目を探しやすいよう英語の項目名を併記します。
 
+カスタムモジュールも、作者が翻訳を定義した見出しや項目は言語切り替えに対応します。開発方法は[Inspectorの言語切り替え対応](./custom-modules.md#localization)を参照してください。
+
 | セクション | 内容 |
 | --- | --- |
 | [Main](./main.md) | 容量、再生条件、寿命や初速などの初期値 |

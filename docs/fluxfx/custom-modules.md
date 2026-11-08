@@ -222,14 +222,33 @@ enumの番号は0から連続させ、ContractとHandleで同じ対応を使い�
 
 ```csharp
 using TpLab.Flux.FX.Editor.Compilation.Definitions;
+using TpLab.Flux.FX.Editor.Localization;
 using TpLab.Flux.FX.Editor.Modules;
 using TpLab.Flux.FX.Editor.Modules.Shared;
 
 namespace TpLab.Flux.FX.CustomModules.Editor
 {
-    public sealed class CustomLiftDefinition : FluxParticleModuleDefinition<CustomLiftModule>
+    public sealed class CustomLiftDefinition : FluxParticleModuleDefinition<CustomLiftModule>, IFluxParticleModuleLocalization
     {
         public override string ModuleId => CustomLiftContract.Module.Id;
+
+        /// <summary>
+        /// Custom Liftの表示文言をInspectorの言語に合わせます。
+        /// </summary>
+        /// <param name="text">翻訳前の表示文言</param>
+        /// <param name="language">Inspectorで選択中の言語</param>
+        /// <returns>日本語の表示文言、または標準表示へ委ねるnull</returns>
+        public string Translate(string text, Language language)
+        {
+            if (language != Language.Japanese) return null;
+            return text switch
+            {
+                "Custom Lift Module" => "カスタムリフト",
+                "Strength" => "強さ",
+                "Direction" => "方向",
+                _ => null
+            };
+        }
 
         public override void Contribute(CustomLiftModule lift, FluxParticleProgramContribution context)
         {
@@ -280,6 +299,38 @@ namespace TpLab.Flux.FX.CustomModules.Editor
 したがって、**この例で加えた速度には、その更新のDragやLimit Velocityは適用されません**。最大速度で制限したい場合は、速度を書き換えるOperation間の依存関係を見直します。Inspectorで追加する順番やStageを変えるだけでは順序を指定できません。
 
 速度の処理列では、コンパイラーが先行するWriterの結果へ読み取りを接続します。`StepPrevious`が書かれていても、標準モジュールの計算結果を常に無視するという意味ではありません。複数のカスタムモジュールが同じ値を書き換える場合も、順序を明確にし、循環依存を避けます。
+
+## Inspectorの言語切り替えに対応する {#localization}
+
+上のDefinitionは、任意の `IFluxParticleModuleLocalization` を実装しています。`TpLab.Flux.FX.Editor.Localization`の`Translate(string text, Language language)`に、翻訳前の表示文言とInspectorで選択中の言語（`Language.English`／`Language.Japanese`）が渡されます。ModuleのRuntimeクラスやContractではなく、Editor側のDefinitionへ実装してください。別の登録操作やFluxFX本体の翻訳ファイルの編集は不要です。
+
+同梱のCustom Liftと上のコード例で翻訳しているのは、`Custom Lift Module`・`Strength`・`Direction`の3つです。Custom Liftのフィールドには`[Tooltip]`の指定はありません。
+
+以下は、FluxFX本体が通常の自動描画で翻訳へ渡す文字列です。キーはParameter IDではなく、表示する箇所ごとの文字列です。
+
+| 対象 | 翻訳キー |
+| --- | --- |
+| モジュールの見出し・Add Module内の名前 | Moduleクラス名をNicifyした文字列。この例は`Custom Lift Module` |
+| 自動描画される項目名 | SerializedPropertyのdisplayName。この例は`Strength`・`Direction` |
+| 項目のTooltip | `SerializedProperty.tooltip`。`[Tooltip("...")]`がある場合はその文言 |
+| 自動描画されるenum選択肢 | `SerializedProperty.enumDisplayNames`。コード上のメンバー名と空白の入り方が異なる場合がある |
+
+**説明用の拡張例：Tooltipを追加する場合**
+
+以下は同梱サンプルに含まれていない、Tooltip翻訳の使い方の例です。Moduleのstrengthフィールドへ`[Tooltip("Acceleration strength.")]`を別行で追加すると、Tooltipの翻訳時には`"Acceleration strength."`が渡されます。Translateのswitchへ`"Acceleration strength." => "加速度の強さ。",`を追加して翻訳できます。項目名の翻訳時には、これとは別に`displayName`の`"Strength"`が渡されます。
+
+翻訳は **モジュール固有の翻訳 → FluxFX標準の翻訳 → 元の文言** の順で解決されます。`null`または空文字を返すと標準翻訳へ委ねます。上の例は日本語の3項目だけを翻訳し、英語や未定義の項目は標準表示に任せます。元の文言を返すと、その文言で確定して標準翻訳へ進みません。
+
+翻訳結果を保持する場合も、言語ごとに解決してください。初回の翻訳だけをキャッシュすると、Inspectorの言語を切り替えても表示が追従しなくなります。表示名を翻訳しても、Module ID・Parameter ID・Operation IDや保存する設定値は変更しません。
+
+独自PropertyDrawerが内部で描く文字列は、このインターフェースでは自動翻訳されません。Drawer側で扱います。また、Play中の対応するLive項目でもラベルとenum選択肢は翻訳されますが、TooltipはRuntime値と変更破棄を説明する共通文言になります。翻訳対応だけでLive編集への対応が追加されるわけではありません。
+
+### 言語切り替えを確認する {#localization-checks}
+
+1. Authoring Inspectorの **Language / 言語** をEnglishと日本語で切り替えます。
+2. Add Moduleの名前、追加後の見出し、項目名、設定したTooltipとenum選択肢を確認します。この例ではCustom Lift Module／Strength／Directionがカスタムリフト／強さ／方向になります。
+3. 未定義のキーが標準翻訳または元の文言で表示されることと、言語を戻すと表示も戻ることを確認します。
+4. Live編集に対応させた項目がある場合は、Play中の表示も確認します。言語を切り替えても設定値やRuntime操作が変わらないことを確認してください。
 
 ## HLSLを書く {#hlsl}
 

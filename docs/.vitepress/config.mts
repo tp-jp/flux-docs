@@ -57,6 +57,7 @@ const jaTheme: DefaultTheme.Config = {
           { text: '状態と粒子数の取得', link: '/fluxfx/state-and-count' }
         ] },
         { text: 'カスタムモジュール開発', items: [
+          { text: 'カスタムモジュール入門', link: '/fluxfx/custom-module-quickstart' },
           { text: '全体構成', link: '/fluxfx/architecture' },
           { text: 'カスタムモジュール', link: '/fluxfx/custom-modules' },
           { text: 'データと実行モデル', link: '/fluxfx/data-and-execution' },
@@ -117,6 +118,7 @@ const labels: Record<string, string> = {
   "モジュール": "Modules",
   "モジュールの基本": "Module basics",
   "カスタムモジュール": "Custom modules",
+  "カスタムモジュール入門": "Custom module quick start",
   "カスタムモジュール開発": "Custom module development",
   "全体構成": "Architecture",
   "データと実行モデル": "Data and execution model",

@@ -54,6 +54,7 @@
 
 | 章 | 扱う内容 |
 | --- | --- |
+| [カスタムモジュール入門](./custom-module-quickstart.md) | 生成して動かし、HLSLを変更する（開発版） |
 | [全体構成](./architecture.md) | 設定からコンパイル・実行・描画までの流れと役割分担 |
 | [カスタムモジュール](./custom-modules.md) | 独自の設定・GPU処理・UdonSharp用ハンドルの作成 |
 | [データと実行モデル](./data-and-execution.md) | Phase、Value、Provider、読み書き、Parameterの設計 |

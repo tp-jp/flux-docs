@@ -2,6 +2,8 @@
 
 カスタムモジュールを作ると、独自の粒子処理をInspectorの **Add Module** から追加できます。ここでは、FluxFXの実装例`CustomLift`を基に、時間で強さが変わる加速度を追加します。モジュール作者向けの章です。[モジュールの基本](./modules.md)と[実行時のパラメーター変更](./runtime-parameters.md)を先に確認してください。
 
+初めて作る場合は、開発版の生成機能を使う[カスタムモジュール入門](./custom-module-quickstart.md)から始められます。この章では、Custom Liftを手動で作成しながら各ファイルを説明します。
+
 ## この章の進め方 {#reading-guide}
 
 最初に[FluxFXの全体構成](./architecture.md)で、Editorでの処理生成と実行時の役割分担を確認してください。この章では、その仕組みに独自の処理を追加します。

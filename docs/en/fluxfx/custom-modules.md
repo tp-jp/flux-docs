@@ -2,6 +2,8 @@
 
 Custom modules let you add your own particle processing through **Add Module** in the Inspector. This chapter uses the `CustomLift` example from the FluxFX implementation to add acceleration whose strength changes over time. This chapter is intended for module authors. Read [Module basics](./modules.md) and [Runtime parameters](./runtime-parameters.md) first.
 
+First-time authors can start with [Custom module quick start](./custom-module-quickstart.md), which uses the development-version generator. This chapter explains the individual files through the manual Custom Lift example.
+
 ## How to use this chapter {#reading-guide}
 
 First read [FluxFX architecture](./architecture.md) to understand processing generation in the Editor and runtime responsibilities. This chapter adds custom processing to that system.

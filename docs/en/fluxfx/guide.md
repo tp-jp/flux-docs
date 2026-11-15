@@ -54,6 +54,7 @@ Start with installation and the quick start, then explore Inspector settings, mo
 
 | Chapter | Topics |
 | --- | --- |
+| [Custom module quick start](./custom-module-quickstart.md) | Generate a module, preview it, and change its HLSL (development version) |
 | [Architecture](./architecture.md) | Settings, compilation, execution, rendering, and component responsibilities |
 | [Custom modules](./custom-modules.md) | Creating custom settings, GPU operations, and UdonSharp handles |
 | [Data and execution model](./data-and-execution.md) | Phases, Values, Providers, reads/writes, and Parameter design |

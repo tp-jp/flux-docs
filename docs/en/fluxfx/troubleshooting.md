@@ -43,7 +43,7 @@ See [installation](./installation.md). Confirm SceneFlow Debug Window detects `F
 | Completed non-looping schedule | Use Restart; Play does not rewind |
 | Start Lifetime | Avoid zero or very short values; try 3 seconds |
 | Start Size / Start Color / Intensity | Check nonzero size and RGB intensity; check alpha for transparent blends |
-| Modules | Temporarily disable size/color changes and Blink |
+| Modules | Temporarily disable size/color changes and Brightness |
 | Placement and camera | Check walls/floor, visibility, and layers |
 | Culling Bounds | Include the full particle and trail area |
 
@@ -68,10 +68,10 @@ Lower Rate, shorten lifetime, spread bursts out, or increase capacity if appropr
 | Gradient colors differ | Gradient multiplies Start Color; try white |
 | Final rotation differs | End Rotation adds to the initial rotation |
 | Texture frames do not change | Check for Tiles 1×1 or Cycles 0 |
-| No blinking | Check Frequency 0, Duty 1, Minimum 1, Target, and Blend Mode |
+| No blinking | Check Brightness Waveform, Period, Minimum / Maximum, Duty, Target, and Blend Mode |
 | Transparent overlap looks wrong | No per-particle depth sorting; adjust density, size, or blending |
 
-See [Renderer](./renderer.md), [appearance over lifetime](./lifetime-appearance.md), and [texture animation and blinking](./texture-animation-blink.md).
+See [Renderer](./renderer.md), [appearance over lifetime](./lifetime-appearance.md), [texture animation](./texture-animation-blink.md), and [Brightness](./brightness.md).
 
 <span id="trailsが表示されない・途切れる"></span>
 
@@ -144,3 +144,15 @@ If the issue persists, record package versions, environment, the first Console e
 | Distance Fade has no effect | Check that the camera uses perspective projection, End Distance exceeds Start Distance, and all three axes have the same scale factor. Also check distance from the system origin and whether Target matches the blend mode |
 
 See [Audio Input](./audio-input.md) and [Distance Fade](./distance-fade.md) for details.
+
+## Brightness audio and legacy data {#brightness}
+
+| Symptom | Check |
+| --- | --- |
+| Brightness does not change over time | Check for Waveform Off, Period 0, or equal Minimum and Maximum. Pulse also stays constant with Duty 0 or 1 |
+| Enabling audio causes a build error | Add Audio Input to the same System. With Audio Enabled on, this dependency remains even if Brightness is disabled |
+| No audio brightening | Turn on Audio Enabled before Play. Check both modules' Enabled states, Audio Boost, AudioLink input, and Audio Input Gain / Strength |
+| Changing Band or Attack / Release does not affect Brightness | Brightness uses the four-band average and its own Audio Attack / Release |
+| Legacy Blink appears as missing | Preserve the old module and follow the [migration steps](./brightness.md#migration) |
+
+Without AudioLink, input is zero. See [Brightness](./brightness.md) for settings.

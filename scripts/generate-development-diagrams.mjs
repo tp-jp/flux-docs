@@ -21,7 +21,7 @@ for (const lang of ['ja', 'en']) {
       box(20, 496, 440, 70, ['custom-position', ja ? 'AfterOperation で位置を読む' : 'Reads position with AfterOperation'], true)
     })
 
-    diagram('standard-pipelines', lang, dark, 662, ja ? '標準の速度と描画色の処理列' : 'Standard velocity and rendering color pipelines', ({ box, arrow, text, heading }) => {
+    diagram('standard-pipelines', lang, dark, 662, ja ? '標準の速度と描画色の処理順' : 'Standard velocity and rendering color pipelines', ({ box, arrow, text, heading }) => {
       heading(27, ja ? 'UPDATE / 速度から位置へ' : 'UPDATE / VELOCITY TO POSITION')
       box(20, 50, 440, 114, ['Value: particle.velocity', 'gravity → force → noise', '→ vortex → drag → limit-velocity', ja ? '存在する速度Writerを順に接続' : 'Connect the velocity writers present'], true)
       arrow('M240 168 V210')
@@ -30,8 +30,8 @@ for (const lang of ['ja', 'en']) {
       arrow('M240 292 V328')
       text(260, 315, 'particle.position', 15, undefined, 400, 'start')
       box(20, 336, 440, 70, ['velocity-over-lifetime', ja ? 'さらに位置を変更' : 'Further modify position'])
-      heading(467, ja ? 'RENDER / 描画色の処理列' : 'RENDER / COLOR PIPELINE', true)
-      box(20, 490, 440, 114, ['Value: render.color', 'render.start → render.color → render.blink', ja ? '直前のWriterの結果を次へ渡す' : 'Pass each result to the next writer', ja ? 'Updateとは別のPhase' : 'A separate Phase from Update'], true)
+      heading(467, ja ? 'RENDER / 描画色の処理順' : 'RENDER / COLOR PIPELINE', true)
+      box(20, 490, 440, 132, ['Value: render.color', 'render.start → render.color', '→ render.brightness', ja ? '直前のWriterの結果を次へ渡す' : 'Pass each result to the next writer', ja ? 'Updateとは別のPhase' : 'A separate Phase from Update'], true)
       text(240, 637, ja ? '描画サイズ・回転・UVは、それぞれ別の依存関係' : 'Size, rotation, and UVs have separate dependencies', 15)
     })
 

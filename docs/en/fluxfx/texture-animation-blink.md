@@ -1,8 +1,9 @@
 <span id="テクスチャアニメーションと点滅"></span>
+<span id="texture-animation-and-blinking"></span>
 
-# Texture animation and blinking
+# Texture Sheet Animation
 
-Texture Sheet Animation selects frames within a texture; Blink periodically changes color or alpha. Add either through **MODULES → Rendering → Add Module**.
+Texture Sheet Animation selects frames within a texture. Add it through **MODULES → Rendering → Add Module**.
 
 ## Texture Sheet Animation
 
@@ -36,54 +37,15 @@ Cycles 0 displays the first frame. Fractional values are supported: 0.5 covers h
 
 Renderer Tiling and Offset are applied together with frame selection. Restore these values first if only part of the image appears. The default 1×1 grid does not animate.
 
-## Blink
-
-Multiplies rendered color components by a value between Minimum and 1.
-
-| Setting | Default | Meaning |
-| --- | --- | --- |
-| Frequency | 2 | Cycles per second, nonnegative |
-| Duty | 0.5 | Bright fraction of a cycle, 0–1 |
-| Minimum | 0 | Multiplier during the dark interval, 0–1 |
-| Smoothness | 0 | Softness of transitions, 0–1 |
-| Random Phase | 0 | Per-particle timing variation, 0–1 |
-| Time Mode | SystemTime | Time source |
-| Target | Alpha | Components to multiply |
-
-Frequency 2, Duty 0.5, and Smoothness 0 alternate bright and dark about every 0.25 seconds. Minimum 0.2 retains 20% during the dark interval. Increase Smoothness for gentler transitions.
-
+<span id="time-and-timing"></span>
+<span id="target-and-blending"></span>
+<span id="when-nothing-changes"></span>
 <span id="時間とタイミング"></span>
-
-### Time and timing
-
-| Time Mode | Behavior |
-| --- | --- |
-| SystemTime | Uses elapsed simulation time; Random Phase 0 aligns particles in the same system |
-| ParticleAge | Uses time since each particle's birth; emission times offset cycles |
-
-SystemTime is neither wall-clock time nor shared network time. Random Phase offsets cycles using a value determined for each spawned particle.
-
 <span id="targetとブレンド"></span>
-
-### Target and blending
-
-| Target | Affected components |
-| --- | --- |
-| Rgb | Darkens RGB only |
-| Alpha | Reduces alpha only |
-| Both | Reduces RGB and alpha |
-
-For blinking through transparency, try Renderer Blend Mode Alpha and Target Alpha. Rgb makes colors approach black, so black particles may remain with Alpha blending. Opaque does not use alpha for transparency.
-
-Both multiplies RGB and alpha. Blends such as Additive also use alpha during rendering, so this can darken more than Rgb alone. Blink further multiplies any [color over lifetime](./lifetime-appearance.md).
-
 <span id="変化しない場合"></span>
 
-### When nothing changes
+<span id="blink"></span>
 
-- Frequency 0 disables blink attenuation.
-- Duty 1 always uses multiplier 1.
-- Minimum 1 removes the bright/dark difference.
-- Positive Frequency with Duty 0 always uses Minimum.
+## Brightness replaces Blink
 
-Compare with Frequency 2, Duty 0.5, Minimum 0, Smoothness 0, and Random Phase 0. Blink affects particles, not [Trails](./trails.md).
+For brightness variation, smooth modulation, and blinking, see [Brightness](./brightness.md). Legacy settings require [migration](./brightness.md#migration).

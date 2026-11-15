@@ -48,7 +48,8 @@ const jaTheme: DefaultTheme.Config = {
           { text: '力と速度', link: '/fluxfx/forces' },
           { text: '動きの変化', link: '/fluxfx/motion' },
           { text: '寿命に応じた見た目', link: '/fluxfx/lifetime-appearance' },
-          { text: 'テクスチャアニメーションと点滅', link: '/fluxfx/texture-animation-blink' },
+          { text: 'テクスチャアニメーション', link: '/fluxfx/texture-animation-blink' },
+          { text: 'Brightness', link: '/fluxfx/brightness' },
           { text: 'Trails', link: '/fluxfx/trails' },
           { text: 'Distance Fade', link: '/fluxfx/distance-fade' },
           { text: 'Audio Input', link: '/fluxfx/audio-input' }
@@ -129,7 +130,7 @@ const labels: Record<string, string> = {
   "力と速度": "Forces and velocity",
   "動きの変化": "Motion effects",
   "寿命に応じた見た目": "Appearance over lifetime",
-  "テクスチャアニメーションと点滅": "Texture animation and blinking",
+  "テクスチャアニメーション": "Texture Sheet Animation",
   "UdonSharpからの制御": "Controlling FluxFX from UdonSharp",
   "再生と停止": "Playback controls",
   "実行時のパラメーター変更": "Runtime parameters",

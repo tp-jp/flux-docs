@@ -1,6 +1,6 @@
 # Audio Input
 
-AudioLinkの入力を読み取り、他のモジュールが使う音声応答を供給します。**追加しただけでは色・サイズ・動きは変わりません。** 応答を読むカスタムモジュールなどと組み合わせます。
+AudioLinkの入力を読み取り、他のモジュールが使う音声応答を供給します。**追加しただけでは色・サイズ・動きは変わりません。** 音声増光を有効にした[Brightness](./brightness.md#audio)や、入力を読むカスタムモジュールと組み合わせます。
 
 ## 追加と準備 {#setup}
 
@@ -38,7 +38,9 @@ AudioLinkを後から導入した場合は、Previewを作り直すかPlay Mode�
 
 入力が使えない場合、Timeoutを超えて更新が止まった場合、Enabledをオフにした場合は、応答がゼロへ減衰します。**無効化しても減衰用の更新は続きます。** 負荷を比較する場合はモジュールを削除した構成とも比較してください。
 
-カスタムモジュールで読むには、[音声応答の読み取り契約](./custom-module-reference.md#input-appearance)を使います。標準のColor over Lifetimeなどへ自動接続する機能ではありません。
+[Brightness](./brightness.md#audio)はこのresponseを使わず、未平滑化の4音域平均から独自の応答を計算します。Brightnessの反応速度はAudio InputのAttack／Release／Slow Responseではなく、BrightnessのAudio Attack／Releaseで調整します。Bandの選択もBrightnessには影響しません。
+
+カスタムモジュールで平滑化済みの応答を読むには、[音声応答の読み取り契約](./custom-module-reference.md#audio-response-read)を使います。独自に平滑化する場合は[ReadSample／ReadFreshness](./custom-module-reference.md#brightness)を使います。標準のColor over Lifetimeなどへ自動接続する機能ではありません。
 
 ## Runtimeから変更する {#runtime}
 
@@ -50,7 +52,7 @@ Band、Gain、NoiseFloor、Strength、Attack、Release、SlowResponse、AverageG
 
 ## 反応しない場合 {#troubleshooting}
 
-- Audio Inputの応答を使うモジュールを組み込んでいるか確認します。
+- 音声増光を有効にしたBrightnessなど、Audio Inputの入力や応答を使うモジュールを組み込んでいるか確認します。
 - AudioLinkの導入と入力供給を確認します。音声が再生されているだけでは、AudioLink入力が有効とは限りません。
 - Enabled、Gain、Strength、Noise Floor、Bandと、生存粒子の有無を確認します。
-- 応答がゆっくり消えるのはRelease・Slow Responseの平滑化です。無効化による即時リセットではありません。
+- 平滑化済みresponseがゆっくり消えるのはRelease・Slow Responseによるものです。Brightnessの音声増光はBrightnessのAudio Releaseで減衰します。いずれも無効化による即時リセットではありません。

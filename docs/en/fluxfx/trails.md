@@ -50,7 +50,7 @@ A trail disappears when its particle dies. Duration does not keep a trail visibl
 
 ## Differences from particle appearance
 
-Trails use dedicated rendering. Color and Width do not inherit Main Start Color, Start Size, Color/Size over Lifetime, Texture Sheet Animation, or Blink.
+Trails use dedicated rendering. Color and Width do not inherit Main Start Color, Start Size, Color/Size over Lifetime, Texture Sheet Animation, or Brightness.
 
 Trails use alpha blending. Particle Renderer Texture and Blend Mode do not configure trail textures or blending.
 

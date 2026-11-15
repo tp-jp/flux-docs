@@ -80,7 +80,7 @@ Curveは寿命の0〜1区間を128点でサンプリングします。Gradient�
 | 記録対象 | 容量内の分散したスロットを対象にする。生存粒子だけを動的に選び直すわけではない |
 | 粒子の消滅 | 軌跡も消える。消滅後にDuration秒残す動作ではない |
 | 座標 | Local空間でも履歴はワールド座標で記録する |
-| 見た目 | 専用の色・幅・アルファブレンドを使う。粒子の色・点滅・テクスチャ設定を引き継がない |
+| 見た目 | 専用の色・幅・アルファブレンドを使う。粒子の色・Brightness・テクスチャ設定を引き継がない |
 
 最初はMax TrailsとPoints Per Trailを小さくし、必要な滑らかさに合わせて増やします。詳しくは[Trails](./trails.md)を参照してください。
 
@@ -114,3 +114,7 @@ FluxFXはFluxのARGBFloat RenderTextureとシェーダー処理を利用し、�
 [Audio Input](./audio-input.md)は粒子ごとにresponse（Float3）とfreshness（Float2）を保持し、更新処理を追加します。無効化しても減衰処理は残るため、削除した構成とも比較してください。RenderTexture数を固定で見積もらず、生成結果のState PagesとPassを確認します。AudioLinkの導入は必須ではなく、未導入の場合は入力がゼロになります。
 
 [Distance Fade](./distance-fade.md)は描画色を減衰させる処理で、シミュレーションは停止しません。フェードが完了しても描画負荷がなくなる保証はありません。XYZ軸で倍率が異なるScaleには対応しておらず、正投影カメラではフェードしません。
+
+## Brightnessの音声処理 {#brightness}
+
+Audio EnabledがOFFなら音声更新の状態と処理は追加されません。音声を組み込んだ構成では、Brightnessを無効化しても応答を減衰させる更新が続きます。Audio Inputの公開された入力契約を使い、AudioLinkを別途サンプリングしません。[Brightness](./brightness.md#audio)を参照してください。

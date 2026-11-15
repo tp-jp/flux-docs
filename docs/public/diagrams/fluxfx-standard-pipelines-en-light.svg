@@ -21,10 +21,11 @@
 <text x="240" y="385" text-anchor="middle" fill="#555b70" font-size="16" font-weight="400">Further modify position</text>
 <rect x="20" y="452" width="4" height="20" rx="2" fill="#197e70"/>
 <text x="36" y="467" text-anchor="start" fill="#197e70" font-size="15" font-weight="700">RENDER / COLOR PIPELINE</text>
-<rect x="20" y="490" width="440" height="114" rx="10" fill="#f0f0fa" stroke="#5954b5"/>
+<rect x="20" y="490" width="440" height="132" rx="10" fill="#f0f0fa" stroke="#5954b5"/>
 <text x="240" y="517" text-anchor="middle" fill="#242638" font-size="19" font-weight="600">Value: render.color</text>
-<text x="240" y="539" text-anchor="middle" fill="#555b70" font-size="16" font-weight="400">render.start → render.color → render.blink</text>
-<text x="240" y="561" text-anchor="middle" fill="#555b70" font-size="16" font-weight="400">Pass each result to the next writer</text>
-<text x="240" y="583" text-anchor="middle" fill="#555b70" font-size="16" font-weight="400">A separate Phase from Update</text>
+<text x="240" y="539" text-anchor="middle" fill="#555b70" font-size="16" font-weight="400">render.start → render.color</text>
+<text x="240" y="561" text-anchor="middle" fill="#555b70" font-size="16" font-weight="400">→ render.brightness</text>
+<text x="240" y="583" text-anchor="middle" fill="#555b70" font-size="16" font-weight="400">Pass each result to the next writer</text>
+<text x="240" y="605" text-anchor="middle" fill="#555b70" font-size="16" font-weight="400">A separate Phase from Update</text>
 <text x="240" y="637" text-anchor="middle" fill="#555b70" font-size="15" font-weight="400">Size, rotation, and UVs have separate dependencies</text>
 </g></svg>

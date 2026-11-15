@@ -23,7 +23,7 @@
 | --- | --- | --- |
 | Velocity Update | Gravity、Force、Noise、Vortex、Drag、Limit Velocity | 保存される速度を更新する |
 | Position Update | Velocity over Lifetime、[Audio Input](./audio-input.md) | 追加の移動、または音声応答の供給（Audio Inputは位置を変更しない） |
-| Rendering | Color・Size・Rotation over Lifetime、Texture Sheet Animation、Blink、Trails、[Distance Fade](./distance-fade.md) | 描画時の見た目や軌跡を設定する |
+| Rendering | Color・Size・Rotation over Lifetime、Texture Sheet Animation、Brightness、Trails、[Distance Fade](./distance-fade.md) | 描画時の見た目や軌跡を設定する |
 
 登録されたモジュールに応じて、Spawnなど別のグループが表示される場合もあります。
 
@@ -70,6 +70,8 @@ Gravity → Force → Noise → Vortex → Drag → Limit Velocity
 - [力と速度](./forces.md)：一定の加速、減速、速度上限
 - [動きの変化](./motion.md)：揺らぎ、渦、寿命に応じた移動
 - [寿命に応じた見た目](./lifetime-appearance.md)：色・サイズ・回転の変化
-- [テクスチャアニメーションと点滅](./texture-animation-blink.md)：コマの切り替えと周期的な明暗
+- [テクスチャアニメーション](./texture-animation-blink.md)：テクスチャのコマの切り替え
 - [Trails](./trails.md)：移動経路の記録と軌跡の表示
 - [カスタムモジュール](./custom-modules.md)：C#とHLSLによる独自モジュールの作成
+
+- [Brightness](./brightness.md)：明るさのばらつき、明滅・点滅、音声による増光

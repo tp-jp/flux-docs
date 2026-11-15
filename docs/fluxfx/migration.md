@@ -37,3 +37,7 @@ Authoring Inspectorに移行要求が表示されている間は、通常の設�
 ## 変更内容と公開状況 {#release-status}
 
 Authoring集約は、編集設定の保存先を変更する移行を伴う更新です。この変更は0.1.0でリリースされました。0.1.0より前のデータを使用する場合は、上記の手順で移行してください。
+
+## 旧Blinkの設定 {#blink-migration}
+
+Blinkには別の[Brightnessへの移行手順](./brightness.md#migration)があります。そのメニューはAssets内の保存済みPrefabとSceneを更新し、閉じたSceneも対象です。専用の手順に従い、Missing状態の旧モジュールも移行前に削除しないでください。

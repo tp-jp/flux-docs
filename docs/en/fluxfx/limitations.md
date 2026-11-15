@@ -80,7 +80,7 @@ Tracked count is `min(Particle Count, Max Trails)`. With `P` Points Per Trail, t
 | Tracked slots | Distributed across capacity, not dynamically selected from living particles |
 | Particle death | Trail disappears too; Duration is not persistence after death |
 | Coordinates | World-space history even with Local simulation |
-| Appearance | Dedicated color, width, and alpha blend; does not inherit particle color, texture, or Blink settings |
+| Appearance | Dedicated color, width, and alpha blend; does not inherit particle color, texture, or Brightness settings |
 
 Start with small Max Trails and Points Per Trail, increasing only for the required smoothness. See [Trails](./trails.md).
 
@@ -114,3 +114,7 @@ Implementation alone cannot predict frame rate for a specific particle count. Af
 [Audio Input](./audio-input.md) stores response (Float3) and freshness (Float2) per particle and adds update work. Disabling retains decay processing; compare against removing the module. Inspect generated State Pages and passes rather than assuming a fixed RenderTexture count. AudioLink is optional, with zero input when absent.
 
 [Distance Fade](./distance-fade.md) attenuates render color; it does not stop simulation. Fully faded rendering does not guarantee eliminated draw cost. Non-uniform scale is unsupported, and orthographic cameras bypass fading.
+
+## Brightness audio processing {#brightness}
+
+Audio Enabled off adds no audio-update state or operations. With audio included, disabling Brightness leaves response-decay updates running. Brightness reads Audio Input through its public input contract; it does not separately sample AudioLink. See [Brightness](./brightness.md#audio).

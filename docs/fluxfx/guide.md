@@ -37,9 +37,10 @@
 | [力と速度](./forces.md) | Gravity、Force、Drag、Limit Velocity |
 | [動きの変化](./motion.md) | Noise、Vortex、Velocity over Lifetime |
 | [寿命に応じた見た目](./lifetime-appearance.md) | Color・Size・Rotation over Lifetime |
-| [テクスチャアニメーションと点滅](./texture-animation-blink.md) | Texture Sheet Animation、Blink |
+| [テクスチャアニメーション](./texture-animation-blink.md) | Texture Sheet Animation |
 | [Distance Fade](./distance-fade.md) | カメラ距離によるフェード、RGB／Alphaの選択 |
 | [Audio Input](./audio-input.md) | AudioLinkの音声応答と、それを使うモジュール |
+| [Brightness](./brightness.md) | 明るさのばらつき・明滅・音声増光・旧Blinkの移行 |
 | [Trails](./trails.md) | 軌跡の設定と表示 |
 
 <span id="controlling-fluxfx-from-udonsharp"></span>

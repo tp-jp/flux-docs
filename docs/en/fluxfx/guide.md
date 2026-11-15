@@ -37,9 +37,10 @@ Start with installation and the quick start, then explore Inspector settings, mo
 | [Forces and velocity](./forces.md) | Gravity, Force, Drag, and Limit Velocity |
 | [Motion effects](./motion.md) | Noise, Vortex, and Velocity over Lifetime |
 | [Appearance over lifetime](./lifetime-appearance.md) | Color, Size, and Rotation over Lifetime |
-| [Texture animation and blinking](./texture-animation-blink.md) | Texture Sheet Animation and Blink |
+| [Texture Sheet Animation](./texture-animation-blink.md) | Texture Sheet Animation |
 | [Distance Fade](./distance-fade.md) | Camera-distance fading and RGB / Alpha targets |
 | [Audio Input](./audio-input.md) | AudioLink responses and consumer modules |
+| [Brightness](./brightness.md) | Base variation, waveforms, audio brightening, and legacy Blink migration |
 | [Trails](./trails.md) | Trail settings and display |
 
 <span id="udonsharpからの制御"></span>

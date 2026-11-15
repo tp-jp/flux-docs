@@ -14,7 +14,7 @@ FluxFX is a GPU particle and effects system for VRChat. Configure particle emiss
 | Emission | Continuous emission, timed bursts, and looping |
 | Spawn shape | Point, Sphere, Hemisphere, Circle, Box, and Cone |
 | Movement | Gravity, force, drag, speed limits, Noise, Vortex, and more |
-| Appearance | Color, size, and rotation over lifetime; texture animation; blinking; and Trails |
+| Appearance | Color, size, and rotation over lifetime; texture animation; brightness changes with [Brightness](./brightness.md); and Trails |
 | Rendering | Billboard or Mesh, textures, and blending |
 | Runtime control | Playback and supported parameter changes from UdonSharp |
 

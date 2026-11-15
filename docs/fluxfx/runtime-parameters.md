@@ -32,7 +32,7 @@
 | --- | --- | --- |
 | 発生頻度 | EmissionのRate | 次の発生計算から使う |
 | 発生時に使う値 | Start Speed、Shapeの位置・半径など | 以後に生成する粒子に使う。既存粒子の初速や発生位置を変更しない |
-| 更新・描画に使う値 | Gravityなどの力、モジュールの有効状態、Intensity、Blinkなど | 以後の更新・描画に反映する |
+| 更新・描画に使う値 | Gravityなどの力、モジュールの有効状態、Intensity、Brightnessなど | 以後の更新・描画に反映する |
 | 発生スケジュール | Start Delay、Duration、Loop、Bursts | 次回Restartで取り込む |
 | Static | Start Lifetime、Start Color、Start Size、Start Rotationとそれらの範囲、Texture Sheet AnimationのTiles | 初回シミュレーション更新後は変更不可 |
 
@@ -176,3 +176,7 @@ Billboardの回転はZ軸だけ、サイズや頻度は非負など、Inspector�
 ## Audio InputとDistance Fade {#input-appearance}
 
 `target.Modules.AudioInput`・`target.Modules.DistanceFade`を取得し、`TpLab.Flux.FX.Udon.Modules`の拡張メソッドを使います。両方ともLive設定とGetEnabled／SetEnabledに対応します。設定名と範囲は[Audio Input](./audio-input.md#runtime)・[Distance Fade](./distance-fade.md#runtime)を参照してください。変更は対応するLive Inspector項目にも反映されます。Audio InputのHandleは設定用で、粒子ごとの応答をCPUへ読み戻すものではありません。
+
+## Brightness {#brightness}
+
+廃止されたBlink APIの代わりに`target.Modules.Brightness`を使います。PeriodはHzではなく秒です。描画設定とEnabledはLive変更できます。Audio Enabledの変更には再構築が必要で、実行中に音声処理を追加できません。組み込み済みの音声処理にはAudioBoost／AudioAttack／AudioReleaseがあります。[BrightnessのAPI](./brightness.md#runtime)と[旧Blinkからの移行](./brightness.md#migration)を参照してください。

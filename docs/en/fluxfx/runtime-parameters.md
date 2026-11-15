@@ -32,7 +32,7 @@ Obtain handles from the target; do not construct them with `new` or edit interna
 | --- | --- | --- |
 | Emission rate | Emission Rate | Next emission calculation |
 | Spawn values | Start Speed, Shape position/radius | Newly spawned particles; existing initial velocity and spawn positions are unchanged |
-| Update/render values | Gravity, module enabled state, Intensity, Blink | Subsequent updates/rendering |
+| Update/render values | Gravity, module enabled state, Intensity, Brightness | Subsequent updates/rendering |
 | Emission schedule | Start Delay, Duration, Loop, Bursts | Next Restart |
 | Static | Start Lifetime, Start Color, Start Size, Start Rotation, and their ranges; Texture Sheet Animation Tiles | Locked after the first simulation update |
 
@@ -176,3 +176,7 @@ Runtime edits do not modify the saved Prefab or synchronize over the network. Se
 ## Audio Input and Distance Fade {#input-appearance}
 
 Use `target.Modules.AudioInput` and `target.Modules.DistanceFade` with `TpLab.Flux.FX.Udon.Modules`. Both expose Live settings and GetEnabled / SetEnabled. See [Audio Input](./audio-input.md#runtime) and [Distance Fade](./distance-fade.md#runtime) for the complete setting names and ranges. These changes also appear in supported Live Inspector fields. Audio Input exposes settings, not CPU readback of per-particle responses.
+
+## Brightness {#brightness}
+
+Use `target.Modules.Brightness` instead of the removed Blink API. Period is in seconds, not frequency in Hz. Rendering settings and Enabled support Live changes. Audio Enabled requires rebuilding; it cannot add audio processing at runtime. Included audio processing exposes AudioBoost / AudioAttack / AudioRelease. See [Brightness API](./brightness.md#runtime) and [legacy Blink migration](./brightness.md#migration).

@@ -1,6 +1,6 @@
 # Audio Input
 
-Read AudioLink input and supply audio responses for other modules. **Adding this module alone does not change color, size, or motion.** Combine it with a custom module that consumes the response.
+Read AudioLink input and supply audio responses for other modules. **Adding this module alone does not change color, size, or motion.** Combine it with [Brightness audio brightening](./brightness.md#audio) or a custom module that reads its input.
 
 ## Setup {#setup}
 
@@ -38,7 +38,9 @@ Responses approach their targets using exponential smoothing. Attack and similar
 
 Responses decay toward zero when input is unavailable, frame updates stop beyond Timeout, or Enabled is turned off. **Updates continue while disabled to allow decay.** Compare with the module removed when evaluating cost.
 
-Custom modules should use the [audio response read contract](./custom-module-reference.md#input-appearance). There is no automatic connection to standard Color over Lifetime or similar modules.
+[Brightness](./brightness.md#audio) does not use this response. It computes its own response from the unsmoothed four-band average. Adjust its response speed with Brightness Audio Attack / Release, not Audio Input Attack / Release / Slow Response. Band selection also has no effect on Brightness.
+
+Custom modules can use the [audio response read contract](./custom-module-reference.md#audio-response-read) for smoothed responses, or [ReadSample / ReadFreshness](./custom-module-reference.md#brightness) for their own smoothing. There is no automatic connection to standard Color over Lifetime or similar modules.
 
 ## Change settings at runtime {#runtime}
 
@@ -50,7 +52,7 @@ All support Live changes, including adjustment in the Authoring Inspector during
 
 ## If nothing reacts {#troubleshooting}
 
-- Include a module that actually consumes Audio Input's response.
+- Include a module that consumes Audio Input's input or response, such as Brightness with Audio Enabled on.
 - Check AudioLink installation and input supply. Playing audio alone does not guarantee valid AudioLink input.
 - Check Enabled, Gain, Strength, Noise Floor, Band, and whether particles are alive.
-- A response fading slowly reflects Release / Slow Response smoothing. Disabling is not an immediate reset.
+- A slowly fading smoothed response reflects Release / Slow Response. Brightness audio brightening decays using its own Audio Release. Neither is reset instantly by disabling.

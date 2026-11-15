@@ -43,7 +43,7 @@
 | 非ループの終了 | Playでは発生周期を巻き戻さない。Restartを呼ぶ |
 | Start Lifetime | 0や極端に短い値を避け、まず3秒程度で確認する |
 | Start Size・Start Color・Intensity | サイズやRGB強度が0でないか、透過ブレンドでAlphaが0でないか確認する |
-| モジュール | SizeやColorの変化、Blinkを一時的に無効にして比較する |
+| モジュール | SizeやColorの変化、Brightnessを一時的に無効にして比較する |
 | 配置とカメラ | 床・壁の内側にないか、カメラから見える位置・レイヤーか確認する |
 | Culling Bounds | 粒子と軌跡が移動する範囲を含める |
 
@@ -68,10 +68,10 @@ Rateを下げる、寿命を短くする、Burstを分散する、必要に応�
 | Gradientで指定した色にならない | Color over LifetimeのGradientはStart Colorへの乗算。まずStart Colorを白にする |
 | 回転の終点がずれる | Rotation over LifetimeのEnd Rotationは初期角度への加算 |
 | テクスチャのコマが切り替わらない | Tilesが1×1、Cyclesが0になっていないか |
-| 点滅しない | Frequencyが0、Dutyが1、Minimumが1になっていないか。TargetとBlend Modeも確認する |
+| 点滅しない | BrightnessのWaveform・Period・Minimum／Maximum・Duty・Target・Blend Modeを確認する |
 | 重なった半透明粒子の前後関係がおかしい | 粒子単位の奥行きソートは行われない。密度・サイズ・ブレンドを見直す |
 
-詳しい設定は[Renderer](./renderer.md)、[寿命に応じた見た目](./lifetime-appearance.md)、[テクスチャアニメーションと点滅](./texture-animation-blink.md)を参照してください。
+詳しい設定は[Renderer](./renderer.md)、[寿命に応じた見た目](./lifetime-appearance.md)、[テクスチャアニメーション](./texture-animation-blink.md)、[Brightness](./brightness.md)を参照してください。
 
 <span id="trails-are-missing-or-interrupted"></span>
 
@@ -144,3 +144,15 @@ StaticはPause・Stop・Clear・Restartでも変更可能になりません。[�
 | Distance Fadeが効かない | カメラが透視投影か、End DistanceがStart Distanceより大きいか、ScaleのXYZ軸の倍率が等しいかを確認する。システム原点からの距離と、Targetに合うブレンド設定も確認する |
 
 詳しくは[Audio Input](./audio-input.md)と[Distance Fade](./distance-fade.md)を参照してください。
+
+## Brightnessの音声と旧データ {#brightness}
+
+| 症状 | 確認すること |
+| --- | --- |
+| 明るさが時間で変わらない | WaveformがOff、Periodが0、MinimumとMaximumが同じ値になっていないか確認する。PulseはDutyが0または1でも一定になる |
+| 音声増光をONにすると構築エラーになる | 同じSystemにAudio Inputが必要。Brightnessが無効でもAudio EnabledがONなら依存関係は必要 |
+| 音声に反応しない | Play前にAudio EnabledをONにする。両モジュールのEnabled、Audio Boost、AudioLinkの入力、Audio InputのGain・Strengthを確認する |
+| BandやAttack／Releaseを変えてもBrightnessの反応が変わらない | Brightnessは4音域平均と独自のAudio Attack／Releaseを使う |
+| 旧BlinkがMissingになった | 旧モジュールを削除せず、[移行手順](./brightness.md#migration)に従う |
+
+AudioLinkが未導入なら入力はゼロです。詳しい設定は[Brightness](./brightness.md)を参照してください。

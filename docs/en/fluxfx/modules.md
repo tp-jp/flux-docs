@@ -23,7 +23,7 @@ You cannot add multiple modules of the same type. Already-added types are remove
 | --- | --- | --- |
 | Velocity Update | Gravity, Force, Noise, Vortex, Drag, Limit Velocity | Update stored velocity |
 | Position Update | Velocity over Lifetime; [Audio Input](./audio-input.md) | Additional displacement, or audio response supply (Audio Input does not move particles) |
-| Rendering | Color, Size, Rotation over Lifetime; Texture Sheet Animation; Blink; Trails; [Distance Fade](./distance-fade.md) | Appearance and trails |
+| Rendering | Color, Size, Rotation over Lifetime; Texture Sheet Animation; Brightness; Trails; [Distance Fade](./distance-fade.md) | Appearance and trails |
 
 Other groups, such as Spawn, may appear depending on registered modules.
 
@@ -70,6 +70,8 @@ For example, Vortex Center `(0, 0, 0)` in World mode refers to the world origin,
 - [Forces and velocity](./forces.md): acceleration, drag, and speed limits.
 - [Motion effects](./motion.md): noise, vortices, and lifetime-based movement.
 - [Appearance over lifetime](./lifetime-appearance.md): color, size, and rotation.
-- [Texture animation and blinking](./texture-animation-blink.md): frames and periodic brightness.
+- [Texture Sheet Animation](./texture-animation-blink.md): texture frame animation.
 - [Trails](./trails.md): recording and rendering movement history.
 - [Custom modules](./custom-modules.md): creating your own modules with C# and HLSL.
+
+- [Brightness](./brightness.md): brightness variation, waveforms, and audio brightening.

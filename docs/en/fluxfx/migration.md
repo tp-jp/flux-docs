@@ -37,3 +37,7 @@ For unmigrated data, Play/build preparation can read Particle Count and Play On 
 ## Changes and release status {#release-status}
 
 Authoring consolidation changes where editable settings are stored and requires migration. This change was released in 0.1.0. Follow the steps above when using data created before 0.1.0.
+
+## Legacy Blink settings {#blink-migration}
+
+Blink has a separate [migration to Brightness](./brightness.md#migration). Its menu updates saved Prefabs and Scenes under Assets, including closed Scenes. Follow that procedure and preserve missing legacy modules until migration.

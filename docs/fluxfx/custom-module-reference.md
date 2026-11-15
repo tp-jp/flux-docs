@@ -167,7 +167,13 @@ Operation IDは、処理そのものを識別するIDです。Value IDやModule 
 | `limit-velocity` | Update | Limit Velocity：速度 |
 | `velocity-over-lifetime` | Update | Velocity over Lifetime：`motion`の後で位置を変更する |
 | `render.color` | Render | Color over Lifetime：描画色 |
-| `render.blink` | Render | Blink：描画色 |
+| `render.brightness` | Render | Brightness：描画色 |
+| `brightness.initialize` | Spawn | Brightness：音声状態を初期化。Audio EnabledがONの構成のみ |
+| `brightness.update` | Update | Brightness：独自の音声応答。Audio EnabledがONの構成のみ |
+| `audio-input.initialize` | Spawn | Audio Input：入力の更新状態と応答を初期化 |
+| `audio-input.update-freshness` | Update | Audio Input：入力の更新状態 |
+| `audio-input.update-response` | Update | Audio Input：平滑化した応答 |
+| `render.distance-fade` | Render | Distance Fade：描画色 |
 | `render.size-over-lifetime` | Render | Size over Lifetime：描画サイズ |
 | `render.rotation-over-lifetime` | Render | Rotation over Lifetime：描画回転 |
 | `render.texture-sheet-animation` | Render | Texture Sheet Animation：描画UV変換 |
@@ -200,13 +206,13 @@ TrailsはこのOperation一覧には入りません。パラメーターとハ�
 標準モジュールがすべて存在する場合の主な順序は次のとおりです。省略したモジュールは列から外れます。
 
 <div class="development-figure">
-  <a class="diagram-light" href="../diagrams/fluxfx-standard-pipelines-ja-light.svg" target="_blank" rel="noopener" title="図を別タブで拡大表示"><img src="/diagrams/fluxfx-standard-pipelines-ja-light.svg" alt="Updateでは標準の速度Writerの結果がmotionへ渡り、Velocity over Lifetimeがその後で位置を変更します。別PhaseのRenderではrender.start、render.color、render.blinkの順に描画色を渡します。" width="480" height="662" /></a>
-  <a class="diagram-dark" href="../diagrams/fluxfx-standard-pipelines-ja-dark.svg" target="_blank" rel="noopener" title="図を別タブで拡大表示"><img src="/diagrams/fluxfx-standard-pipelines-ja-dark.svg" alt="Updateでは標準の速度Writerの結果がmotionへ渡り、Velocity over Lifetimeがその後で位置を変更します。別PhaseのRenderではrender.start、render.color、render.blinkの順に描画色を渡します。" width="480" height="662" /></a>
+  <a class="diagram-light" href="../diagrams/fluxfx-standard-pipelines-ja-light.svg" target="_blank" rel="noopener" title="図を別タブで拡大表示"><img src="/diagrams/fluxfx-standard-pipelines-ja-light.svg" alt="Updateでは標準の速度Writerの結果がmotionへ渡り、Velocity over Lifetimeがその後で位置を変更します。別PhaseのRenderではrender.start、render.color、render.brightnessの順に描画色を渡します。" width="480" height="662" /></a>
+  <a class="diagram-dark" href="../diagrams/fluxfx-standard-pipelines-ja-dark.svg" target="_blank" rel="noopener" title="図を別タブで拡大表示"><img src="/diagrams/fluxfx-standard-pipelines-ja-dark.svg" alt="Updateでは標準の速度Writerの結果がmotionへ渡り、Velocity over Lifetimeがその後で位置を変更します。別PhaseのRenderではrender.start、render.color、render.brightnessの順に描画色を渡します。" width="480" height="662" /></a>
 </div>
 
 速度の最後のWriterの結果は`motion`へ渡されます。速度Writerがなければ`velocity.identity → motion`になります。描画サイズ・回転・UVの処理は、それぞれの`render.*-start`への必須依存で接続されます。これらと描画色の列の間に一律の実行順があるわけではありません。
 
-速度・描画色の列では、各Writerの入力が直前のWriterの結果へ接続し直されます。例えばBlinkは`render.start`を読む宣言ですが、Color over Lifetimeもある場合はその結果を受け取ります。一方、任意のValueで同じ自動接続が行われるわけではありません。
+速度・描画色の列では、各Writerの入力が直前のWriterの結果へ接続し直されます。例えばBrightnessは`render.start`を読む宣言ですが、Color over Lifetimeもある場合はその結果を受け取ります。一方、任意のValueで同じ自動接続が行われるわけではありません。
 
 ### カスタム処理の順序を決める例 {#custom-operation-order}
 
@@ -242,7 +248,7 @@ CustomLiftの例では、標準の速度Writerをすべて`optionalDependencies`
 | Operation | `audio-input.update-response` | Update。freshness更新後に応答を計算 |
 | Operation | `render.distance-fade` | Render。render.colorのRGBまたはAlphaへ距離係数を掛ける |
 
-これらは対応モジュールを追加した構成にだけ存在します。Audio Inputが所有する状態へ、利用側から書き込まないでください。sampleとfreshnessは内部処理用で、利用側はresponseの公開契約を使います。
+これらは対応モジュールを追加した構成にだけ存在します。Audio Inputが所有する状態へ、利用側から書き込まないでください。平滑化済みの応答はRead、独自の音声応答を計算する場合はReadSample／ReadFreshnessの公開契約で読みます。
 
 Parameter IDはDistance Fadeが`distance-fade.start-distance`、`distance-fade.end-distance`、`distance-fade.target`、`distance-fade.enabled`です。Audio Inputは`audio-input.`にband、gain、noise-floor、strength、attack、release、slow-response、average-gain、timeout、enabledを続けたIDです。いずれもLiveです。設定値の範囲は[Distance Fade](./distance-fade.md)と[Audio Input](./audio-input.md)を参照してください。
 
@@ -262,8 +268,25 @@ Parameter IDはDistance Fadeが`distance-fade.start-distance`、`distance-fade.e
 
 ### 距離フェードと色処理の順序 {#distance-fade-order}
 
-Distance Fadeは、登録時に存在するRender Phaseのrender.color Writerと、`render.color`・`render.blink`を任意の先行Operationとして集めます。独自の色処理はDistance Fadeより先に登録し、処理順を確認してください。後から追加した独自Writerまで自動検出するわけではありません。
+Distance Fadeは、登録時に存在するRender Phaseのrender.color Writerと、`render.color`を任意の先行Operationとして集めます。独自の色処理はDistance Fadeより先に登録し、処理順を確認してください。後から追加した独自Writerまで自動検出するわけではありません。
 
 上の図は標準モジュールの基本的な処理順序を示しています。Distance Fadeを含む構成では、その前に登録した色処理の後へ`render.distance-fade`が続きます。Audio Inputでは、速度・位置を変更する処理とは別に、入力の更新状態（freshness）、応答（response）、その応答を使うUpdate処理の順に実行します。
 
 独自の処理で密度などを取得するために、生成されたRenderプログラムを利用する場合、include前の`FLUXFX_INTRINSIC_RENDER`定義により距離フェードが省略されます。共通HLSL `Runtime/Shaders/DistanceFade.hlsl`を別の描画処理から呼ぶ場合は、元のSystemの原点と、親を含む一様スケールの倍率を渡してください。
+
+## Brightnessの契約 {#brightness}
+
+Module IDは`tplab.fluxfx.brightness`です。Parameter IDは`brightness.`にbase-minimum、base-maximum、waveform、period、period-minimum、period-maximum、random-phase、time-mode、minimum、maximum、duty、smoothness、target、audio-boost、audio-attack、audio-release、enabledを続けた値です。Audio EnabledはAuthoringの構築時設定で、実行時のParameterスイッチではありません。
+
+| ID | 種類と役割 |
+| --- | --- |
+| brightness.audio | FloatのValue。音声ありならOwnerManaged、音声なしならReadOnlyで0を返すDerived Provider |
+| brightness.initialize | Spawn。音声を組み込む場合だけ、音声状態を0に初期化 |
+| brightness.update | Update。音声を組み込む場合だけ、独自の音声応答を更新 |
+| render.brightness | Render。先行する色処理の結果へ倍率を掛ける |
+
+独自の音声応答には、Updateのreadsで`FluxParticleAudioInputOutputs.ReadSample()`（Provided）と`ReadFreshness()`（audio-input.update-freshnessのAfterOperation）を使います。SampleはFloat3で、選択音域・4音域平均・更新カウンターです。Gain・Noise Floor・Strength・Average Gainは適用済みで、平滑化はされていません。FreshnessはFloat2で、最後のカウンターと変化がない秒数です。Audio InputのEnabled、カウンターが0以上、未更新の秒数がTimeout未満という条件を合わせて確認します。
+
+Brightnessはaudio-input.responseではなくsample.yを読み、独自のAttack／Releaseを使います。brightness.updateはaudio-input.update-freshnessの後で実行されますが、audio-input.update-responseとの前後関係は指定しません。無効化中も音声状態を減衰させるUpdateは続きます。音声を組み込まない場合は音声状態もUpdate処理も追加しません。Renderでのbrightness.audioの読み取りは、音声ありならCommitted、なしならProvidedです。
+
+Brightnessは登録時に存在するRenderの色Writerとrender.colorを任意の先行処理として集めます。独自の色処理は先に登録してください。旧render.blinkは廃止されているため、[移行](./brightness.md#migration)を確認してください。

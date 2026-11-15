@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="480" height="662" viewBox="0 0 480 662" role="img" aria-labelledby="title">
-<title id="title">標準の速度と描画色の処理列</title>
+<title id="title">標準の速度と描画色の処理順</title>
 <defs><marker id="arrow" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" orient="auto"><path d="M1 1L7 4L1 7" fill="none" stroke="#858b9e" stroke-width="1.5"/></marker></defs>
 <g font-family="Arial, Noto Sans JP, sans-serif">
 <rect x="20" y="12" width="4" height="20" rx="2" fill="#5954b5"/>
@@ -20,11 +20,12 @@
 <text x="240" y="363" text-anchor="middle" fill="#242638" font-size="19" font-weight="600">velocity-over-lifetime</text>
 <text x="240" y="385" text-anchor="middle" fill="#555b70" font-size="16" font-weight="400">さらに位置を変更</text>
 <rect x="20" y="452" width="4" height="20" rx="2" fill="#197e70"/>
-<text x="36" y="467" text-anchor="start" fill="#197e70" font-size="15" font-weight="700">RENDER / 描画色の処理列</text>
-<rect x="20" y="490" width="440" height="114" rx="10" fill="#f0f0fa" stroke="#5954b5"/>
+<text x="36" y="467" text-anchor="start" fill="#197e70" font-size="15" font-weight="700">RENDER / 描画色の処理順</text>
+<rect x="20" y="490" width="440" height="132" rx="10" fill="#f0f0fa" stroke="#5954b5"/>
 <text x="240" y="517" text-anchor="middle" fill="#242638" font-size="19" font-weight="600">Value: render.color</text>
-<text x="240" y="539" text-anchor="middle" fill="#555b70" font-size="16" font-weight="400">render.start → render.color → render.blink</text>
-<text x="240" y="561" text-anchor="middle" fill="#555b70" font-size="16" font-weight="400">直前のWriterの結果を次へ渡す</text>
-<text x="240" y="583" text-anchor="middle" fill="#555b70" font-size="16" font-weight="400">Updateとは別のPhase</text>
+<text x="240" y="539" text-anchor="middle" fill="#555b70" font-size="16" font-weight="400">render.start → render.color</text>
+<text x="240" y="561" text-anchor="middle" fill="#555b70" font-size="16" font-weight="400">→ render.brightness</text>
+<text x="240" y="583" text-anchor="middle" fill="#555b70" font-size="16" font-weight="400">直前のWriterの結果を次へ渡す</text>
+<text x="240" y="605" text-anchor="middle" fill="#555b70" font-size="16" font-weight="400">Updateとは別のPhase</text>
 <text x="240" y="637" text-anchor="middle" fill="#555b70" font-size="15" font-weight="400">描画サイズ・回転・UVは、それぞれ別の依存関係</text>
 </g></svg>

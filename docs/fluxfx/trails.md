@@ -52,7 +52,7 @@ Durationは粒子の寿命とは別です。長くすると、より昔の移動
 
 ## 粒子本体との見た目の違い
 
-Trailsは専用の描画を使います。色と幅はTrailsのColorとWidthで設定し、MainのStart Color・Start SizeやColor／Size over Lifetimeには連動しません。Texture Sheet AnimationやBlinkも軌跡には適用されません。
+Trailsは専用の描画を使います。色と幅はTrailsのColorとWidthで設定し、MainのStart Color・Start SizeやColor／Size over Lifetimeには連動しません。Texture Sheet AnimationやBrightnessも軌跡には適用されません。
 
 軌跡はアルファブレンドで表示されます。粒子本体のRendererでTextureやBlend Modeを変えても、軌跡のテクスチャやブレンド設定にはなりません。
 

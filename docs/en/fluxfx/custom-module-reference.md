@@ -167,7 +167,13 @@ These are registered when the corresponding module is included. Turning Enabled 
 | `limit-velocity` | Update | Limit Velocity: velocity |
 | `velocity-over-lifetime` | Update | Velocity over Lifetime: modifies position after `motion` |
 | `render.color` | Render | Color over Lifetime: rendering color |
-| `render.blink` | Render | Blink: rendering color |
+| `render.brightness` | Render | Brightness: rendering color |
+| `brightness.initialize` | Spawn | Brightness: initializes audio state; only with Audio Enabled on |
+| `brightness.update` | Update | Brightness: independent audio response; only with Audio Enabled on |
+| `audio-input.initialize` | Spawn | Audio Input: initializes input freshness and response |
+| `audio-input.update-freshness` | Update | Audio Input: input freshness |
+| `audio-input.update-response` | Update | Audio Input: smoothed response |
+| `render.distance-fade` | Render | Distance Fade: rendering color |
 | `render.size-over-lifetime` | Render | Size over Lifetime: rendering size |
 | `render.rotation-over-lifetime` | Render | Rotation over Lifetime: rendering rotation |
 | `render.texture-sheet-animation` | Render | Texture Sheet Animation: rendering UV transform |
@@ -200,13 +206,13 @@ The standard build resolves writer order for **`particle.velocity` in Update** a
 With all standard modules present, the main sequences are as follows. Omitted modules drop out of the sequence.
 
 <div class="development-figure">
-  <a class="diagram-light" href="../../diagrams/fluxfx-standard-pipelines-en-light.svg" target="_blank" rel="noopener" title="Open full-size diagram"><img src="/diagrams/fluxfx-standard-pipelines-en-light.svg" alt="In Update, standard velocity writers feed motion, followed by Velocity over Lifetime. Separately in Render, color flows from render.start through render.color to render.blink." width="480" height="662" /></a>
-  <a class="diagram-dark" href="../../diagrams/fluxfx-standard-pipelines-en-dark.svg" target="_blank" rel="noopener" title="Open full-size diagram"><img src="/diagrams/fluxfx-standard-pipelines-en-dark.svg" alt="In Update, standard velocity writers feed motion, followed by Velocity over Lifetime. Separately in Render, color flows from render.start through render.color to render.blink." width="480" height="662" /></a>
+  <a class="diagram-light" href="../../diagrams/fluxfx-standard-pipelines-en-light.svg" target="_blank" rel="noopener" title="Open full-size diagram"><img src="/diagrams/fluxfx-standard-pipelines-en-light.svg" alt="In Update, standard velocity writers feed motion, followed by Velocity over Lifetime. Separately in Render, color flows from render.start through render.color to render.brightness." width="480" height="662" /></a>
+  <a class="diagram-dark" href="../../diagrams/fluxfx-standard-pipelines-en-dark.svg" target="_blank" rel="noopener" title="Open full-size diagram"><img src="/diagrams/fluxfx-standard-pipelines-en-dark.svg" alt="In Update, standard velocity writers feed motion, followed by Velocity over Lifetime. Separately in Render, color flows from render.start through render.color to render.brightness." width="480" height="662" /></a>
 </div>
 
 The final velocity writer feeds `motion`. With no velocity writers, the sequence is `velocity.identity → motion`. Rendering size, rotation, and UV operations use required dependencies on their respective `render.*-start` operations. There is no universal order between these and the rendering color pipeline.
 
-In the velocity and rendering color pipelines, each writer's input is reconnected to the preceding writer's result. For example, Blink declares a read from `render.start`, but receives Color over Lifetime's result when that module is present. This automatic reconnection does not apply to arbitrary Values.
+In the velocity and rendering color pipelines, each writer's input is reconnected to the preceding writer's result. For example, Brightness declares a read from `render.start`, but receives Color over Lifetime's result when that module is present. This automatic reconnection does not apply to arbitrary Values.
 
 ### Ordering custom operations {#custom-operation-order}
 
@@ -242,7 +248,7 @@ Multiple operations writing the same Value in the same Phase need an order betwe
 | Operation | `audio-input.update-response` | Update; computes response after freshness |
 | Operation | `render.distance-fade` | Render; multiplies render.color RGB or Alpha by a distance factor |
 
-These exist only when the corresponding modules are included. Consumers must not write Audio Input's owned state. sample and freshness are implementation details; use the public response contract.
+These exist only when the corresponding modules are included. Consumers must not write Audio Input's owned state. Use Read for smoothed responses, or the public ReadSample / ReadFreshness contracts for an independent audio response.
 
 Distance Fade Parameter IDs are `distance-fade.start-distance`, `distance-fade.end-distance`, `distance-fade.target`, and `distance-fade.enabled`. Audio Input uses the prefix `audio-input.` with band, gain, noise-floor, strength, attack, release, slow-response, average-gain, timeout, and enabled. All are Live. See [Distance Fade](./distance-fade.md) and [Audio Input](./audio-input.md) for ranges.
 
@@ -262,8 +268,25 @@ The generated HLSL input is `ctx.valueAudioInputResponse`: x is the fast selecte
 
 ### Distance fade and color order {#distance-fade-order}
 
-Distance Fade collects existing Render-phase render.color writers at registration time, plus `render.color` and `render.blink`, as optional predecessors. Register custom color processing before Distance Fade and verify order. Writers registered later are not automatically discovered.
+Distance Fade collects existing Render-phase render.color writers at registration time, plus `render.color`, as optional predecessors. Register custom color processing before Distance Fade and verify order. Writers registered later are not automatically discovered.
 
 The standard pipeline diagram above shows the basic chain. With Distance Fade, `render.distance-fade` follows the color operations registered before it. Audio Input runs a separate sequence: update input freshness, update the response, then run Update operations that use the response. It does not modify velocity or position itself.
 
 When using the generated Render program for custom density captures or similar purposes, defining `FLUXFX_INTRINSIC_RENDER` before inclusion skips distance fading. If another renderer calls the shared `Runtime/Shaders/DistanceFade.hlsl`, pass the source System's origin and uniform scale, not the destination renderer's transform.
+
+## Brightness contracts {#brightness}
+
+Module ID is `tplab.fluxfx.brightness`. Parameter IDs use `brightness.` followed by base-minimum, base-maximum, waveform, period, period-minimum, period-maximum, random-phase, time-mode, minimum, maximum, duty, smoothness, target, audio-boost, audio-attack, audio-release, and enabled. Audio Enabled is an Authoring build-time setting, not a runtime Parameter switch.
+
+| ID | Kind and behavior |
+| --- | --- |
+| brightness.audio | Float Value; OwnerManaged with audio enabled, otherwise ReadOnly with a zero-valued Derived Provider |
+| brightness.initialize | Spawn; initializes audio state to zero, only when audio is included |
+| brightness.update | Update; updates the independent audio response, only when audio is included |
+| render.brightness | Render; multiplies render.color after preceding color writers |
+
+For an independent response, use `FluxParticleAudioInputOutputs.ReadSample()` (Provided) and `ReadFreshness()` (AfterOperation for audio-input.update-freshness) in Update reads. Sample is Float3: selected band, four-band average, and update counter. Gain, Noise Floor, Strength, and Average Gain are already applied; smoothing is not. Freshness is Float2: last counter and elapsed seconds without a change. Check Audio Input Enabled, counter >= 0, and elapsed time < Timeout together.
+
+Brightness uses sample.y and its own Attack / Release instead of audio-input.response. brightness.update runs after audio-input.update-freshness, with no declared order relative to audio-input.update-response. Its Update processing continues while disabled to decay stored audio. When audio is omitted, no audio state or Update operation is added. Render reads brightness.audio as Committed with audio included, otherwise Provided.
+
+Brightness gathers existing Render color writers and render.color as optional predecessors. Register custom color processing before it. Legacy render.blink no longer exists; see [migration](./brightness.md#migration).

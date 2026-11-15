@@ -25,11 +25,11 @@
 | --- | --- | --- |
 | `Spawn` | 今回生成する粒子 | 状態の初期化、生成時の設定値を保存する |
 | `Update` | 更新開始時に生存している既存粒子 | 速度・位置などの更新 |
-| `Render` | 描画評価 | 色・サイズ・回転・UVなどの計算 |
+| `Render` | 描画時の計算 | 色・サイズ・回転・UVなどの計算 |
 
 GPUの更新処理は生成対象ならSpawn、それ以外の生存粒子ならUpdateへ分岐します。**同じ更新で新規粒子にSpawnとUpdateの両方を適用するわけではありません。** 生成時から必要な独自状態は、Updateを待たずにSpawnで初期化します。
 
-標準の生存判定は`particle.age >= 0`かつ`particle.age < particle.lifetime`です。Coreが年齢と失効を管理し、寿命に達した粒子を非生存状態にします。非生存になっても、独自Valueの全成分が自動でゼロになるわけではありません。スロットが再利用されるときの値はSpawnで設定します。
+標準の生存判定は`particle.age >= 0`かつ`particle.age < particle.lifetime`です。Coreが粒子の年齢を管理し、寿命に達した粒子の生存を終了させます。寿命を迎えても、独自Valueの全成分が自動でゼロになるわけではありません。スロットが再利用されるときの値はSpawnで設定します。
 
 Renderは描画シェーダー内の評価であり、シミュレーションの更新回数と同じ頻度で一度だけ呼ばれる処理ではありません。フレームをまたぐ蓄積や状態変更はSpawn・Updateで設計します。Phase間を`dependencies`でつなぐことはできません。
 
@@ -91,7 +91,7 @@ Operationの`reads`は入力、`writes`は出力、`parameters`は使用する�
 | `Committed` | シミュレーション後の状態。Renderでのみ指定できる |
 | `Provided` | Providerの供給値。Providerとその入力のPhase制約に従う |
 
-`AfterOperation`には第3引数でOperation IDを渡します。指定先は対象Valueを書いている必要があり、`contribution.Operation`がその必須依存を追加します。速度・描画色の処理列では入力が先行Writerへ接続し直されるため、[実行順の説明](./custom-module-reference.md#operation-pipelines)も確認してください。
+`AfterOperation`には第3引数でOperation IDを渡します。指定先は対象Valueを書いている必要があり、`contribution.Operation`がその必須依存を追加します。速度・描画色を更新する処理では入力が先行Writerへ接続し直されるため、[実行順の説明](./custom-module-reference.md#operation-pipelines)も確認してください。
 
 | WriteKind | 意味・制約 |
 | --- | --- |
@@ -122,7 +122,7 @@ Parameterは粒子ごとの状態ではなく、システムの計算へ渡す�
 
 Contractでは`ApiName`と`Policy`を指定します。数値には`Minimum`・`Maximum`・`Range`、整数制約には`Integer`、範囲の成分順には`OrderedComponents`などを使えます。Enumは`AllowedValues`で許可値を指定でき、省略した場合はenumで定義された値が対象です。NaN・Infinityは拒否されます。
 
-Inspectorの属性だけでなく、Contractにも必要な制約を置きます。Bind時の初期値の検証と、Handle経由の変更の検証に使われます。不正な初期値は生成エラーとなり、実行時のSetは失敗を戻り値で通知します。自動で範囲内へ丸める前提にはしません。
+Inspectorの属性だけでなく、Contractにも必要な制約を置きます。Bind時の初期値の検証と、Handle経由の変更の検証に使われます。不正な初期値は生成エラーとなり、実行時のSetは失敗を戻り値で通知します。値が自動的に許容範囲内へ補正されると考えず、戻り値を確認してください。
 
 ### 変更方針 {#parameter-policies}
 

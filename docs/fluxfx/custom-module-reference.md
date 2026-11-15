@@ -130,7 +130,7 @@ Value IDだけでなく、`FluxParticleValueRead`の第2引数で読み取り方
 | ReadVersion | 用途 |
 | --- | --- |
 | `Provided` | Providerが供給する値。時間、寿命、初期色など。Providerの登録と、そのPhaseで利用可能な入力が必要 |
-| `StepPrevious` | Updateで、更新前の粒子状態を読む。速度の処理列では先行Writerの結果へ接続される場合がある |
+| `StepPrevious` | Updateで、更新前の粒子状態を読む。速度を更新する処理では、その前に実行されたWriterの結果を読む場合がある |
 | `AfterOperation` | 同じPhase内の指定したOperationが書いた結果を読む。第3引数にOperation IDを指定する |
 | `Committed` | Renderで、更新済みの粒子状態を読む |
 
@@ -189,13 +189,13 @@ TrailsはこのOperation一覧には入りません。パラメーターとハ�
 | --- | --- |
 | `dependencies: new[] { "motion" }` | 必須の先行処理。順序を指定するだけで、読み取るValueは別途宣言する。対象がないとエラー |
 | `new FluxParticleValueRead("particle.position", FluxParticleReadVersion.AfterOperation, "motion")` | `motion`が書いた位置を読む。`contribution.Operation`はこの読み取りから必須依存も追加する |
-| `optionalDependencies: new[] { "gravity", "force" }` | 対象が存在する場合のWriter順序制約。現在は後述の速度・描画色の処理列に限って解決される |
+| `optionalDependencies: new[] { "gravity", "force" }` | 対象が存在する場合のWriter順序制約。現在は後述する速度・描画色の更新処理に限って解決される |
 
 `AfterOperation`では、指定した処理がそのValueを書いている必要があります。独自Operationに名前を付けただけでは順序は決まりません。Inspectorでの追加順、Stage、IDの名前順に頼らず、必要な依存関係を宣言します。
 
-### 自動で接続される処理列 {#operation-pipelines}
+### 自動的に順序が決まる処理 {#operation-pipelines}
 
-標準のビルド処理は、**Updateの`particle.velocity`**と**Renderの`render.color`**について、Writer間の順序を解決します。`optionalDependencies`は、依存元・依存先の両方がその処理列のWriterである場合だけ使われます。別のValueへの書き込みや別PhaseのOperationを指定しても、この指定では順序は付きません。
+標準のビルド処理は、**Updateの`particle.velocity`**と**Renderの`render.color`**について、Writer間の順序を解決します。`optionalDependencies`は、依存元・依存先の両方が同じ値を更新するWriterである場合だけ使われます。別のValueへの書き込みや別PhaseのOperationを指定しても、この指定では順序は付きません。
 
 標準モジュールがすべて存在する場合の主な順序は次のとおりです。省略したモジュールは列から外れます。
 
@@ -225,3 +225,45 @@ CustomLiftの例では、標準の速度Writerをすべて`optionalDependencies`
 
 同じPhaseで同じValueを書く複数の処理には、互いの順序が必要です。順序が一意に決まらない、依存が循環する、必須の対象がない場合はエラーになります。`render.intensity`はParameterであり、Operationの依存先には指定できません。Intensityは描画シェーダーで[Intensity Mask](./renderer.md#intensity-mask)に応じてRGBへ適用されます。
 
+
+## Audio InputとDistance Fadeの接続 {#input-appearance}
+
+### 追加されるID {#input-appearance-ids}
+
+| 種類 | ID | 型・Phase・用途 |
+| --- | --- | --- |
+| Module | `tplab.fluxfx.audio-input` | Audio Input |
+| Module | `tplab.fluxfx.distance-fade` | Distance Fade |
+| Value | `audio-input.sample` | Float3・ReadOnly。Derived Providerが供給する入力と更新カウンター |
+| Value | `audio-input.freshness` | Float2・OwnerManaged。前回の更新カウンターと、入力が更新されていない時間 |
+| Value | `audio-input.response` | Float3・OwnerManaged。外部モジュールが読む平滑化した応答 |
+| Operation | `audio-input.initialize` | Spawn。freshnessを(-1, 0)、responseを0に初期化 |
+| Operation | `audio-input.update-freshness` | Update。入力の更新状態を計算 |
+| Operation | `audio-input.update-response` | Update。freshness更新後に応答を計算 |
+| Operation | `render.distance-fade` | Render。render.colorのRGBまたはAlphaへ距離係数を掛ける |
+
+これらは対応モジュールを追加した構成にだけ存在します。Audio Inputが所有する状態へ、利用側から書き込まないでください。sampleとfreshnessは内部処理用で、利用側はresponseの公開契約を使います。
+
+Parameter IDはDistance Fadeが`distance-fade.start-distance`、`distance-fade.end-distance`、`distance-fade.target`、`distance-fade.enabled`です。Audio Inputは`audio-input.`にband、gain、noise-floor、strength、attack、release、slow-response、average-gain、timeout、enabledを続けたIDです。いずれもLiveです。設定値の範囲は[Distance Fade](./distance-fade.md)と[Audio Input](./audio-input.md)を参照してください。
+
+### 音声応答を読む {#audio-response-read}
+
+利用側のDefinitionでは`TpLab.Flux.FX.Editor.Modules.AudioInput`の`FluxParticleAudioInputOutputs.Read(phase)`をOperationの`reads`へ渡します。
+
+| 利用Phase | 読み取り |
+| --- | --- |
+| Update | `Read(FluxParticlePhase.Update)`。audio-input.update-responseのAfterOperation |
+| Render | `Read(FluxParticlePhase.Render)`。Committed |
+| Spawn | Readは例外になる。応答はこの時点ではゼロへ初期化される |
+
+同じSystemへAudio Inputを追加することが前提です。Readを宣言してもAudio Inputは自動追加されません。Updateで読む場合は応答更新後の順序も読み取り契約に含まれます。Renderでは確定した応答を使うため、UpdateのOperationをRenderのdependenciesへ指定しません。
+
+生成されるHLSLでは、入力を`ctx.valueAudioInputResponse`で参照します。xは選択音域の速い応答、yはその遅い応答、zは4音域平均です。利用側では、例えばこの値を色やサイズの係数として計算に使い、変更先のValueのreads・writesと他Writerとの順序も宣言します。Audio Input自身は描画を変更しません。
+
+### 距離フェードと色処理の順序 {#distance-fade-order}
+
+Distance Fadeは、登録時に存在するRender Phaseのrender.color Writerと、`render.color`・`render.blink`を任意の先行Operationとして集めます。独自の色処理はDistance Fadeより先に登録し、処理順を確認してください。後から追加した独自Writerまで自動検出するわけではありません。
+
+上の図は標準モジュールの基本的な処理順序を示しています。Distance Fadeを含む構成では、その前に登録した色処理の後へ`render.distance-fade`が続きます。Audio Inputでは、速度・位置を変更する処理とは別に、入力の更新状態（freshness）、応答（response）、その応答を使うUpdate処理の順に実行します。
+
+独自の処理で密度などを取得するために、生成されたRenderプログラムを利用する場合、include前の`FLUXFX_INTRINSIC_RENDER`定義により距離フェードが省略されます。共通HLSL `Runtime/Shaders/DistanceFade.hlsl`を別の描画処理から呼ぶ場合は、元のSystemの原点と、親を含む一様スケールの倍率を渡してください。

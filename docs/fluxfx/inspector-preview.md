@@ -74,7 +74,7 @@ Play開始・ワールドビルド時に、Authoringの設定からRuntime用の
 
 Play中もAuthoring Inspectorを使います。対応するLive項目は元のセクションに表示され、Runtimeの値を読み書きします。外部UdonがRuntime APIで変更した値にも表示が追従します。**Play中の変更はPlay終了時に破棄されます。**
 
-再生成が必要な項目やInspector更新に未対応の項目は編集できません。Sceneビューの形状ハンドルも編集不可です。未生成・未初期化のLive項目も読み取り専用になるため、表示が無効な項目をSystem側で直接変更しないでください。APIの変更方針がLiveでも、Inspector用の対応がなければ編集できません。
+再生成が必要な項目やInspector更新に未対応の項目は編集できません。Sceneビューの形状ハンドルも編集不可です。Runtimeの構成が生成されていない場合や、初期化が完了していない場合もLive項目は編集できません。編集できない項目をSystem側で直接変更しないでください。APIの変更方針がLiveでも、Inspector用の対応がなければ編集できません。
 
 外部Udonからの操作は引き続き[FluxParticleSystemのRuntime API](./runtime-parameters.md)を使用します。
 

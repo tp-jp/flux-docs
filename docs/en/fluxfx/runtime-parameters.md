@@ -172,3 +172,7 @@ Set methods returning bool reject unsupported parameters, locked Static values, 
 Inspector constraints still apply: Billboard supports only Z rotation, sizes/rates are nonnegative, and Trails Duration must be positive. Changing Duration on enabled Trails or re-enabling Trails clears history.
 
 Runtime edits do not modify the saved Prefab or synchronize over the network. See [Status and particle counts](./state-and-count.md) for status display.
+
+## Audio Input and Distance Fade {#input-appearance}
+
+Use `target.Modules.AudioInput` and `target.Modules.DistanceFade` with `TpLab.Flux.FX.Udon.Modules`. Both expose Live settings and GetEnabled / SetEnabled. See [Audio Input](./audio-input.md#runtime) and [Distance Fade](./distance-fade.md#runtime) for the complete setting names and ranges. These changes also appear in supported Live Inspector fields. Audio Input exposes settings, not CPU readback of per-particle responses.

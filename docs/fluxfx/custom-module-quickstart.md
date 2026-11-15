@@ -85,7 +85,7 @@ ID・HLSL関数名・GUID・アセンブリ参照は自動生成されます。H
 
 初期値の名前では、生成namespaceは`MyCompany.FluxFX.CustomAcceleration.Udon`、取得メソッドは`system.Modules.CustomAcceleration()`です。`system`にはFluxParticleSystemを使います。対象モジュールが組み込まれていない場合、取得結果はnullです。
 
-Handleには`GetStrength`／`SetStrength`、`GetDirection`／`SetDirection`、`GetEnabled`／`SetEnabled`があります。変更はRuntime限りで、Authoringの保存値を書き換えません。独自asmdefの呼び出し元には生成された`R.Udon`への参照が必要です。Handleをフィールドへ保持するときは、[既存のRuntime APIの例](./runtime-parameters.md)と同様にobject型で保持して利用時にキャストします。
+Handleには`GetStrength`／`SetStrength`、`GetDirection`／`SetDirection`、`GetEnabled`／`SetEnabled`があります。変更は実行中の値にだけ適用され、Authoringに保存された設定値は書き換えません。独自asmdefの呼び出し元には生成された`R.Udon`への参照が必要です。Handleをフィールドへ保持するときは、[既存のRuntime APIの例](./runtime-parameters.md)と同様にobject型で保持して利用時にキャストします。
 
 ## 名前・配置で困ったとき {#constraints}
 

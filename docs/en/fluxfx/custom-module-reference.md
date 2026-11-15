@@ -225,3 +225,45 @@ To modify position after `motion`, use the `AfterOperation` read of `particle.po
 
 Multiple operations writing the same Value in the same Phase need an order between them. Ambiguous ordering, dependency cycles, and missing required targets produce errors. `render.intensity` is a Parameter, not an Operation dependency target. The rendering shader applies Intensity to RGB according to the [Intensity Mask](./renderer.md#intensity-mask).
 
+
+## Connecting Audio Input and Distance Fade {#input-appearance}
+
+### Additional IDs {#input-appearance-ids}
+
+| Kind | ID | Type, phase, and purpose |
+| --- | --- | --- |
+| Module | `tplab.fluxfx.audio-input` | Audio Input |
+| Module | `tplab.fluxfx.distance-fade` | Distance Fade |
+| Value | `audio-input.sample` | Float3, ReadOnly; input and update counter supplied by a Derived Provider |
+| Value | `audio-input.freshness` | Float2, OwnerManaged; previous counter and time without updates |
+| Value | `audio-input.response` | Float3, OwnerManaged; smoothed response read by consumer modules |
+| Operation | `audio-input.initialize` | Spawn; initializes freshness to (-1, 0) and response to 0 |
+| Operation | `audio-input.update-freshness` | Update; computes input freshness |
+| Operation | `audio-input.update-response` | Update; computes response after freshness |
+| Operation | `render.distance-fade` | Render; multiplies render.color RGB or Alpha by a distance factor |
+
+These exist only when the corresponding modules are included. Consumers must not write Audio Input's owned state. sample and freshness are implementation details; use the public response contract.
+
+Distance Fade Parameter IDs are `distance-fade.start-distance`, `distance-fade.end-distance`, `distance-fade.target`, and `distance-fade.enabled`. Audio Input uses the prefix `audio-input.` with band, gain, noise-floor, strength, attack, release, slow-response, average-gain, timeout, and enabled. All are Live. See [Distance Fade](./distance-fade.md) and [Audio Input](./audio-input.md) for ranges.
+
+### Read the audio response {#audio-response-read}
+
+In the consumer Definition, pass `FluxParticleAudioInputOutputs.Read(phase)` from `TpLab.Flux.FX.Editor.Modules.AudioInput` to the Operation's `reads`.
+
+| Consumer phase | Read |
+| --- | --- |
+| Update | `Read(FluxParticlePhase.Update)`: AfterOperation for audio-input.update-response |
+| Render | `Read(FluxParticlePhase.Render)`: Committed |
+| Spawn | Read throws; response is initialized to zero at this phase |
+
+Add Audio Input to the same System. Declaring a read does not add it automatically. The Update read contract orders the consumer after response updates. Render reads committed state; do not put an Update Operation in Render dependencies.
+
+The generated HLSL input is `ctx.valueAudioInputResponse`: x is the fast selected-band response, y its slow response, and z the four-band average. A consumer can use it as a color or size factor, while also declaring the target Value's reads/writes and ordering against other writers. Audio Input itself does not modify rendering.
+
+### Distance fade and color order {#distance-fade-order}
+
+Distance Fade collects existing Render-phase render.color writers at registration time, plus `render.color` and `render.blink`, as optional predecessors. Register custom color processing before Distance Fade and verify order. Writers registered later are not automatically discovered.
+
+The standard pipeline diagram above shows the basic chain. With Distance Fade, `render.distance-fade` follows the color operations registered before it. Audio Input runs a separate sequence: update input freshness, update the response, then run Update operations that use the response. It does not modify velocity or position itself.
+
+When using the generated Render program for custom density captures or similar purposes, defining `FLUXFX_INTRINSIC_RENDER` before inclusion skips distance fading. If another renderer calls the shared `Runtime/Shaders/DistanceFade.hlsl`, pass the source System's origin and uniform scale, not the destination renderer's transform.

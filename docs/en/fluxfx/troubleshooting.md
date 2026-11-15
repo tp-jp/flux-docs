@@ -134,3 +134,13 @@ These are distinctive message fragments; numbers and paths vary.
 `Particle Executor Manifest is invalid`, mismatched Buffer dimensions, and missing Prefab components indicate configuration problems. Before guessing internal references, check dependency versions and reproduce with a fresh bundled Prefab and normal generation.
 
 If the issue persists, record package versions, environment, the first Console error, and a minimal reproducing configuration.
+
+## Audio input and distance fading {#input-appearance}
+
+| Symptom | Check |
+| --- | --- |
+| Audio Input has no visible effect | Include a response consumer; check AudioLink input, Enabled, Gain, Strength, and alive particles |
+| Audio response remains after disabling | It decays through Release and Slow Response; disabling does not reset it instantly |
+| Distance Fade has no effect | Check that the camera uses perspective projection, End Distance exceeds Start Distance, and all three axes have the same scale factor. Also check distance from the system origin and whether Target matches the blend mode |
+
+See [Audio Input](./audio-input.md) and [Distance Fade](./distance-fade.md) for details.

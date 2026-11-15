@@ -167,8 +167,12 @@ Initializeには既存の`ParticleCount`を渡します。この操作はシェ�
 
 ## 変更が拒否される場合
 
-boolを返すSetメソッドは、非対応の項目・Staticのロック・型や数値制約に合わない値などでfalseを返します。自動的に適正値へ丸められるとは考えず、戻り値を確認します。NaNやInfinityも受け付けません。
+boolを返すSetメソッドは、非対応の項目・Staticのロック・型や数値制約に合わない値などでfalseを返します。値が自動的に許容範囲内へ補正されると考えず、戻り値を確認します。NaNやInfinityも受け付けません。
 
 Billboardの回転はZ軸だけ、サイズや頻度は非負など、Inspectorと同じ項目の制約を確認してください。TrailsのDurationは正の値が必要です。有効なTrailsでDurationを変更したり、Trailsを再び有効にしたりすると、軌跡の履歴は消去されます。
 
 実行中の変更は保存済みPrefabの編集やネットワーク同期にはなりません。状態の表示方法は[状態と粒子数の取得](./state-and-count.md)を参照してください。
+
+## Audio InputとDistance Fade {#input-appearance}
+
+`target.Modules.AudioInput`・`target.Modules.DistanceFade`を取得し、`TpLab.Flux.FX.Udon.Modules`の拡張メソッドを使います。両方ともLive設定とGetEnabled／SetEnabledに対応します。設定名と範囲は[Audio Input](./audio-input.md#runtime)・[Distance Fade](./distance-fade.md#runtime)を参照してください。変更は対応するLive Inspector項目にも反映されます。Audio InputのHandleは設定用で、粒子ごとの応答をCPUへ読み戻すものではありません。

@@ -296,11 +296,11 @@ namespace TpLab.Flux.FX.CustomModules.Editor
 
 ### 処理順に注意する {#execution-order}
 
-この例の`optionalDependencies`は、[速度の処理列](./custom-module-reference.md#operation-pipelines)に存在する標準Writerの後へ配置する指定です。Gravity、Force、Noise、Vortex、Drag、Limit Velocityの後で加速し、これらの標準モジュールがなくても使えます。
+この例の`optionalDependencies`は、[速度を更新する処理](./custom-module-reference.md#operation-pipelines)に存在する標準Writerの後へ配置する指定です。Gravity、Force、Noise、Vortex、Drag、Limit Velocityの後で加速し、これらの標準モジュールがなくても使えます。
 
 したがって、**この例で加えた速度には、その更新のDragやLimit Velocityは適用されません**。最大速度で制限したい場合は、速度を書き換えるOperation間の依存関係を見直します。Inspectorで追加する順番やStageを変えるだけでは順序を指定できません。
 
-速度の処理列では、コンパイラーが先行するWriterの結果へ読み取りを接続します。`StepPrevious`が書かれていても、標準モジュールの計算結果を常に無視するという意味ではありません。複数のカスタムモジュールが同じ値を書き換える場合も、順序を明確にし、循環依存を避けます。
+速度を更新する処理では、コンパイラーが先行するWriterの結果へ読み取りを接続します。`StepPrevious`が書かれていても、標準モジュールの計算結果を常に無視するという意味ではありません。複数のカスタムモジュールが同じ値を書き換える場合も、順序を明確にし、循環依存を避けます。
 
 ## Inspectorの言語切り替えに対応する {#localization}
 
@@ -325,7 +325,7 @@ namespace TpLab.Flux.FX.CustomModules.Editor
 
 翻訳結果を保持する場合も、言語ごとに解決してください。初回の翻訳だけをキャッシュすると、Inspectorの言語を切り替えても表示が追従しなくなります。表示名を翻訳しても、Module ID・Parameter ID・Operation IDや保存する設定値は変更しません。
 
-独自PropertyDrawerが内部で描く文字列は、このインターフェースでは自動翻訳されません。Drawer側で扱います。また、Play中の対応するLive項目でもラベルとenum選択肢は翻訳されますが、TooltipはRuntime値と変更破棄を説明する共通文言になります。翻訳対応だけでLive編集への対応が追加されるわけではありません。
+独自PropertyDrawerが内部で描く文字列は、このインターフェースでは自動翻訳されません。Drawer側で扱います。また、Play中の対応するLive項目でもラベルとenum選択肢は翻訳されますが、Tooltipには、実行中の値を表示していることと、Play終了時に変更が破棄されることを説明する共通の文言が表示されます。翻訳対応だけでLive編集への対応が追加されるわけではありません。
 
 ### 言語切り替えを確認する {#localization-checks}
 

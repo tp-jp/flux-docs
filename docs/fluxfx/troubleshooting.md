@@ -134,3 +134,13 @@ StaticはPause・Stop・Clear・Restartでも変更可能になりません。[�
 `Particle Executor Manifest is invalid`、Buffer寸法の不一致、Prefab内のコンポーネント不足などは、実行用構成の問題です。内部参照を個別に推測して埋める前に、依存バージョンを確認し、同梱Prefabの新規配置と通常の生成手順で再現するか調べます。
 
 解決しない場合は、パッケージのバージョン、発生する環境、最初のConsoleエラー、再現する最小設定を記録すると原因を絞りやすくなります。
+
+## 音声入力と距離フェード {#input-appearance}
+
+| 症状 | 確認すること |
+| --- | --- |
+| Audio Inputを追加しても変化しない | 応答を使うモジュール、AudioLink入力、Enabled・Gain・Strength、生存粒子を確認する |
+| 無効化後も音声応答が残る | Release・Slow Responseで減衰する。即時リセットではない |
+| Distance Fadeが効かない | カメラが透視投影か、End DistanceがStart Distanceより大きいか、ScaleのXYZ軸の倍率が等しいかを確認する。システム原点からの距離と、Targetに合うブレンド設定も確認する |
+
+詳しくは[Audio Input](./audio-input.md)と[Distance Fade](./distance-fade.md)を参照してください。

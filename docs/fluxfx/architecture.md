@@ -23,7 +23,7 @@ FluxはRenderTextureとシェーダーを使ったGPU計算の基盤です。Flu
 
 ## Inspectorの設定とModule {#authoring}
 
-`FluxParticleAuthoring`は専用Inspectorと全編集設定を持ちます。Particle Count・Play On Awake、Main・Emission・Shape・Renderer、Curve／Gradient、モジュール一覧もAuthoringに保存します。Play開始・ワールドビルド時に設定をRuntimeへベイクします。各Moduleはその一覧に保存される設定オブジェクトです。例えばCustomLiftはStrengthとDirectionを保持します。
+`FluxParticleAuthoring`は専用Inspectorとすべての編集用設定を持ちます。Particle Count・Play On Awake、Main・Emission・Shape・Renderer、Curve／Gradient、モジュール一覧もAuthoringに保存します。Play開始・ワールドビルド時に設定をRuntimeへベイクします。各Moduleはその一覧に保存される設定オブジェクトです。例えばCustomLiftはStrengthとDirectionを保持します。
 
 Moduleは、個別に毎フレーム実行されるUdonSharpBehaviourではありません。Editorがその設定を読み、対応するDefinitionを通してGPU処理へ組み込みます。InspectorのStageは表示グループを決め、実際の実行順はOperationの依存関係で決まります。
 

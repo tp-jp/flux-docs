@@ -108,3 +108,9 @@ Each client runs its own simulation. Playback, parameters, and particle states a
 Change one setting at a time. Distinguish lowering Rate from lowering capacity, and Stop from Pause. Measure initialization separately from ongoing playback.
 
 Implementation alone cannot predict frame rate for a specific particle count. After preview tuning, evaluate the actual world alongside its other rendering and logic. For failures, see [troubleshooting](./troubleshooting.md).
+
+## Audio Input and Distance Fade costs {#input-appearance}
+
+[Audio Input](./audio-input.md) stores response (Float3) and freshness (Float2) per particle and adds update work. Disabling retains decay processing; compare against removing the module. Inspect generated State Pages and passes rather than assuming a fixed RenderTexture count. AudioLink is optional, with zero input when absent.
+
+[Distance Fade](./distance-fade.md) attenuates render color; it does not stop simulation. Fully faded rendering does not guarantee eliminated draw cost. Non-uniform scale is unsupported, and orthographic cameras bypass fading.

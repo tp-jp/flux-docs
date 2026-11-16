@@ -8,9 +8,9 @@ This page describes limits in Flux. See [Installation](./installation.md) for se
 
 ## Buffer format and capacity
 
-A Buffer is a square ARGBFloat RenderTexture. One element holds four floating-point components; there is no API for storing arbitrary structures or variable-length records directly. Assign data to these components or use multiple Buffers.
+A Buffer is an ARGBFloat RenderTexture. One element holds four floating-point components; there is no API for storing arbitrary structures or variable-length records directly. Assign data to these components or use multiple Buffers.
 
-The side length is `ceil(sqrt(Initial Count))`. The texture can contain pixels beyond the valid Count.
+Automatic creates a square with side length `ceil(sqrt(Initial Count))`; Explicit uses Width × Height. The texture can contain pixels beyond the valid Count.
 
 | Operation | Limitation |
 | --- | --- |
@@ -20,7 +20,7 @@ The side length is `ceil(sqrt(Initial Count))`. The texture can contain pixels b
 | Increasing Count | Does not initialize newly valid elements |
 | Reuse after Release | Reallocates from initial settings; old contents and modified Count are lost |
 
-Flux defines no independent maximum Buffer element count. Actual allocation depends on texture support and GPU memory. It does not split large allocations or switch to a fallback format on failure.
+Width and height must be positive, their product must fit in Int32, and Initial Count must not exceed capacity. Actual allocation depends on texture support and GPU memory. It does not split large allocations or switch to a fallback format on failure.
 
 <span id="cpuからのアップロード"></span>
 
@@ -41,11 +41,11 @@ The upload shader writes zero outside Count. Consecutive uploads of array chunks
 
 ## Kernel execution
 
-Kernels execute shaders through VRCGraphics.Blit. There are no API arguments for thread-group count or pass number. The output texture determines the rendered dimensions; the shader must handle valid ranges.
+Kernels execute shaders through VRCGraphics.Blit. Dispatch overloads accept a Pass number, but there is no thread-group count argument. The output texture determines the rendered dimensions; the shader must handle valid ranges.
 
 | Concern | Caller responsibility |
 | --- | --- |
-| References | Check nulls and keep inputs separate from output |
+| References | Explicit Buffer nulls and identical Textures are checked; prevent overlap with additional input Textures yourself |
 | Output Count | Set it explicitly; Dispatch does not change it |
 | Pixels outside Count | Exclude or initialize them in the shader |
 | Additional inputs | SetBuffer passes only a Texture; pass extra dimensions and counts when needed |
@@ -91,3 +91,15 @@ Flux uses ARGBFloat RenderTextures, shader rendering, and VRCAsyncGPUReadback wh
 Source code alone cannot establish how many elements will sustain a particular frame rate. Evaluate capacity, Buffer count, Dispatch count, shader cost, and readback frequency together. Lowering Count does not shrink allocated textures; avoid excessive initial capacity.
 
 Flux is in early development. Check API, package structure, and sample assumptions when upgrading.
+
+## Grids, Scatter, Filter, and swaps {#grid-operations}
+
+A Grid manages layout only and does not own Buffers. CellCount differs from AtlasCapacity; Buffers must use the full atlas dimensions and Count.
+
+See [Scatter](./scatter.md) for its standard D3D11 / SM5 backend, 131,072-input per-dispatch limit, and range end limit of 16,777,216. Udon cannot fully detect GPU support, and a true Try result does not guarantee GPU completion. Chunked accumulation has rounding error and is not guaranteed to match another method bit for bit.
+
+Grid Filter writes one axis at a time into a separate Texture without allocating working Buffers. Zero boundaries do not renormalize weights; Clamp boundaries constrain coordinates only. The caller specifies weight normalization and unit compensation.
+
+FluxPingPong manages references and order only. ResetOrder does not restore contents or match Buffer dimensions or Count. See the [grid workflow](./grid-workflow.md) for a complete example.
+
+The framework does not provide half precision, dynamic resizing, shared pools, or ownership management for external Textures. Application migration, matching output or appearance, and performance improvements require separate evaluation.

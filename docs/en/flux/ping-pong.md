@@ -2,7 +2,7 @@
 
 # Iterative computation with ping-pong
 
-To use the previous result as the next input, alternate two Buffers between input and output. This is called ping-pong. Flux implements it with Kernel Dispatch and reference swapping, not a dedicated component.
+To use the previous result as the next input, alternate two Buffers between input and output. This is called ping-pong. Use Kernel Dispatch and reference swapping, either directly or through the `FluxPingPong` helper component.
 
 <span id="入力と出力を切り替える"></span>
 
@@ -16,6 +16,35 @@ Do not use the same Buffer as both input and output.
 </div>
 
 No CPU readback is necessary between passes. Pass each output directly to the next Dispatch.
+
+## Use FluxPingPong {#component}
+
+Assign separate **Buffer A** and **Buffer B** references in the FluxPingPong Inspector. Initially Current is A and Next is B. Reading these references does not allocate Textures.
+
+| API | Behavior |
+| --- | --- |
+| `Current` / `Next` | Current and next-output Buffer references; null when unassigned |
+| `TrySetBuffers(current, next)` | Set two different non-null components and reset order; preserves both pair and order on failure |
+| `TrySwap()` | Exchange roles; returns false and preserves order for invalid references |
+| `ResetOrder()` | Restore the last successfully assigned pair's order, or Inspector A→B if unchanged |
+
+With initialized input and Buffer dimensions, counts, and capacities appropriate for the computation:
+
+```csharp
+var current = buffers.Current;
+var next = buffers.Next;
+if (current == null || next == null || current == next) return;
+if (current.Texture == null || current.Texture == next.Texture) return;
+if (!kernel.ValidateDispatch(next, 0)) return;
+kernel.Dispatch(current, next, 0);
+if (!buffers.TrySwap()) return;
+```
+
+Here buffers is a FluxPingPong and kernel is a prepared computation Kernel. Read Current, issue writes into Next, then swap. TrySwap does not detect Dispatch success or GPU completion.
+
+The helper does not own Buffers or allocate, clear, release, copy, change Count, or dispatch. It validates component references only, not dimensions, Count, or actual Texture identity. Disabling, re-enabling, or releasing Buffers preserves order. ResetOrder does not initialize or rewind GPU data.
+
+The caller manages time, update frequency, deltaTime, and iteration count. The [grid workflow example](./grid-workflow.md) uses this helper. The following example swaps references manually to show how the mechanism works.
 
 <span id="_2倍の計算を3回実行する"></span>
 

@@ -38,7 +38,7 @@ GameObjectに`FluxBuffer`を追加し、Inspectorの **Initial Count** に初期
 | `Capacity` | 確保済みの最大要素数。テクスチャの幅×高さ |
 | `Texture` | Bufferが保持するRenderTexture |
 
-テクスチャは正方形で、1辺の長さは`ceil(sqrt(Initial Count))`です。そのため、有効要素数より容量が大きくなる場合があります。
+**Size Mode = Automatic**では正方形で、1辺の長さは`ceil(sqrt(Initial Count))`です。**Explicit**ではWidthとHeightを指定します。例えば256×128ならCapacityは32,768で、Initial Countはその範囲内にします。どちらも有効要素数より容量が大きくなる場合があります。以下はAutomaticの例です。
 
 | Initial Count | テクスチャサイズ | 初期Count | Capacity |
 | --- | --- | --- | --- |
@@ -52,7 +52,7 @@ GameObjectに`FluxBuffer`を追加し、Inspectorの **Initial Count** に初期
 
 ### 有効要素数を変える
 
-次のコードは、Initial Countが5のBufferを参照する`buffer`に対して実行する例です。
+次のコードと図は、Automatic・Initial Countが5のBufferを参照する`buffer`に対して実行する例です。
 
 ```csharp
 buffer.SetCount(3); // Countは3、Capacityは9のまま
@@ -66,7 +66,7 @@ buffer.SetCount(8); // 確保済みの容量内なので変更できる
 
 `SetCount`で指定できるのは0以上Capacity以下です。範囲外ではエラーを出力し、Countは変更しません。Countを増やしてもデータの初期化は行われないため、新しく有効にした要素へ値を書き込んでから読み取ります。
 
-`SetCount`はテクスチャの拡張や縮小を行いません。必要な最大要素数に合わせて、実行前にInitial Countを設定してください。確保後にInspectorの値を変更しても、その場で再確保されるわけではありません。
+`SetCount`は、確保済みテクスチャの拡張・縮小・クリアを行いません。未確保なら、指定したcountではなくInspectorの初期設定で遅延確保してから範囲を検証します。必要容量に合わせて、実行前にInitial CountとSize Mode・寸法を設定してください。確保後にInspectorの値を変更しても、その場で再確保されるわけではありません。
 
 <span id="array-to-texture-mapping"></span>
 
@@ -92,24 +92,34 @@ FluxBufferは次の設定でRenderTextureを作成します。
 | 設定 | 値 |
 | --- | --- |
 | フォーマット | `ARGBFloat` |
-| フィルタリング | `Point` |
+| フィルタリング | Filter Modeで`Point`（初期値）または`Bilinear` |
 | ラップモード | `Clamp` |
 | 深度バッファ | なし |
 | ミップマップ | なし |
 
 BufferをKernelへ渡す場合は`SetBuffer`、描画など別の用途でテクスチャを参照する場合は`Texture`を使います。Bufferのデータ配置を維持するため、取得したテクスチャのサイズや設定は変更せずに使ってください。
 
+## 初期設定と確保失敗 {#allocation}
+
+Size Modeの初期値はAutomatic、Filter ModeはPointです。追加前の既存Assetでも、この初期値を維持します。ExplicitのWidth・Heightは各1以上、Initial Countは1以上かつWidth×Height以下が必要です。積はlongで検証し、Int32を超える容量を拒否します。不明なSize Mode／Filter Modeもエラーになります。
+
+EditorのC#実行ではGPUの最大TextureサイズとARGBFloat対応も事前確認します。Udonではこれらの問い合わせを使わず、Createの成否、IsCreated、実際の寸法・形式を確認します。確保失敗時はTextureがnull、CountとCapacityが0になります。作成直後の内容は未定義で、ゼロ初期化済みではありません。
+
+Pointは個々の値を読む用途、BilinearはUVによる補間が必要な用途で選びます。HLSLの整数Loadにはフィルタ設定は影響しません。[3Dグリッド](./grid3d.md)ではタイル境界をまたがない専用の補間関数を使います。
+
+半精度形式、動的リサイズ、共有プール、外部Textureの所有権管理を行うAPIはありません。
+
 <span id="release-and-reuse"></span>
 
 ## 解放と再利用
 
-不要になったBufferは`Release()`でテクスチャを解放できます。GameObjectの破棄時にも自動的に解放されます。
+不要になったBufferは`Release()`でテクスチャを解放できます。OnDestroyでも解放されますが、OnDisableでは自動解放しません。無効化だけでは内容や容量は変わりません。
 
 ```csharp
 buffer.Release();
 ```
 
-解放後、次に`Texture`・`Count`・`Capacity`などを利用すると、Initial Countに基づいて再確保されます。以前のデータや`SetCount`で変更したCountは引き継がれません。例えばInitial Countが5なら、再確保後のCountは5です。
+解放後、次に`Texture`・`Count`・`Capacity`などを利用すると、Size Mode・Width・Height・Filter Mode・Initial Countの初期設定に基づいて再確保されます。以前のデータや`SetCount`で変更したCountは引き継がれません。例えばInitial Countが5なら、再確保後のCountは5です。
 
 読み戻し要求の処理中に解放しないでください。また、`SetBuffer`でKernelに設定済みのテクスチャ参照は自動で差し替わらないため、再確保後にもう一度`SetBuffer`を呼びます。
 

@@ -90,6 +90,13 @@ For Editor testing, use Play Mode with normal scene reload enabled. SceneFlow is
 
 Calling `SetFloat`, `Dispatch`, or other Kernel methods before scene processing has prepared the Material can cause errors.
 
+## GPU features and validation {#gpu-and-tests}
+
+Buffers use ARGBFloat RenderTextures. Grid3D and Grid Filter HLSL require integer loads at target 3.5 or higher; standard Scatter requires D3D11, Shader Model 5 tessellation, and Geometry Shader support. The Scatter requirements do not apply to every Flux feature.
+
+Import **Runtime Tests** from Package Manager's Samples to execute the same Udon test bodies in normal Play or Test Runner. See [Runtime Tests](./runtime-tests.md) for ClientSim, Scene Reload, GPU requirements, and execution steps.
+
+
 <span id="次のステップ"></span>
 
 ## Next steps

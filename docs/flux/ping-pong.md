@@ -2,7 +2,7 @@
 
 # Ping-pongによる反復計算
 
-前回の計算結果を次の入力にするには、2つのBufferを使い、入力と出力の役割を交互に切り替えます。この方法をPing-pongと呼びます。Fluxでは専用コンポーネントではなく、FluxKernelのDispatchとBuffer参照の交換で実装します。
+前回の計算結果を次の入力にするには、2つのBufferを使い、入力と出力の役割を交互に切り替えます。この方法をPing-pongと呼びます。FluxKernelのDispatchとBuffer参照の交換で実装でき、交換を管理する補助コンポーネント`FluxPingPong`も使えます。
 
 <span id="alternate-input-and-output"></span>
 
@@ -16,6 +16,35 @@
 </div>
 
 計算結果をCPUへ戻す必要はありません。出力したBufferをそのまま次のDispatchへ渡せます。
+
+## FluxPingPongを使う {#component}
+
+FluxPingPongのInspectorへ別々の **Buffer A** と **Buffer B** を設定します。初期状態ではCurrentがA、NextがBです。参照の取得だけではTextureを確保しません。
+
+| API | 動作 |
+| --- | --- |
+| `Current` / `Next` | 現在側／次回書き込み側のBuffer参照。未設定ならnull |
+| `TrySetBuffers(current, next)` | 異なる2つの非nullコンポーネント参照を設定し、順序を初期化。失敗時は組と順序を保持 |
+| `TrySwap()` | 参照の役割を交換。参照不正ならfalseで順序を維持 |
+| `ResetOrder()` | 最後に設定した組の順序へ戻す。未変更ならInspectorのA→B |
+
+入力が初期化済みで、両Bufferの寸法・Count・容量が計算に合っている場合、次のように使います。
+
+```csharp
+var current = buffers.Current;
+var next = buffers.Next;
+if (current == null || next == null || current == next) return;
+if (current.Texture == null || current.Texture == next.Texture) return;
+if (!kernel.ValidateDispatch(next, 0)) return;
+kernel.Dispatch(current, next, 0);
+if (!buffers.TrySwap()) return;
+```
+
+buffersはFluxPingPong、kernelは準備済みの計算用Kernelです。Currentを読みNextへ書き込みを発行した後に交換します。TrySwapはDispatchの成功やGPU完了を判定しません。
+
+このコンポーネントはBufferを所有せず、確保・クリア・解放・コピー・Count変更・Dispatchを行いません。検証対象はコンポーネント参照だけで、寸法やCount、実際のTextureの同一性は保証しません。無効化・再有効化やBufferのReleaseでも交換順序は維持します。ResetOrderはGPUデータの初期化や巻き戻しではありません。
+
+時刻、更新頻度、deltaTime、反復回数は利用側で管理します。[グリッド計算の例](./grid-workflow.md)でもこの補助を使います。以下は仕組みを確認するため、参照を手動で交換する例です。
 
 <span id="double-the-values-three-times"></span>
 

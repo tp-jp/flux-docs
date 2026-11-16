@@ -90,6 +90,13 @@ Editorで試すときは、通常のシーンリロードを伴うPlay Modeを�
 
 シーン処理が実行されない状態でKernelの`SetFloat`や`Dispatch`などを呼ぶと、Materialが未設定のままになり、エラーになることがあります。
 
+## GPU機能と動作確認 {#gpu-and-tests}
+
+BufferはARGBFloat RenderTextureを使います。Grid3DとGrid FilterのHLSLは整数Load対応のtarget 3.5以上、標準ScatterはD3D11・Shader Model 5のテッセレーションとGeometry Shaderが必要です。Scatterの条件をすべてのFlux機能に適用する必要はありません。
+
+Package ManagerのSamplesから **Runtime Tests** をインポートすると、通常PlayとTest Runnerで同じUdonテスト本体を動かせます。ClientSim・Scene Reload・GPU環境の条件と実行手順は[Runtime Tests](./runtime-tests.md)を参照してください。
+
+
 <span id="next-steps"></span>
 
 ## 次のステップ

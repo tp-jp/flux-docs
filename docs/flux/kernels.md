@@ -22,6 +22,8 @@ Materialは[導入時に設定したSceneFlow](./installation.md#sceneflowによ
 | --- | --- |
 | `kernel.Dispatch(destination)` | 主入力のBufferなしで値を生成する。初期値の生成やUploadなど |
 | `kernel.Dispatch(source, destination)` | sourceを読み取り、destinationへ結果を書き込む |
+| `kernel.Dispatch(destination, pass)` | 主入力なしで指定Passだけを実行する |
+| `kernel.Dispatch(source, destination, pass)` | sourceを読み取り、指定Passだけを実行する |
 
 入力付きのDispatchでは、sourceのテクスチャがシェーダーの`_MainTex`へ渡されます。内部では`VRCGraphics.Blit`が呼ばれ、フラグメントシェーダーの戻り値が出力先のピクセルに書き込まれます。
 
@@ -52,7 +54,13 @@ kernel.SetFloat("_Scale", 2f);
 kernel.Dispatch(source, destination);
 ```
 
-Dispatch自体はnull参照、入力と出力の重複、要素数の対応を検証しません。参照と要素数は呼び出し側で揃え、シェーダー側でも有効範囲を確認します。
+DispatchはMaterialの準備、明示したBufferのnull・Texture確保失敗、sourceとdestinationの同一Textureを検証し、失敗時は描画しません。要素数の対応や、SetBuffer等で追加した入力Textureの重複までは検証しません。Countの対応は利用側で揃え、シェーダー側でも有効範囲を確認します。自動クリアは行わないため、加算用Shaderでは先に別のクリア処理を実行します。
+
+## Passを指定する {#passes}
+
+Pass番号は0以上、MaterialのPass数未満である必要があります。不正な番号や未準備のMaterialでは、エラーを記録して終了します。Passを省略した従来のDispatchは、引き続きPass引数なしの`VRCGraphics.Blit`を呼びます。暗黙にPass 0を選択するAPIへ変更されたわけではありません。クリアと加算を別Passに持つShaderでは、実行したいPassを明示してください。
+
+`ValidateDispatch(destination, pass)`は描画せずにMaterial・Pass・出力の条件を検証し、必要なら出力Textureを遅延確保します。EditorのC#実行ではShaderのisSupportedも調べますが、Udonでは確認できません。trueはGPU完了や結果の正しさを表しません。sourceや追加Textureの検証は含みません。
 
 ## 各要素を2倍にするシェーダー {#scale-shader}
 
@@ -102,7 +110,7 @@ Shader "Flux/Examples/Scale"
 }
 ```
 
-`Cull Off`、`ZWrite Off`、`ZTest Always`は、データを書き込むPassが面の向きや深度に左右されないようにする設定です。この例は1つのPassで処理します。FluxKernelのAPIにはPass番号を選択する引数はありません。
+`Cull Off`、`ZWrite Off`、`ZTest Always`は、データを書き込むPassが面の向きや深度に左右されないようにする設定です。この例は1つのPassで処理します。Passを明示するなら`kernel.Dispatch(source, destination, 0)`でこのPassだけを実行できます。
 
 <span id="try-it-in-the-quick-start"></span>
 
@@ -177,7 +185,7 @@ Dispatch時には次の値が自動設定されます。自分のパラメータ
 | `_FluxSourceCount` | 主入力の有効要素数 |
 | `_FluxSourceWidth`、`_FluxSourceHeight` | 主入力テクスチャの幅と高さ |
 
-主入力の値が更新されるのは`Dispatch(source, destination)`のときだけです。`Dispatch(destination)`では主入力の情報が設定・リセットされないため、主入力用の関数や`_MainTex`に依存しないシェーダーを使います。
+主入力の値が更新されるのはsourceを渡すDispatch（Pass指定の有無を問わない）のときだけです。`Dispatch(destination)`では主入力の情報が設定・リセットされないため、主入力用の関数や`_MainTex`に依存しないシェーダーを使います。
 
 <span id="pass-parameters"></span>
 
@@ -194,6 +202,23 @@ Dispatch時には次の値が自動設定されます。自分のパラメータ
 `name`は`_Scale`のようなシェーダー内の名前です。Inspector向けの表示名ではありません。パラメーターは同じKernelのMaterialに保持されるので、用途を切り替えるときは必要な値を設定し直してください。
 
 `SetVectorArray`を使う場合は、シェーダー側にも対応する配列を宣言します。配列をBufferへ転送する一般的な用途には、転送用シェーダーと要素数の検証を持つ`FluxUpload`を使えます。
+
+## Materialの設定をコピーする {#copy-material}
+
+`CopyPropertiesFromMaterial(source)`は、準備済みのKernel MaterialへUnityのCopyPropertiesFromMaterialに従って設定を一括コピーします。実行時に設定した値を含むプロパティ値・Texture参照・Shaderキーワード・RenderQueue・GIフラグが対象です。KernelのMaterialインスタンスとShaderは維持します。
+
+異なるShaderのMaterialも指定できますが、コピー先Shaderに対応するプロパティが必要です。sourceがnull、またはKernel Materialが未準備なら、エラーを記録して変更せず終了します。コピー元の後続変更は自動同期しません。Textureは参照だけをコピーし、内容は複製しません。
+
+以下は`FluxScale.shader`を設定したKernelで、コピー後に入力と倍率を上書きする例です。sourceSettingsはInspectorで割り当てるMaterial、sourceとdestinationは異なるBufferで、Countと容量を準備済みとします。
+
+```csharp
+kernel.CopyPropertiesFromMaterial(sourceSettings);
+kernel.SetBuffer("_MainTex", source);
+kernel.SetFloat("_Scale", 2f);
+kernel.Dispatch(source, destination, 0);
+```
+
+コピー自体はBufferの確保・クリア・Dispatchを行わず、Textureの入出力重複も検証しません。出力のCount・幅・高さはDispatch時に実際のBuffer情報で上書きされます。主入力の情報はsourceを渡すDispatchでのみ上書きされます。コピーした追加Textureも出力先と重ならないよう確認してください。Materialの生成は引き続きSceneFlow／FluxBuildPassが担当します。
 
 <span id="use-an-additional-input-buffer"></span>
 

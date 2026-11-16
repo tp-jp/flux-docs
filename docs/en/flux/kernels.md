@@ -22,6 +22,8 @@ FluxKernel executes a shader to write computation results to a Buffer. Set param
 | --- | --- |
 | `kernel.Dispatch(destination)` | Generate values without a primary input Buffer, such as initialization or upload |
 | `kernel.Dispatch(source, destination)` | Read source and write results to destination |
+| `kernel.Dispatch(destination, pass)` | Execute only the selected Pass without a primary input |
+| `kernel.Dispatch(source, destination, pass)` | Read source and execute only the selected Pass |
 
 With an input Buffer, its texture is passed as `_MainTex`. Internally, VRCGraphics.Blit runs the shader, and fragment return values are written to output pixels.
 
@@ -52,7 +54,13 @@ kernel.SetFloat("_Scale", 2f);
 kernel.Dispatch(source, destination);
 ```
 
-Dispatch does not validate null references, input/output overlap, or matching counts. Check references and counts in the caller and valid ranges in the shader.
+Dispatch checks Material preparation, explicit Buffer nulls or Texture allocation failure, and identical source/destination Textures, aborting drawing on failure. It does not check matching counts or overlapping additional Textures assigned with SetBuffer or similar calls. Match counts in the caller and check valid ranges in the shader. Dispatch does not clear automatically; additive shaders need a separate clear first.
+
+## Select a Pass {#passes}
+
+A Pass number must be nonnegative and less than the Material's pass count. Invalid numbers or unprepared Materials log an error and abort. Existing Dispatch overloads without a Pass still call `VRCGraphics.Blit` without a Pass argument. They have not been changed to implicitly select Pass 0. Explicitly select the intended Pass when a Shader separates clearing and accumulation.
+
+`ValidateDispatch(destination, pass)` checks the Material, Pass, and output without drawing, lazily allocating the output Texture if necessary. Editor C# execution also checks Shader isSupported; Udon cannot perform that check. True does not mean GPU completion or correct results. Source and additional input Textures are not checked.
 
 ## A shader that doubles each element {#scale-shader}
 
@@ -102,7 +110,7 @@ Shader "Flux/Examples/Scale"
 }
 ```
 
-Cull Off, ZWrite Off, and ZTest Always keep data writes independent of face orientation and depth. This example uses one pass. FluxKernel has no argument for selecting a pass number.
+Cull Off, ZWrite Off, and ZTest Always keep data writes independent of face orientation and depth. This example uses one pass. To explicitly select this Pass, call `kernel.Dispatch(source, destination, 0)`.
 
 <span id="クイックスタートで試す"></span>
 
@@ -177,7 +185,7 @@ Dispatch automatically supplies the following parameters. Do not overwrite them 
 | `_FluxSourceCount` | Valid primary-input element count |
 | `_FluxSourceWidth`, `_FluxSourceHeight` | Primary-input texture dimensions |
 
-Source metadata updates only with Dispatch(source, destination). Dispatch(destination) does not set or reset it, so use a shader that does not depend on primary-input helpers or `_MainTex`.
+Source metadata updates only with a Dispatch that receives source, with or without an explicit Pass. Dispatch(destination) does not set or reset it, so use a shader that does not depend on primary-input helpers or `_MainTex`.
 
 <span id="パラメーターを渡す"></span>
 
@@ -194,6 +202,23 @@ Source metadata updates only with Dispatch(source, destination). Dispatch(destin
 Use the shader's internal name, such as `_Scale`, not its Inspector display label. Values remain on the Kernel's Material; update them as needed when reusing a Kernel.
 
 SetVectorArray requires a matching shader array declaration. For ordinary array-to-Buffer transfers, FluxUpload includes the upload shader workflow and count validation.
+
+## Copy Material settings {#copy-material}
+
+`CopyPropertiesFromMaterial(source)` copies settings into the prepared Kernel Material using Unity's CopyPropertiesFromMaterial behavior: property values including runtime settings, Texture references, Shader keywords, RenderQueue, and GI flags. The Kernel's Material instance and Shader remain unchanged.
+
+A source Material using a different Shader is allowed, but the destination Shader must have corresponding properties. Null source or an unprepared Kernel Material logs an error without changing settings. Later source changes are not automatically synchronized. Texture references are copied, not Texture contents.
+
+This example uses the FluxScale.shader Kernel, overriding input and scale after copying. Assign sourceSettings as a Material in the Inspector. Prepare separate source and destination Buffers with suitable counts and capacities.
+
+```csharp
+kernel.CopyPropertiesFromMaterial(sourceSettings);
+kernel.SetBuffer("_MainTex", source);
+kernel.SetFloat("_Scale", 2f);
+kernel.Dispatch(source, destination, 0);
+```
+
+Copying does not allocate or clear Buffers, dispatch, or check Texture overlap. Dispatch overwrites output count and dimension metadata with actual Buffer values. Primary-input metadata is overwritten only when source is passed to Dispatch. Ensure copied additional input Textures do not overlap the output. SceneFlow / FluxBuildPass still owns Material preparation.
 
 <span id="追加のbufferを入力にする"></span>
 

@@ -21,11 +21,16 @@ const jaTheme: DefaultTheme.Config = {
         ] },
         { text: '応用', items: [
           { text: 'Ping-pongによる反復計算', link: '/flux/ping-pong' },
-          { text: 'Reductionによる集約', link: '/flux/reduction' }
+          { text: 'Reductionによる集約', link: '/flux/reduction' },
+          { text: '3Dグリッドとアトラス', link: '/flux/grid3d' },
+          { text: 'Scatterによる加算', link: '/flux/scatter' },
+          { text: 'Grid Filterによる平滑化', link: '/flux/grid-filter' },
+          { text: 'グリッド計算を組み合わせる', link: '/flux/grid-workflow' }
         ] },
         { text: '困ったとき', items: [
           { text: 'トラブルシューティング', link: '/flux/troubleshooting' },
-          { text: '制約', link: '/flux/limitations' }
+          { text: '制約', link: '/flux/limitations' },
+          { text: 'Runtime Tests', link: '/flux/runtime-tests' }
         ] }
       ],
       '/fluxfx/': [
@@ -114,6 +119,10 @@ const labels: Record<string, string> = {
   "応用": "Advanced usage",
   "Ping-pongによる反復計算": "Iterative computation with ping-pong",
   "Reductionによる集約": "Aggregation with reduction",
+  "3Dグリッドとアトラス": "3D grids and atlases",
+  "Scatterによる加算": "Scatter accumulation",
+  "Grid Filterによる平滑化": "Grid Filter smoothing",
+  "グリッド計算を組み合わせる": "Combining grid operations",
   "困ったとき": "Help",
   "トラブルシューティング": "Troubleshooting",
   "制約": "Limitations",

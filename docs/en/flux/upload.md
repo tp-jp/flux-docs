@@ -81,7 +81,7 @@ Upload has no return value or completion event. To verify the data, use [readbac
 
 ### Count is not capacity
 
-Initial Count 5 produces Count 5 and Capacity 9. Upload a five-element array, not a nine-element array.
+In Automatic mode, Initial Count 5 produces Count 5 and Capacity 9. Upload a five-element array, not a nine-element array.
 
 To change the valid count, call SetCount before upload. This snippet assumes buffer, upload, and values are prepared:
 

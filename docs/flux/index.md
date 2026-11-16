@@ -4,6 +4,8 @@
 
 Fluxは、VRChat向けのGPU計算フレームワークです。GPU上のデータをRenderTextureに保持し、シェーダーで計算します。UdonSharpからデータの転送や計算を制御できます。
 
+Fluxは汎用の計算基盤で、特定の粒子システムや表現のデータ配置には依存しません。値の意味・選別、座標変換、単位や解像度の補正、合成式、時刻と更新頻度は利用側が管理します。
+
 <span id="main-components"></span>
 
 ## 主な構成要素
@@ -15,6 +17,10 @@ Fluxは、VRChat向けのGPU計算フレームワークです。GPU上のデー�
 | `FluxUpload` | CPU上の`Vector4[]`をBufferへ転送する |
 | `FluxReadback` | GPU上のデータをCPUへ非同期で読み戻す |
 | `FluxReduction` | 複数回の計算でBufferのデータを1要素へ集約する |
+| [`FluxGrid3D`](./grid3d.md) | 3Dセルと2Dアトラスの配置を管理する |
+| [`FluxScatter`](./scatter.md) | 周囲8セルへ値を重み付き加算する |
+| [`FluxGridFilter`](./grid-filter.md) | グリッドを1軸ずつ平滑化する |
+| [`FluxPingPong`](./ping-pong.md#component) | 2つのBufferの参照と交換順序を管理する |
 
 1つのBuffer要素は、テクスチャの1ピクセルに対応する4成分の浮動小数点データです。Kernelは`VRCGraphics.Blit`を通じてシェーダーを実行します。
 

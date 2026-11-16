@@ -4,6 +4,8 @@
 
 Flux is a GPU computing framework for VRChat. It stores data in RenderTextures, processes it with shaders, and lets you control transfers and computation from UdonSharp.
 
+Flux is a general-purpose computation framework, independent of any particular particle system or visual effect data layout. The caller manages value semantics and selection, coordinate conversion, units and resolution compensation, composition formulas, time, and update frequency.
+
 <span id="主な構成要素"></span>
 
 ## Main components
@@ -15,6 +17,10 @@ Flux is a GPU computing framework for VRChat. It stores data in RenderTextures, 
 | `FluxUpload` | Transfers a CPU-side `Vector4[]` to a Buffer |
 | `FluxReadback` | Asynchronously reads GPU data back to the CPU |
 | `FluxReduction` | Aggregates Buffer data into one element over multiple passes |
+| [`FluxGrid3D`](./grid3d.md) | Maps 3D cells to a 2D atlas |
+| [`FluxScatter`](./scatter.md) | Accumulates weighted values into eight neighboring cells |
+| [`FluxGridFilter`](./grid-filter.md) | Smooths one grid axis at a time |
+| [`FluxPingPong`](./ping-pong.md#component) | Manages two Buffer references and their exchange order |
 
 Each Buffer element is a texture pixel containing four floating-point components. Kernels execute shaders through `VRCGraphics.Blit`.
 

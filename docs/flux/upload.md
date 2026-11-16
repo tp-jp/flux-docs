@@ -81,7 +81,7 @@ public class FluxUploadExample : UdonSharpBehaviour
 
 ### Countと容量を混同しない
 
-例えばInitial Countが5なら、Countは5、Capacityは9です。この状態で必要なのは長さ5の配列です。容量に合わせて長さ9にすると、Count不一致で拒否されます。
+例えばSize ModeがAutomaticでInitial Countが5なら、Countは5、Capacityは9です。この状態で必要なのは長さ5の配列です。容量に合わせて長さ9にすると、Count不一致で拒否されます。
 
 要素数を変える場合は、転送前に`SetCount`でCountを揃えます。次は、`buffer`、`upload`、`values`を準備済みの処理例です。
 

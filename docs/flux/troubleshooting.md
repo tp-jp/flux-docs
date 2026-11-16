@@ -46,7 +46,7 @@ Consoleのメッセージには、以下の文字列が含まれます。数値�
 
 | メッセージ | 原因と対処 |
 | --- | --- |
-| `Count must be between 0 and Capacity` | SetCountの値が範囲外です。0以上Capacity以下にします。容量が不足する場合は、実行前のInitial Countを見直します |
+| `Count must be between 0 and Capacity` | SetCountの値が範囲外です。0以上Capacity以下にします。容量が不足する場合は、実行前のInitial CountとSize Mode・寸法を見直します |
 | `Upload count must match the destination count` | 配列の長さと転送先のCountが異なります。CapacityではなくCountに合わせます |
 | `Upload count exceeds the maximum of 512` | 1回の転送が512要素を超えています。標準Uploadの上限内に収めます |
 
@@ -62,7 +62,7 @@ Consoleのメッセージには、以下の文字列が含まれます。数値�
 
 ### 再利用したBufferのデータが消える
 
-`Release()`後の利用では、Initial Countに基づいてテクスチャが再確保されます。以前の値は保持されないので再初期化します。別のKernelへ`SetBuffer`で渡していた場合は、新しいテクスチャを設定し直してください。
+`Release()`後の利用では、Size Mode・寸法・Initial Count等の初期設定でテクスチャが再確保されます。以前の値は保持されないので再初期化します。別のKernelへ`SetBuffer`で渡していた場合は、新しいテクスチャを設定し直してください。
 
 <span id="unexpected-kernel-results"></span>
 
@@ -149,3 +149,19 @@ Workspaceが実際の計算で使われない小さな入力でも、両方の�
 ## 問題を切り分けるときに記録する情報
 
 再現に必要なのは、Flux・Unity・Worlds SDK・SceneFlowのバージョン、実行先、最初のエラー、各BufferのCountとCapacity、使用Shader、実行順序です。小さな入力と期待値も用意すると、設定の問題と計算内容の問題を分けやすくなります。
+
+## 明示寸法・Pass・グリッドのエラー {#grid-operations}
+
+| 症状・エラー | 確認すること |
+| --- | --- |
+| Textureがnull、CountとCapacityが0 | Initial Count、Size Mode、Width／Height、容量のInt32上限、ARGBFloat対応、GPUの最大寸法とメモリ。確保失敗のConsoleログを確認 |
+| `Initial Count exceeds Buffer capacity` | Explicit寸法の積以上のInitial Countになっていないか |
+| `Pass must be between` | 0以上・MaterialのPass数未満の番号を指定。標準Scatterはクリア0・加算1、Grid Filterは0 |
+| `Source and destination must use different Textures` | 入力と出力を別にする。追加でバインドしたTextureも自分で確認 |
+| Grid Bufferの寸法・Countエラー | Width／HeightをAtlasWidth／AtlasHeightへ、CountをCellCountではなくAtlasCapacityへ合わせる |
+| 分割したScatterの一部しか残らない | 最初に一度だけクリアする。各範囲の間にクリアしない |
+| Scatterで描画されない | D3D11／SM5対応、入力の範囲、PositionsのW、セル座標を確認。0件のtrueでは描画されない |
+| Filterの出力が大きすぎる／端で減る | 重みの総和とZero／Clampを確認。自動正規化はしない |
+| ResetOrderしても初期状態へ戻らない | 参照順序だけの操作。初期データは別途書き直す |
+
+詳細は[Buffer](./buffers.md#allocation)、[Kernel](./kernels.md#passes)、[Scatter](./scatter.md)、[Grid Filter](./grid-filter.md)、[Runtime Tests](./runtime-tests.md)を参照してください。

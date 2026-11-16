@@ -38,7 +38,7 @@ Before reading newly allocated contents, write your data with Upload or an initi
 | `Capacity` | Allocated element capacity: texture width × height |
 | `Texture` | The Buffer's RenderTexture |
 
-The texture is square, with side length `ceil(sqrt(Initial Count))`. Capacity can therefore exceed Count.
+With **Size Mode = Automatic**, the texture is square with side length `ceil(sqrt(Initial Count))`. **Explicit** uses Width and Height instead. For example, 256×128 gives Capacity 32,768; Initial Count must fit within it. Capacity can exceed Count in either mode. The following examples use Automatic.
 
 | Initial Count | Texture size | Initial `Count` | Capacity |
 | --- | --- | --- | --- |
@@ -52,7 +52,7 @@ The texture is square, with side length `ceil(sqrt(Initial Count))`. Capacity ca
 
 ### Change the valid count
 
-For a Buffer with Initial Count set to 5:
+The code and diagram below use an Automatic Buffer with Initial Count set to 5:
 
 ```csharp
 buffer.SetCount(3); // Count is 3; Capacity remains 9
@@ -66,7 +66,7 @@ buffer.SetCount(8); // Fits within the allocated capacity
 
 SetCount accepts values from 0 through Capacity. An out-of-range value logs an error and leaves Count unchanged. Increasing Count does not initialize the newly valid elements; write them before reading them.
 
-SetCount does not resize the texture. Set Initial Count for the largest capacity you need before running. Changing the Inspector value after allocation does not immediately reallocate it.
+SetCount does not resize or clear an allocated Texture. If unallocated, it first allocates from the Inspector's initial settings, not the requested count, then validates the count. Set Initial Count, Size Mode, and dimensions for the required capacity before running. Changing the Inspector value after allocation does not immediately reallocate it.
 
 <span id="配列とテクスチャの対応"></span>
 
@@ -90,24 +90,34 @@ Invalid elements still occupy texture pixels. Check valid ranges in shaders, and
 | Setting | Value |
 | --- | --- |
 | Format | ARGBFloat |
-| Filtering | Point |
+| Filtering | Filter Mode selects Point (default) or Bilinear |
 | Wrap mode | Clamp |
 | Depth buffer | None |
 | Mipmaps | None |
 
 Use SetBuffer to pass a Buffer to a Kernel. Use Texture when another consumer, such as rendering, needs the texture itself. Keep its dimensions and settings unchanged to preserve the data layout.
 
+## Initial settings and allocation failure {#allocation}
+
+Size Mode defaults to Automatic and Filter Mode to Point, including existing Assets created before these fields were added. Explicit Width and Height must each be positive. Initial Count must be positive and fit within Width × Height. Capacity is checked using a long product and must fit in Int32. Unknown Size Mode or Filter Mode values are rejected.
+
+Editor C# execution also checks the GPU's maximum Texture size and ARGBFloat support. Udon does not use those queries; it checks Create, IsCreated, and the actual dimensions and format. Allocation failure yields null Texture and zero Count and Capacity. Newly allocated contents are undefined, not guaranteed zero.
+
+Choose Point for individual values or Bilinear when UV sampling should interpolate. Integer HLSL loads ignore filtering. For [3D grids](./grid3d.md), use the dedicated interpolation helpers that avoid crossing tile boundaries.
+
+No API provides half precision, dynamic resizing, shared pools, or ownership management for external Textures.
+
 <span id="解放と再利用"></span>
 
 ## Release and reuse
 
-Release an unused Buffer with Release(). It is also released when its GameObject is destroyed.
+Release an unused Buffer with Release(). OnDestroy also releases it, but OnDisable does not. Disabling alone does not change contents or capacity.
 
 ```csharp
 buffer.Release();
 ```
 
-The next access to Texture, Count, or Capacity reallocates it using Initial Count. Previous contents and counts set with SetCount are not preserved. With Initial Count 5, the new Count is 5 again.
+The next access to Texture, Count, or Capacity reallocates it from Size Mode, Width, Height, Filter Mode, and Initial Count. Previous contents and counts set with SetCount are not preserved. With Initial Count 5, the new Count is 5 again.
 
 Do not release a Buffer while readback is pending. Kernel texture references assigned through SetBuffer do not automatically follow reallocation; call SetBuffer again afterwards.
 

@@ -149,3 +149,19 @@ See [Reduction](./reduction.md) for examples.
 ## Information to record
 
 Record Flux, Unity, Worlds SDK, and SceneFlow versions; target environment; first error; Buffer counts and capacities; Shader; and operation order. A small input and its expected result help distinguish setup problems from computation errors.
+
+## Explicit dimensions, Passes, and grids {#grid-operations}
+
+| Symptom or error | Check |
+| --- | --- |
+| Null Texture and zero Count / Capacity | Initial Count, Size Mode, Width / Height, Int32 capacity limit, ARGBFloat support, GPU maximum dimensions and memory; inspect allocation errors in the Console |
+| `Initial Count exceeds Buffer capacity` | Initial Count must not exceed the product of Explicit dimensions |
+| `Pass must be between` | Use a nonnegative number below the Material's pass count; standard Scatter clears with 0 and accumulates with 1, Grid Filter uses 0 |
+| `Source and destination must use different Textures` | Separate input and output; check additional bound Textures yourself too |
+| Grid Buffer dimensions or Count error | Match AtlasWidth / AtlasHeight and set Count to AtlasCapacity, not CellCount |
+| Only part of chunked Scatter remains | Clear once at the beginning, not between ranges |
+| Scatter draws nothing | Check D3D11 / SM5 support, input range, Positions W, and cell coordinates; a zero-count true result does not draw |
+| Filter output is too large or decreases at edges | Check total weight and Zero / Clamp; weights are not normalized automatically |
+| ResetOrder does not restore initial data | It restores reference order only; write initial data separately |
+
+See [Buffers](./buffers.md#allocation), [Kernels](./kernels.md#passes), [Scatter](./scatter.md), [Grid Filter](./grid-filter.md), and [Runtime Tests](./runtime-tests.md).

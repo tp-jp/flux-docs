@@ -46,7 +46,7 @@ Numeric portions of these messages vary at runtime.
 
 | Message | Cause and action |
 | --- | --- |
-| `Count must be between 0 and Capacity` | SetCount is out of range. Use 0 through Capacity, or increase Initial Count before running |
+| `Count must be between 0 and Capacity` | SetCount is out of range. Use 0 through Capacity. If capacity is insufficient, review Initial Count, Size Mode, and dimensions before running |
 | `Upload count must match the destination count` | Array length differs from Count. Match Count, not Capacity |
 | `Upload count exceeds the maximum of 512` | Keep the upload within 512 elements |
 
@@ -62,7 +62,7 @@ Check the array, destination Buffer, Upload Kernel, and that Kernel's Shader. St
 
 ### Reused Buffer data disappears
 
-After Release, the next access reallocates using Initial Count. Initialize the data again. Reassign SetBuffer on any Kernel that held the old texture.
+After Release, the next access reallocates using initial settings such as Size Mode, dimensions, and Initial Count. Initialize the data again. Reassign SetBuffer on any Kernel that held the old texture.
 
 <span id="kernelの結果が期待と違う"></span>
 

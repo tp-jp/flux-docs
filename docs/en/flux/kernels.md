@@ -213,10 +213,11 @@ This example uses the FluxScale.shader Kernel, overriding input and scale after 
 
 ```csharp
 kernel.CopyPropertiesFromMaterial(sourceSettings);
-kernel.SetBuffer("_MainTex", source);
 kernel.SetFloat("_Scale", 2f);
 kernel.Dispatch(source, destination, 0);
 ```
+
+In this example, the source argument to Dispatch specifies the primary input Texture.
 
 Copying does not allocate or clear Buffers, dispatch, or check Texture overlap. Dispatch overwrites output count and dimension metadata with actual Buffer values. Primary-input metadata is overwritten only when source is passed to Dispatch. Ensure copied additional input Textures do not overlap the output. SceneFlow / FluxBuildPass still owns Material preparation.
 

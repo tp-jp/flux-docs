@@ -101,5 +101,3 @@ See [Scatter](./scatter.md) for its standard D3D11 / SM5 backend, 131,072-input 
 Grid Filter writes one axis at a time into a separate Texture without allocating working Buffers. Zero boundaries do not renormalize weights; Clamp boundaries constrain coordinates only. The caller specifies weight normalization and unit compensation.
 
 FluxPingPong manages references and order only. ResetOrder does not restore contents or match Buffer dimensions or Count. See the [grid workflow](./grid-workflow.md) for a complete example.
-
-The framework does not provide half precision, dynamic resizing, shared pools, or ownership management for external Textures. Application migration, matching output or appearance, and performance improvements require separate evaluation.

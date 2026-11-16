@@ -11,7 +11,9 @@
 
 `AtlasColumns`を列数、`AtlasRows = ceil(Size Z / AtlasColumns)`を行数として、幅は`Size X × AtlasColumns`、高さは`Size Y × AtlasRows`です。
 
-使用する[FluxBuffer](./buffers.md)は **Size Mode = Explicit** にし、Width / Heightを`AtlasWidth` / `AtlasHeight`へ、Initial Countを`AtlasCapacity`へ合わせます。実行時も**Count = AtlasCapacity**が必要です。`CellCount`をCountへ設定する契約ではありません。
+使用する[FluxBuffer](./buffers.md)には、**アトラスと同じ幅・高さ、およびCount = AtlasCapacity**が必要です。`CellCount`をCountへ設定する契約ではありません。
+
+設定するには **Size Mode = Explicit** を使い、Width / Heightを`AtlasWidth` / `AtlasHeight`へ、Initial Countを`AtlasCapacity`へ合わせると分かりやすくなります。Automaticでも、確保された寸法とCountが同じ条件を満たせば使用できます。
 
 例えばSize = `(4, 3, 5)`、Slice Columns = 2なら、2列×3行、8×9ピクセルのアトラスです。CellCountは60、AtlasCapacityは72です。最後の行の右タイルは未使用で、12ピクセルの余白があります。余白は有効な3Dセルではありません。
 

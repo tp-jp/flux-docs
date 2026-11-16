@@ -28,15 +28,28 @@ Both Textures are loaded as row-major arrays. Their dimensions may differ. Filte
 | `TryAccumulate(destination, inputStart, inputCount, pass)` | Accumulate a range in one dispatch; standard Shader Pass 1 |
 | `MaxInputCountPerDispatch` | 131,072 inputs; no automatic splitting |
 
-Clear once, then accumulate each range into the same output. Clearing between ranges discards earlier contributions. Run this example after assigning references, initializing input data, and preparing the Material.
+Clear once, then accumulate each range into the same output. Clearing between ranges discards earlier contributions. This example pairs positions and values one-to-one, checking matching counts, the range limit, and Texture separation before clearing. Assign references, initialize input data, and prepare the Material first. scatterKernel must be the same Kernel assigned to FluxScatter.
 
 ```csharp
-scatterKernel.SetBuffer("_FluxScatterPositions", positions);
-scatterKernel.SetBuffer("_FluxScatterValues", values);
-if (!scatter.TryClear(destination, 0)) return;
+var total = positions.Count;
+if (total != values.Count || total > 16777216)
+{
+    Debug.LogError("Input counts must match and be at most 16777216.");
+    return;
+}
+var positionTexture = positions.Texture;
+var valueTexture = values.Texture;
+var outputTexture = destination.Texture;
+if (positionTexture == null || valueTexture == null || outputTexture == null) return;
+if (positionTexture == outputTexture || valueTexture == outputTexture)
+{
+    Debug.LogError("Scatter inputs must not use the output Texture.");
+    return;
+}
 
-var total = Mathf.Min(positions.Count, values.Count);
-if (total > 16777216) return;
+scatterKernel.SetTexture("_FluxScatterPositions", positionTexture);
+scatterKernel.SetTexture("_FluxScatterValues", valueTexture);
+if (!scatter.TryClear(destination, 0)) return;
 for (var start = 0; start < total;)
 {
     var count = Mathf.Min(FluxScatter.MaxInputCountPerDispatch, total - start);
@@ -47,7 +60,7 @@ for (var start = 0; start < total;)
 
 Ranges require `inputStart >= 0`, `0 <= inputCount <= 131072`, and `inputStart + inputCount <= 16777216`. Invalid ranges log an error and return false. A valid zero-count range returns true without validating the destination or Pass, allocating Textures, or drawing. Positive counts validate the layout, Pass, and output dimensions and Count. The Inspector's Grid and Kernel references are required.
 
-Accumulation neither clears automatically nor changes output Count. True indicates validation and submission, not GPU completion or correct results. Floating-point rounding can depend on accumulation order.
+Accumulation neither clears automatically nor changes output Count. For positive counts, true indicates validation and submission, not GPU completion or correct results. Floating-point rounding can depend on accumulation order.
 
 ## Boundaries and values {#boundary}
 

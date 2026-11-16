@@ -28,15 +28,28 @@
 | `TryAccumulate(destination, inputStart, inputCount, pass)` | 範囲を1回で加算。標準ShaderはPass 1 |
 | `MaxInputCountPerDispatch` | 131,072件。自動分割はしない |
 
-最初に一度クリアし、その後は同じ出力へ各範囲を加算します。途中でクリアすると、それまでの加算結果を失います。次の処理は参照・入力データ・Materialの準備後に実行する例です。
+最初に一度クリアし、その後は同じ出力へ各範囲を加算します。途中でクリアすると、それまでの加算結果を失います。次の例は位置と値が1対1に対応する入力で、Countの一致と上限、入出力の分離をクリア前に確認します。参照・入力データ・Materialを準備し、scatterKernelにはFluxScatterのKernelと同じものを割り当ててください。
 
 ```csharp
-scatterKernel.SetBuffer("_FluxScatterPositions", positions);
-scatterKernel.SetBuffer("_FluxScatterValues", values);
-if (!scatter.TryClear(destination, 0)) return;
+var total = positions.Count;
+if (total != values.Count || total > 16777216)
+{
+    Debug.LogError("Input counts must match and be at most 16777216.");
+    return;
+}
+var positionTexture = positions.Texture;
+var valueTexture = values.Texture;
+var outputTexture = destination.Texture;
+if (positionTexture == null || valueTexture == null || outputTexture == null) return;
+if (positionTexture == outputTexture || valueTexture == outputTexture)
+{
+    Debug.LogError("Scatter inputs must not use the output Texture.");
+    return;
+}
 
-var total = Mathf.Min(positions.Count, values.Count);
-if (total > 16777216) return;
+scatterKernel.SetTexture("_FluxScatterPositions", positionTexture);
+scatterKernel.SetTexture("_FluxScatterValues", valueTexture);
+if (!scatter.TryClear(destination, 0)) return;
 for (var start = 0; start < total;)
 {
     var count = Mathf.Min(FluxScatter.MaxInputCountPerDispatch, total - start);
@@ -47,7 +60,7 @@ for (var start = 0; start < total;)
 
 `inputStart >= 0`、`0 <= inputCount <= 131072`、`inputStart + inputCount <= 16777216`が必要です。不正な範囲はエラーを記録してfalseを返します。有効な0件はtrueとなり、出力やPassの検証・Texture確保・描画も行いません。正の件数ではGrid配置・Pass・出力寸法とCountを検証します。GridとKernelのInspector参照は必須です。
 
-加算は自動クリアも出力Countの変更もしません。trueは要求の検証と発行を表し、GPU完了や計算結果の正しさを保証しません。加算順による浮動小数点の丸め誤差があります。
+加算は自動クリアも出力Countの変更もしません。正の件数で返るtrueは要求の検証と発行を表し、GPU完了や計算結果の正しさを保証しません。加算順による浮動小数点の丸め誤差があります。
 
 ## 境界と値 {#boundary}
 

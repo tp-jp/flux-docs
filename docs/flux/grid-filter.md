@@ -4,7 +4,7 @@
 
 ## 準備とAPI {#setup}
 
-FluxKernelのShaderに`Flux/GridFilter`を設定し、FluxGridFilterの **Grid** と **Kernel** を割り当てます。MaterialはSceneFlow／FluxBuildPassで準備します。入力と出力のBufferはアトラスと同じ寸法、Count = AtlasCapacityとし、**異なるTexture**を使用してください。作業用Bufferは内部で確保されません。
+FluxKernelのShaderに`Flux/GridFilter`を設定し、FluxGridFilterの **Grid** と **Kernel** を割り当てます。MaterialはSceneFlow／FluxBuildPassで準備します。入力と出力のBufferはアトラスと同じ寸法、Count = AtlasCapacityとし、**異なるTexture**を使用してください。入力Bufferには、Uploadや先行するKernelで有効なセルの値を書き込んでおきます。作業用Bufferは内部で確保されません。
 
 ```csharp
 var weights = new Vector4(0.5f, 0.25f, 0f, 0f);
@@ -12,7 +12,7 @@ if (!filter.TryFilter(source, destination, FluxGridAxis.X,
     FluxGridBoundaryMode.Zero, weights, 0)) return;
 ```
 
-`TryFilter(source, destination, axis, boundary, weights, pass)`は軸・境界条件・重み・Grid配置・MaterialとPass・入出力の寸法とCount・同一Textureの有無を検証します。標準ShaderはPass 0です。成功時は出力アトラス全体を上書きし、未使用タイルには0を書きます。Count変更や別のクリア処理は行いません。trueはDispatchの発行を示し、GPU完了通知ではありません。
+`TryFilter(source, destination, axis, boundary, weights, pass)`は軸・境界条件・重み・Grid配置・MaterialとPass・入出力の寸法とCount・同一Textureの有無を検証します。標準ShaderのPass 0は出力アトラス全体を上書きし、未使用タイルには0を書きます。Count変更や別のクリア処理は行いません。trueはDispatchの発行を示し、GPU完了通知ではありません。
 
 ## 重み {#weights}
 

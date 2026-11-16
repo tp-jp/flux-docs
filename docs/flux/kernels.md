@@ -213,10 +213,11 @@ Dispatch時には次の値が自動設定されます。自分のパラメータ
 
 ```csharp
 kernel.CopyPropertiesFromMaterial(sourceSettings);
-kernel.SetBuffer("_MainTex", source);
 kernel.SetFloat("_Scale", 2f);
 kernel.Dispatch(source, destination, 0);
 ```
+
+この例ではDispatchのsource引数で主入力Textureを指定します。
 
 コピー自体はBufferの確保・クリア・Dispatchを行わず、Textureの入出力重複も検証しません。出力のCount・幅・高さはDispatch時に実際のBuffer情報で上書きされます。主入力の情報はsourceを渡すDispatchでのみ上書きされます。コピーした追加Textureも出力先と重ならないよう確認してください。Materialの生成は引き続きSceneFlow／FluxBuildPassが担当します。
 

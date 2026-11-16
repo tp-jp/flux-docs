@@ -11,7 +11,9 @@
 
 `AtlasRows = ceil(Size Z / AtlasColumns)`. Atlas width is `Size X × AtlasColumns`, and height is `Size Y × AtlasRows`.
 
-Set the [FluxBuffer](./buffers.md) to **Size Mode = Explicit**, Width / Height to `AtlasWidth` / `AtlasHeight`, and Initial Count to `AtlasCapacity`. At runtime, **Count must equal AtlasCapacity**, not `CellCount`.
+The [FluxBuffer](./buffers.md) must have **the atlas width and height, with Count = AtlasCapacity**, not `CellCount`.
+
+A straightforward setup is **Size Mode = Explicit**, Width / Height set to `AtlasWidth` / `AtlasHeight`, and Initial Count set to `AtlasCapacity`. Automatic also works if its allocated dimensions and Count satisfy the same requirements.
 
 For Size `(4, 3, 5)` and Slice Columns 2, the atlas has 2 columns and 3 rows of tiles, occupying 8×9 pixels. CellCount is 60, while AtlasCapacity is 72. The right tile in the last row is unused, leaving 12 padding pixels. Padding is not a valid 3D cell.
 

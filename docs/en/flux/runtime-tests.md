@@ -26,7 +26,7 @@ Save your working Scenes and enter Play in the RuntimeTest scene. SceneFlow prep
 
 This integration test compiles UdonSharp for Player and Editor, opens RuntimeTest, and enters Play. It checks completion, pass counts, and the Udon execution flag in the UdonBehaviour heap, rather than calling the C# test bodies directly. Appearing in the EditMode tab does not mean it only tests C#.
 
-The scene is located by GUID, without depending on an absolute import path. Its registered tests determine the expected count. Missing references, an empty suite, failures, unexpected error logs, and failure to complete within 180 seconds are detected. Teardown stops Play and restores the prior scene setup and Play Mode Start Scene.
+The scene is located by GUID, without depending on an absolute import path. Its registered tests determine the expected count. Missing references, an empty suite, failures, unexpected error logs, and failure to complete within 180 seconds after entering Play are detected. Teardown stops Play and restores the prior scene setup and Play Mode Start Scene.
 
 The **one integration test** shown in Test Runner and the **multiple Udon cases** executed inside the scene are different counts. Check both the Test Runner outcome and the reported Udon counts and execution state. Compilation success alone does not establish correct GPU results.
 

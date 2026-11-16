@@ -4,7 +4,7 @@
 
 ## Setup and API {#setup}
 
-Assign `Flux/GridFilter` to a FluxKernel's Shader, then assign the **Grid** and **Kernel** references on FluxGridFilter. SceneFlow / FluxBuildPass prepares the Material. Input and output Buffers must match the atlas dimensions with Count = AtlasCapacity and use **different Textures**. No working Buffers are allocated internally.
+Assign `Flux/GridFilter` to a FluxKernel's Shader, then assign the **Grid** and **Kernel** references on FluxGridFilter. SceneFlow / FluxBuildPass prepares the Material. Input and output Buffers must match the atlas dimensions with Count = AtlasCapacity and use **different Textures**. Initialize the valid cells in the input Buffer with Upload or a preceding Kernel. No working Buffers are allocated internally.
 
 ```csharp
 var weights = new Vector4(0.5f, 0.25f, 0f, 0f);
@@ -12,7 +12,7 @@ if (!filter.TryFilter(source, destination, FluxGridAxis.X,
     FluxGridBoundaryMode.Zero, weights, 0)) return;
 ```
 
-`TryFilter(source, destination, axis, boundary, weights, pass)` validates the axis, boundary mode, weights, layout, Material and Pass, Buffer dimensions and counts, and Texture separation. The standard Shader uses Pass 0. On success it overwrites the entire output atlas, writing zero to unused tiles. It does not change Count or perform a separate clear. True means a Dispatch was issued, not that GPU work has completed.
+`TryFilter(source, destination, axis, boundary, weights, pass)` validates the axis, boundary mode, weights, layout, Material and Pass, Buffer dimensions and counts, and Texture separation. Pass 0 of the standard Shader overwrites the entire output atlas, writing zero to unused tiles. It does not change Count or perform a separate clear. True means a Dispatch was issued, not that GPU work has completed.
 
 ## Weights {#weights}
 

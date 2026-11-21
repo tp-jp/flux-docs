@@ -39,8 +39,8 @@ Start with installation and the quick start, then explore Inspector settings, mo
 | [Appearance over lifetime](./lifetime-appearance.md) | Color, Size, and Rotation over Lifetime |
 | [Texture Sheet Animation](./texture-animation-blink.md) | Texture Sheet Animation |
 | [Distance Fade](./distance-fade.md) | Camera-distance fading and RGB / Alpha targets |
-| [Audio Input](./audio-input.md) | AudioLink responses and consumer modules |
-| [Brightness](./brightness.md) | Base variation, waveforms, audio brightening, and legacy Blink migration |
+| [Audio Input](./audio-input.md) | AudioLink's four bands and average, channels, and Brightness connections |
+| [Brightness](./brightness.md) | Base variation, waveforms, audio input selection, and legacy Blink migration |
 | [Trails](./trails.md) | Trail settings and display |
 
 <span id="udonsharpからの制御"></span>

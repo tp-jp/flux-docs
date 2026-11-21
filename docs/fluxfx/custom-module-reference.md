@@ -168,11 +168,13 @@ Operation IDは、処理そのものを識別するIDです。Value IDやModule 
 | `velocity-over-lifetime` | Update | Velocity over Lifetime：`motion`の後で位置を変更する |
 | `render.color` | Render | Color over Lifetime：描画色 |
 | `render.brightness` | Render | Brightness：描画色 |
-| `brightness.initialize` | Spawn | Brightness：音声状態を初期化。Audio EnabledがONの構成のみ |
-| `brightness.update` | Update | Brightness：独自の音声応答。Audio EnabledがONの構成のみ |
+| `brightness.initialize` | Spawn | Brightness：音声状態を初期化。Audio EnabledがONでIndependent Responseを使う構成のみ |
+| `brightness.update` | Update | Brightness：独自の音声応答。Audio EnabledがONでIndependent Responseを使う構成のみ |
 | `audio-input.initialize` | Spawn | Audio Input：入力の更新状態と応答を初期化 |
 | `audio-input.update-freshness` | Update | Audio Input：入力の更新状態 |
-| `audio-input.update-response` | Update | Audio Input：平滑化した応答 |
+| `audio-input.update-response` | Update | Audio Input：従来のFloat3応答 |
+| `audio-input.channel.{id}.response.initialize` | Spawn | Audio Input：チャンネル応答を0に初期化 |
+| `audio-input.channel.{id}.response.update` | Update | Audio Input：freshness更新後にチャンネル応答を更新 |
 | `render.distance-fade` | Render | Distance Fade：描画色 |
 | `render.size-over-lifetime` | Render | Size over Lifetime：描画サイズ |
 | `render.rotation-over-lifetime` | Render | Rotation over Lifetime：描画回転 |
@@ -240,6 +242,9 @@ CustomLiftの例では、標準の速度Writerをすべて`optionalDependencies`
 | --- | --- | --- |
 | Module | `tplab.fluxfx.audio-input` | Audio Input |
 | Module | `tplab.fluxfx.distance-fade` | Distance Fade |
+| Value | `audio-input.raw-bands` | Float4・ReadOnly。AudioLinkの未加工4帯域。内部の共有入力 |
+| Value | `audio-input.frame` | Float・ReadOnly。更新カウンター。未取得は-1 |
+| Value | `audio-input.bands` | Float4・ReadOnly。共通入力処理後、平滑化前の4帯域 |
 | Value | `audio-input.sample` | Float3・ReadOnly。Derived Providerが供給する入力と更新カウンター |
 | Value | `audio-input.freshness` | Float2・OwnerManaged。前回の更新カウンターと、入力が更新されていない時間 |
 | Value | `audio-input.response` | Float3・OwnerManaged。外部モジュールが読む平滑化した応答 |
@@ -248,23 +253,43 @@ CustomLiftの例では、標準の速度Writerをすべて`optionalDependencies`
 | Operation | `audio-input.update-response` | Update。freshness更新後に応答を計算 |
 | Operation | `render.distance-fade` | Render。render.colorのRGBまたはAlphaへ距離係数を掛ける |
 
-これらは対応モジュールを追加した構成にだけ存在します。Audio Inputが所有する状態へ、利用側から書き込まないでください。平滑化済みの応答はRead、独自の音声応答を計算する場合はReadSample／ReadFreshnessの公開契約で読みます。
+これらは対応モジュールを追加した構成にだけ存在します。Audio Inputが所有する状態へ、利用側から書き込まないでください。平滑化済みの応答にはRead／ReadChannel、独自の応答にはReadBands／ReadSample／ReadFreshnessの公開契約を使います。
 
 Parameter IDはDistance Fadeが`distance-fade.start-distance`、`distance-fade.end-distance`、`distance-fade.target`、`distance-fade.enabled`です。Audio Inputは`audio-input.`にband、gain、noise-floor、strength、attack、release、slow-response、average-gain、timeout、enabledを続けたIDです。いずれもLiveです。設定値の範囲は[Distance Fade](./distance-fade.md)と[Audio Input](./audio-input.md)を参照してください。
 
 ### 音声応答を読む {#audio-response-read}
 
-利用側のDefinitionでは`TpLab.Flux.FX.Editor.Modules.AudioInput`の`FluxParticleAudioInputOutputs.Read(phase)`をOperationの`reads`へ渡します。
+利用側のDefinitionでは`TpLab.Flux.FX.Editor.Modules.AudioInput`の`FluxParticleAudioInputOutputs`を使います。通常の利用側がAudioLinkテクスチャを直接読み直す必要はありません。
 
-| 利用Phase | 読み取り |
-| --- | --- |
-| Update | `Read(FluxParticlePhase.Update)`。audio-input.update-responseのAfterOperation |
-| Render | `Read(FluxParticlePhase.Render)`。Committed |
-| Spawn | Readは例外になる。応答はこの時点ではゼロへ初期化される |
+| 契約 | 型と内容 | 読み取り |
+| --- | --- | --- |
+| `ReadBands()` | Float4。xyzw＝Bass／Low Mid／High Mid／Treble。共通処理後、未平滑化 | Provided |
+| `ReadSample()` | Float3。x＝Bandで選んだ帯域、y＝4帯域平均、z＝更新カウンター（未取得は-1） | Provided |
+| `ReadFreshness()` | Float2。x＝最後のカウンター、y＝変化がない秒数 | Updateでaudio-input.update-freshnessのAfterOperation |
+| `ReadChannel(id, phase)` | 指定した固定IDの平滑化済みFloat応答 | UpdateはChannelUpdate(id)のAfterOperation、RenderはCommitted |
+| `Read(phase)` | 従来のFloat3応答。x＝選択帯域の速い応答、y＝その遅い応答、z＝平均の応答 | Updateはaudio-input.update-responseのAfterOperation、RenderはCommitted |
 
-同じSystemへAudio Inputを追加することが前提です。Readを宣言してもAudio Inputは自動追加されません。Updateで読む場合は応答更新後の順序も読み取り契約に含まれます。Renderでは確定した応答を使うため、UpdateのOperationをRenderのdependenciesへ指定しません。
+Read／ReadChannelをOperationの`reads`へ渡すと、Updateでは当該Stepの応答更新後に読む依存関係も宣言されます。Renderでは確定済みの応答を読みます。UpdateのOperationをRenderのdependenciesへ指定しないでください。Spawnを渡すと例外になり、応答状態自体はSpawnで0へ初期化されます。
 
-生成されるHLSLでは、入力を`ctx.valueAudioInputResponse`で参照します。xは選択音域の速い応答、yはその遅い応答、zは4音域平均です。利用側では、例えばこの値を色やサイズの係数として計算に使い、変更先のValueのreads・writesと他Writerとの順序も宣言します。Audio Input自身は描画を変更しません。
+同じSystemへAudio Inputを追加し、ReadChannelでは対応するチャンネルも作成してください。読み取り宣言だけでは自動追加しません。存在しないIDはビルドエラーで、他のチャンネルへ置き換えません。
+
+独自の応答を計算するUpdate処理では、未平滑化のReadBands／ReadSampleとReadFreshnessを使い、Audio InputのEnabled、カウンターが0以上、未更新時間がTimeout未満という条件を合わせて確認します。BandsにはGain・Noise Floor・Strength、Sampleの平均にはAverage Gainも適用済みです。平均は未加工の4帯域から求めてから共通処理を行うため、Bandsの4成分を平均した値とは一致するとは限りません。
+
+生成されるHLSLでは、従来の応答は`ctx.valueAudioInputResponse`、4帯域は`ctx.valueAudioInputBands`です。利用側は対象Valueのreads・writesと他Writerとの順序も宣言します。Audio Inputの所有状態へ書き込まず、独自の応答状態は利用側が所有してください。
+
+### チャンネルごとのID {#audio-channel-ids}
+
+`{id}`はInspectorに表示される完全なChannel IDです。表示名や配列番号ではありません。空・重複・小文字ASCII英数字以外を含むIDは拒否されます。
+
+| 種類 | IDまたは生成用API | 意味 |
+| --- | --- | --- |
+| Parameter | `audio-input.channel.{id}.source` / `.gain` / `.attack` / `.release` | いずれもLive。契約はFluxParticleAudioChannelContract(id) |
+| Value | `ChannelSample(id)` → `audio-input.channel.{id}.sample` | Float・ReadOnly。固有Gain適用後、未平滑化の入力 |
+| Value | `ChannelResponse(id)` → `audio-input.channel.{id}.response` | Float・OwnerManaged。Audio Inputが管理する平滑化済み応答 |
+| Operation | `audio-input.channel.{id}.response.initialize` | Spawn。チャンネル応答を0に初期化 |
+| Operation | `ChannelUpdate(id)` → `audio-input.channel.{id}.response.update` | Update。freshness更新後に応答を更新 |
+
+ChannelSample／ChannelResponse／ChannelUpdateはFluxParticleAudioInputOutputsのメソッドです。各チャンネルは独立してfreshness更新後に処理され、従来のresponseや別チャンネルとの順序は指定しません。応答更新後に読む必要がある利用側はReadChannelを使います。設定範囲とRuntime APIは[Audio Input](./audio-input.md#runtime)を参照してください。
 
 ### 距離フェードと色処理の順序 {#distance-fade-order}
 
@@ -276,17 +301,18 @@ Distance Fadeは、登録時に存在するRender Phaseのrender.color Writerと
 
 ## Brightnessの契約 {#brightness}
 
-Module IDは`tplab.fluxfx.brightness`です。Parameter IDは`brightness.`にbase-minimum、base-maximum、waveform、period、period-minimum、period-maximum、random-phase、time-mode、minimum、maximum、duty、smoothness、target、audio-boost、audio-attack、audio-release、enabledを続けた値です。Audio EnabledはAuthoringの構築時設定で、実行時のParameterスイッチではありません。
+Module IDは`tplab.fluxfx.brightness`です。Parameter IDは`brightness.`にbase-minimum、base-maximum、waveform、period、period-minimum、period-maximum、random-phase、time-mode、minimum、maximum、duty、smoothness、target、audio-boost、audio-attack、audio-release、audio-source、enabledを続けた値です。Audio EnabledとAudio ChannelはAuthoringの構築時設定で、RuntimeのParameterスイッチではありません。
 
-| ID | 種類と役割 |
-| --- | --- |
-| brightness.audio | FloatのValue。音声ありならOwnerManaged、音声なしならReadOnlyで0を返すDerived Provider |
-| brightness.initialize | Spawn。音声を組み込む場合だけ、音声状態を0に初期化 |
-| brightness.update | Update。音声を組み込む場合だけ、独自の音声応答を更新 |
-| render.brightness | Render。先行する色処理の結果へ倍率を掛ける |
+`brightness.audio`はFloatのValueですが、選択した音声方式によって所有権とProviderが変わります。
 
-独自の音声応答には、Updateのreadsで`FluxParticleAudioInputOutputs.ReadSample()`（Provided）と`ReadFreshness()`（audio-input.update-freshnessのAfterOperation）を使います。SampleはFloat3で、選択音域・4音域平均・更新カウンターです。Gain・Noise Floor・Strength・Average Gainは適用済みで、平滑化はされていません。FreshnessはFloat2で、最後のカウンターと変化がない秒数です。Audio InputのEnabled、カウンターが0以上、未更新の秒数がTimeout未満という条件を合わせて確認します。
+| 構成 | brightness.audio | Spawn／Update | Renderでの読み取り |
+| --- | --- | --- | --- |
+| Audio EnabledがON、Independent Response | OwnerManaged | brightness.initialize／brightness.updateを追加 | Committed |
+| Audio EnabledがON、チャンネル選択 | ReadOnly。チャンネルのresponseを返すDerived Provider | Brightness自身の音声状態・更新は追加しない | Provided |
+| Audio EnabledがOFF | ReadOnly。0を返すDerived Provider | Brightness自身の音声状態・更新は追加しない | Provided |
 
-Brightnessはaudio-input.responseではなくsample.yを読み、独自のAttack／Releaseを使います。brightness.updateはaudio-input.update-freshnessの後で実行されますが、audio-input.update-responseとの前後関係は指定しません。無効化中も音声状態を減衰させるUpdateは続きます。音声を組み込まない場合は音声状態もUpdate処理も追加しません。Renderでのbrightness.audioの読み取りは、音声ありならCommitted、なしならProvidedです。
+独立した応答では[ReadSample・ReadBands・ReadFreshness](#audio-response-read)を使います。Audio SourceがAverageならsample.y、それ以外はbandsの対応成分を読み、BrightnessのAudio Attack／Releaseで更新します。brightness.initializeはSpawnで0に初期化し、brightness.updateはfreshness更新後に実行します。従来のaudio-input.update-responseとの順序は指定しません。Brightnessを無効にしても、独立した応答を減衰させるUpdateは続きます。
 
-Brightnessは登録時に存在するRenderの色Writerとrender.colorを任意の先行処理として集めます。独自の色処理は先に登録してください。旧render.blinkは廃止されているため、[移行](./brightness.md#migration)を確認してください。
+チャンネル選択時は、指定したChannelResponseをDerived Providerでそのまま返します。BrightnessのAudio Attack／Releaseを再適用しません。チャンネルの更新はAudio Inputが管理し、Brightnessを無効にしても継続します。
+
+`render.brightness`はRenderで倍率を適用します。登録時に存在するRenderの色Writerとrender.colorを任意の先行処理として集めるため、独自の色処理は先に登録してください。旧render.blinkは廃止されているため、[移行](./brightness.md#migration)を確認してください。

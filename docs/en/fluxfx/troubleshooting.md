@@ -140,7 +140,7 @@ If the issue persists, record package versions, environment, the first Console e
 | Symptom | Check |
 | --- | --- |
 | Audio Input has no visible effect | Include a response consumer; check AudioLink input, Enabled, Gain, Strength, and alive particles |
-| Audio response remains after disabling | It decays through Release and Slow Response; disabling does not reset it instantly |
+| Audio response remains after disabling Audio Input | The existing response decays through common Release / Slow Response; channels use their own Release. Disabling does not reset them instantly |
 | Distance Fade has no effect | Check that the camera uses perspective projection, End Distance exceeds Start Distance, and all three axes have the same scale factor. Also check distance from the system origin and whether Target matches the blend mode |
 
 See [Audio Input](./audio-input.md) and [Distance Fade](./distance-fade.md) for details.
@@ -152,7 +152,10 @@ See [Audio Input](./audio-input.md) and [Distance Fade](./distance-fade.md) for 
 | Brightness does not change over time | Check for Waveform Off, Period 0, or equal Minimum and Maximum. Pulse also stays constant with Duty 0 or 1 |
 | Enabling audio causes a build error | Add Audio Input to the same System. With Audio Enabled on, this dependency remains even if Brightness is disabled |
 | No audio brightening | Turn on Audio Enabled before Play. Check both modules' Enabled states, Audio Boost, AudioLink input, and Audio Input Gain / Strength |
-| Changing Band or Attack / Release does not affect Brightness | Brightness uses the four-band average and its own Audio Attack / Release |
+| Common Band or Attack / Release does not affect Brightness | For an independent response, adjust Brightness Audio Source / Audio Attack / Release. With a channel selected, adjust that channel's Source / Attack / Release |
+| Audio Source / Audio Attack / Release are hidden | These fields are hidden with an existing channel selected; select Independent Response to show them |
+| A channel is Missing | Check whether the referenced channel was deleted and select a valid channel or Independent Response. An unknown ID in use causes a build error |
+| Connections or channel count cannot be changed during Play | Connection and array changes require rebuilding; stop Play before editing |
 | Legacy Blink appears as missing | Preserve the old module and follow the [migration steps](./brightness.md#migration) |
 
 Without AudioLink, input is zero. See [Brightness](./brightness.md) for settings.

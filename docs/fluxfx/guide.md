@@ -39,8 +39,8 @@
 | [寿命に応じた見た目](./lifetime-appearance.md) | Color・Size・Rotation over Lifetime |
 | [テクスチャアニメーション](./texture-animation-blink.md) | Texture Sheet Animation |
 | [Distance Fade](./distance-fade.md) | カメラ距離によるフェード、RGB／Alphaの選択 |
-| [Audio Input](./audio-input.md) | AudioLinkの音声応答と、それを使うモジュール |
-| [Brightness](./brightness.md) | 明るさのばらつき・明滅・音声増光・旧Blinkの移行 |
+| [Audio Input](./audio-input.md) | AudioLinkの4帯域・平均入力、チャンネル、Brightnessへの接続 |
+| [Brightness](./brightness.md) | 明るさのばらつき・明滅・音声入力の選択・旧Blinkの移行 |
 | [Trails](./trails.md) | 軌跡の設定と表示 |
 
 <span id="controlling-fluxfx-from-udonsharp"></span>

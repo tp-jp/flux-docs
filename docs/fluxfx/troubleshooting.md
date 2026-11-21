@@ -140,7 +140,7 @@ StaticはPause・Stop・Clear・Restartでも変更可能になりません。[�
 | 症状 | 確認すること |
 | --- | --- |
 | Audio Inputを追加しても変化しない | 応答を使うモジュール、AudioLink入力、Enabled・Gain・Strength、生存粒子を確認する |
-| 無効化後も音声応答が残る | Release・Slow Responseで減衰する。即時リセットではない |
+| Audio Input無効化後も音声応答が残る | 従来の応答は共通のRelease・Slow Response、チャンネルは固有のReleaseで減衰する。即時リセットではない |
 | Distance Fadeが効かない | カメラが透視投影か、End DistanceがStart Distanceより大きいか、ScaleのXYZ軸の倍率が等しいかを確認する。システム原点からの距離と、Targetに合うブレンド設定も確認する |
 
 詳しくは[Audio Input](./audio-input.md)と[Distance Fade](./distance-fade.md)を参照してください。
@@ -152,7 +152,10 @@ StaticはPause・Stop・Clear・Restartでも変更可能になりません。[�
 | 明るさが時間で変わらない | WaveformがOff、Periodが0、MinimumとMaximumが同じ値になっていないか確認する。PulseはDutyが0または1でも一定になる |
 | 音声増光をONにすると構築エラーになる | 同じSystemにAudio Inputが必要。Brightnessが無効でもAudio EnabledがONなら依存関係は必要 |
 | 音声に反応しない | Play前にAudio EnabledをONにする。両モジュールのEnabled、Audio Boost、AudioLinkの入力、Audio InputのGain・Strengthを確認する |
-| BandやAttack／Releaseを変えてもBrightnessの反応が変わらない | Brightnessは4音域平均と独自のAudio Attack／Releaseを使う |
+| 共通のBandやAttack／ReleaseがBrightnessに効かない | 独立した応答はBrightnessのAudio Source・Audio Attack／Release、チャンネル選択時はチャンネル側のSource・Attack／Releaseで調整する |
+| Audio Source・Audio Attack／Releaseが表示されない | 作成済みチャンネルを選択中は非表示。独立した応答を選ぶと表示される |
+| チャンネルがMissingになった | 参照先を削除していないか確認し、有効なチャンネルかIndependent Responseを選ぶ。使用中の不明IDは構築エラーになる |
+| Play中に接続先やチャンネル数を変えられない | 接続と配列の変更は再構築が必要。Playを停止して変更する |
 | 旧BlinkがMissingになった | 旧モジュールを削除せず、[移行手順](./brightness.md#migration)に従う |
 
 AudioLinkが未導入なら入力はゼロです。詳しい設定は[Brightness](./brightness.md)を参照してください。

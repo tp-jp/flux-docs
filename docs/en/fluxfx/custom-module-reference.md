@@ -168,11 +168,13 @@ These are registered when the corresponding module is included. Turning Enabled 
 | `velocity-over-lifetime` | Update | Velocity over Lifetime: modifies position after `motion` |
 | `render.color` | Render | Color over Lifetime: rendering color |
 | `render.brightness` | Render | Brightness: rendering color |
-| `brightness.initialize` | Spawn | Brightness: initializes audio state; only with Audio Enabled on |
-| `brightness.update` | Update | Brightness: independent audio response; only with Audio Enabled on |
+| `brightness.initialize` | Spawn | Brightness: initializes audio state; only with Audio Enabled on and Independent Response |
+| `brightness.update` | Update | Brightness: independent audio response; only with Audio Enabled on and Independent Response |
 | `audio-input.initialize` | Spawn | Audio Input: initializes input freshness and response |
 | `audio-input.update-freshness` | Update | Audio Input: input freshness |
-| `audio-input.update-response` | Update | Audio Input: smoothed response |
+| `audio-input.update-response` | Update | Audio Input: existing Float3 response |
+| `audio-input.channel.{id}.response.initialize` | Spawn | Audio Input: initializes a channel response to zero |
+| `audio-input.channel.{id}.response.update` | Update | Audio Input: updates a channel response after freshness |
 | `render.distance-fade` | Render | Distance Fade: rendering color |
 | `render.size-over-lifetime` | Render | Size over Lifetime: rendering size |
 | `render.rotation-over-lifetime` | Render | Rotation over Lifetime: rendering rotation |
@@ -240,6 +242,9 @@ Multiple operations writing the same Value in the same Phase need an order betwe
 | --- | --- | --- |
 | Module | `tplab.fluxfx.audio-input` | Audio Input |
 | Module | `tplab.fluxfx.distance-fade` | Distance Fade |
+| Value | `audio-input.raw-bands` | Float4, ReadOnly; raw AudioLink bands shared internally |
+| Value | `audio-input.frame` | Float, ReadOnly; update counter, -1 when unavailable |
+| Value | `audio-input.bands` | Float4, ReadOnly; four bands after common processing, before smoothing |
 | Value | `audio-input.sample` | Float3, ReadOnly; input and update counter supplied by a Derived Provider |
 | Value | `audio-input.freshness` | Float2, OwnerManaged; previous counter and time without updates |
 | Value | `audio-input.response` | Float3, OwnerManaged; smoothed response read by consumer modules |
@@ -248,23 +253,43 @@ Multiple operations writing the same Value in the same Phase need an order betwe
 | Operation | `audio-input.update-response` | Update; computes response after freshness |
 | Operation | `render.distance-fade` | Render; multiplies render.color RGB or Alpha by a distance factor |
 
-These exist only when the corresponding modules are included. Consumers must not write Audio Input's owned state. Use Read for smoothed responses, or the public ReadSample / ReadFreshness contracts for an independent audio response.
+These exist only when the corresponding modules are included. Consumers must not write Audio Input's owned state. Use Read / ReadChannel for smoothed responses, or the public ReadBands / ReadSample / ReadFreshness contracts for an independent response.
 
 Distance Fade Parameter IDs are `distance-fade.start-distance`, `distance-fade.end-distance`, `distance-fade.target`, and `distance-fade.enabled`. Audio Input uses the prefix `audio-input.` with band, gain, noise-floor, strength, attack, release, slow-response, average-gain, timeout, and enabled. All are Live. See [Distance Fade](./distance-fade.md) and [Audio Input](./audio-input.md) for ranges.
 
 ### Read the audio response {#audio-response-read}
 
-In the consumer Definition, pass `FluxParticleAudioInputOutputs.Read(phase)` from `TpLab.Flux.FX.Editor.Modules.AudioInput` to the Operation's `reads`.
+Use `FluxParticleAudioInputOutputs` from `TpLab.Flux.FX.Editor.Modules.AudioInput` in the consumer Definition. Consumers normally do not need to read the AudioLink texture again directly.
 
-| Consumer phase | Read |
-| --- | --- |
-| Update | `Read(FluxParticlePhase.Update)`: AfterOperation for audio-input.update-response |
-| Render | `Read(FluxParticlePhase.Render)`: Committed |
-| Spawn | Read throws; response is initialized to zero at this phase |
+| Contract | Type and content | Read version |
+| --- | --- | --- |
+| `ReadBands()` | Float4; xyzw = Bass / Low Mid / High Mid / Treble, after common processing but before smoothing | Provided |
+| `ReadSample()` | Float3; x = Band selection, y = four-band average, z = update counter (-1 when unavailable) | Provided |
+| `ReadFreshness()` | Float2; x = last counter, y = seconds without a change | AfterOperation for audio-input.update-freshness in Update |
+| `ReadChannel(id, phase)` | Smoothed Float response for the fixed channel ID | AfterOperation for ChannelUpdate(id) in Update; Committed in Render |
+| `Read(phase)` | Existing Float3 response: fast selected band, slow selected band, average response | AfterOperation for audio-input.update-response in Update; Committed in Render |
 
-Add Audio Input to the same System. Declaring a read does not add it automatically. The Update read contract orders the consumer after response updates. Render reads committed state; do not put an Update Operation in Render dependencies.
+Passing Read / ReadChannel to an Operation's `reads` also declares the dependency on the current Step's response update. Render reads committed responses; do not put an Update Operation in Render dependencies. Passing Spawn throws; the response state itself is initialized to zero at Spawn.
 
-The generated HLSL input is `ctx.valueAudioInputResponse`: x is the fast selected-band response, y its slow response, and z the four-band average. A consumer can use it as a color or size factor, while also declaring the target Value's reads/writes and ordering against other writers. Audio Input itself does not modify rendering.
+Add Audio Input to the same System and create the corresponding channel for ReadChannel. Declaring reads does not add either automatically. An unknown ID causes a build error and is not replaced by another channel.
+
+To compute an independent response in Update, use unsmoothed ReadBands / ReadSample with ReadFreshness, checking Audio Input Enabled, counter >= 0, and time without updates < Timeout together. Bands already includes Gain, Noise Floor, and Strength; the Sample average also includes Average Gain. The average is formed from raw bands before common processing, so averaging the four Bands components does not generally produce the same value.
+
+Generated HLSL exposes the existing response as `ctx.valueAudioInputResponse` and the four bands as `ctx.valueAudioInputBands`. Consumers must also declare target Value reads/writes and order against other writers. Do not write Audio Input's owned state; own any independent response state in the consumer.
+
+### Per-channel IDs {#audio-channel-ids}
+
+`{id}` is the full Channel ID shown in the Inspector, not a display name or array index. Empty or duplicate IDs, or IDs containing characters other than lowercase ASCII letters and digits, are rejected.
+
+| Kind | ID or factory API | Meaning |
+| --- | --- | --- |
+| Parameter | `audio-input.channel.{id}.source` / `.gain` / `.attack` / `.release` | All Live; contracts are provided by FluxParticleAudioChannelContract(id) |
+| Value | `ChannelSample(id)` → `audio-input.channel.{id}.sample` | Float, ReadOnly; input after channel Gain, before smoothing |
+| Value | `ChannelResponse(id)` → `audio-input.channel.{id}.response` | Float, OwnerManaged; smoothed response owned by Audio Input |
+| Operation | `audio-input.channel.{id}.response.initialize` | Spawn; initializes the channel response to zero |
+| Operation | `ChannelUpdate(id)` → `audio-input.channel.{id}.response.update` | Update; updates the response after freshness |
+
+ChannelSample / ChannelResponse / ChannelUpdate are methods on FluxParticleAudioInputOutputs. Each channel updates independently after freshness, without ordering against the existing response or other channels. Consumers that need the updated response should use ReadChannel. See [Audio Input](./audio-input.md#runtime) for ranges and runtime APIs.
 
 ### Distance fade and color order {#distance-fade-order}
 
@@ -276,17 +301,18 @@ When using the generated Render program for custom density captures or similar p
 
 ## Brightness contracts {#brightness}
 
-Module ID is `tplab.fluxfx.brightness`. Parameter IDs use `brightness.` followed by base-minimum, base-maximum, waveform, period, period-minimum, period-maximum, random-phase, time-mode, minimum, maximum, duty, smoothness, target, audio-boost, audio-attack, audio-release, and enabled. Audio Enabled is an Authoring build-time setting, not a runtime Parameter switch.
+Module ID is `tplab.fluxfx.brightness`. Parameter IDs use `brightness.` followed by base-minimum, base-maximum, waveform, period, period-minimum, period-maximum, random-phase, time-mode, minimum, maximum, duty, smoothness, target, audio-boost, audio-attack, audio-release, audio-source, and enabled. Audio Enabled and Audio Channel are Authoring build-time settings, not runtime Parameter switches.
 
-| ID | Kind and behavior |
-| --- | --- |
-| brightness.audio | Float Value; OwnerManaged with audio enabled, otherwise ReadOnly with a zero-valued Derived Provider |
-| brightness.initialize | Spawn; initializes audio state to zero, only when audio is included |
-| brightness.update | Update; updates the independent audio response, only when audio is included |
-| render.brightness | Render; multiplies render.color after preceding color writers |
+`brightness.audio` is a Float Value whose ownership and Provider depend on the selected audio mode.
 
-For an independent response, use `FluxParticleAudioInputOutputs.ReadSample()` (Provided) and `ReadFreshness()` (AfterOperation for audio-input.update-freshness) in Update reads. Sample is Float3: selected band, four-band average, and update counter. Gain, Noise Floor, Strength, and Average Gain are already applied; smoothing is not. Freshness is Float2: last counter and elapsed seconds without a change. Check Audio Input Enabled, counter >= 0, and elapsed time < Timeout together.
+| Configuration | brightness.audio | Spawn / Update | Render read |
+| --- | --- | --- | --- |
+| Audio Enabled on, Independent Response | OwnerManaged | Adds brightness.initialize / brightness.update | Committed |
+| Audio Enabled on, channel selected | ReadOnly; Derived Provider returning the channel response | No audio state or update owned by Brightness | Provided |
+| Audio Enabled off | ReadOnly; Derived Provider returning zero | No audio state or update owned by Brightness | Provided |
 
-Brightness uses sample.y and its own Attack / Release instead of audio-input.response. brightness.update runs after audio-input.update-freshness, with no declared order relative to audio-input.update-response. Its Update processing continues while disabled to decay stored audio. When audio is omitted, no audio state or Update operation is added. Render reads brightness.audio as Committed with audio included, otherwise Provided.
+Independent responses use [ReadSample, ReadBands, and ReadFreshness](#audio-response-read). Average reads sample.y; other Audio Source choices read the corresponding bands component, then update using Brightness Audio Attack / Release. brightness.initialize sets zero at Spawn; brightness.update executes after freshness updates, with no declared order relative to the existing audio-input.update-response. Disabling Brightness retains Update processing that decays its independent response.
 
-Brightness gathers existing Render color writers and render.color as optional predecessors. Register custom color processing before it. Legacy render.blink no longer exists; see [migration](./brightness.md#migration).
+With a channel selected, a Derived Provider returns the specified ChannelResponse directly, without reapplying Brightness Audio Attack / Release. Audio Input owns the channel update, which continues while Brightness is disabled.
+
+`render.brightness` applies the multiplier in Render. It gathers existing Render color writers and render.color as optional predecessors at registration time, so register custom color processing first. Legacy render.blink no longer exists; see [migration](./brightness.md#migration).

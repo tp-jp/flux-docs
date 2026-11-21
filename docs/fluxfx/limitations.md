@@ -111,10 +111,10 @@ FluxFXはFluxのARGBFloat RenderTextureとシェーダー処理を利用し、�
 
 ## Audio InputとDistance Fadeの負荷 {#input-appearance}
 
-[Audio Input](./audio-input.md)は粒子ごとにresponse（Float3）とfreshness（Float2）を保持し、更新処理を追加します。無効化しても減衰処理は残るため、削除した構成とも比較してください。RenderTexture数を固定で見積もらず、生成結果のState PagesとPassを確認します。AudioLinkの導入は必須ではなく、未導入の場合は入力がゼロになります。
+[Audio Input](./audio-input.md)は粒子ごとに従来のresponse（Float3）とfreshness（Float2）を保持し、設定した各チャンネルにもFloat応答と初期化・更新処理を追加します。4帯域の共有入力は未平滑化で、チャンネルごとに独立した応答を計算します。無効化しても減衰処理は残るため、削除した構成とも比較してください。RenderTexture数を固定で見積もらず、生成結果のState PagesとPassを確認します。AudioLinkの導入は必須ではなく、未導入の場合は入力がゼロになります。
 
 [Distance Fade](./distance-fade.md)は描画色を減衰させる処理で、シミュレーションは停止しません。フェードが完了しても描画負荷がなくなる保証はありません。XYZ軸で倍率が異なるScaleには対応しておらず、正投影カメラではフェードしません。
 
 ## Brightnessの音声処理 {#brightness}
 
-Audio EnabledがOFFなら音声更新の状態と処理は追加されません。音声を組み込んだ構成では、Brightnessを無効化しても応答を減衰させる更新が続きます。Audio Inputの公開された入力契約を使い、AudioLinkを別途サンプリングしません。[Brightness](./brightness.md#audio)を参照してください。
+Audio EnabledがOFFならBrightness自身の音声状態と更新処理は追加されません。Independent Responseでは独自のFloat状態を持ち、Brightnessを無効化しても減衰用の更新が続きます。チャンネル選択時は既存のチャンネル応答をそのまま読み、Brightness自身の音声状態や二重の平滑化処理を追加しません。チャンネルの更新はBrightnessを無効化しても継続します。両方式ともAudio Inputの共有入力・応答を使い、AudioLinkを別途サンプリングしません。[Brightness](./brightness.md#audio)を参照してください。

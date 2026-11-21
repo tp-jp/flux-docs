@@ -21,10 +21,12 @@ Rendering color is multiplied by **base multiplier × temporal multiplier × aud
 | Smoothness | 0 | Pulse transition smoothness; 0–1 |
 | Target | RGB | RGB / Alpha / Both |
 | Audio Enabled | OFF | Include audio processing in the configuration |
+| Audio Channel | Independent Response | Choose an independent response or an existing channel |
+| Audio Source | Average | Input source for an independent response; five choices |
 | Audio Boost | 2 | Audio brightening amount; nonnegative |
 | Audio Attack / Release | 0.025 / 0.12 seconds | Audio rise and decay times; at least 0.01 seconds |
 
-The Inspector supports Japanese and English. Off hides temporal settings; Duty and Smoothness appear only for Pulse. Audio Boost, Audio Attack, and Audio Release appear only when Audio Enabled is on.
+The Inspector supports Japanese and English. Off hides temporal settings; Duty and Smoothness appear only for Pulse. Audio Channel and Audio Boost appear only when Audio Enabled is on. Audio Source, Audio Attack, and Audio Release additionally require Independent Response.
 
 ## Changes over time {#waveforms}
 
@@ -47,15 +49,24 @@ For blinking through transparency, try Renderer Blend Mode Alpha and Target Alph
 
 ## Brighten with audio {#audio}
 
-Base variation, Sine, and Pulse do not require AudioLink. For audio brightening, add [Audio Input](./audio-input.md) to the same System, install AudioLink and configure input, then enable Audio Enabled before entering Play Mode.
+Base variation, Sine, and Pulse do not require AudioLink. For audio brightening, add [Audio Input](./audio-input.md) to the same FluxParticleAuthoring, supply audio to AudioLink, and turn on **Audio Enabled** before Play.
 
-Brightness reads Audio Input's **unsmoothed four-band average** and input freshness, applying its own Audio Attack / Release. It neither reuses the smoothed response nor reads the AudioLink texture separately. Input Gain, Noise Floor, Strength, and Average Gain affect it; the selected Band and Audio Input Attack / Release do not control Brightness's response.
+Choose one of these options in **Audio Channel**:
 
-The audio response starts at zero for each particle and approaches its target exponentially using Audio Attack / Release. These times do not specify an exact duration to reach the target completely. The audio multiplier is 1 plus the squared response multiplied by Audio Boost and a per-particle factor from 0.65 to 1.
+| Selection | Input and response times |
+| --- | --- |
+| Independent Response | Apply Brightness's own Audio Attack / Release to the unsmoothed input selected by Audio Source |
+| An existing channel | Use the smoothed response computed by that Audio Input channel directly |
 
-Silence, unavailable input, or disabling Audio Input or Brightness causes the audio response to decay to zero and the audio multiplier to return to 1. If frame updates stop while input values remain, decay starts when Audio Input's Timeout is reached. While Brightness is disabled, its rendering multiplier is also bypassed.
+For an independent response, **Audio Source** offers Average / Bass / Low Mid / High Mid / Treble. It defaults to Average, the average of AudioLink's four bands. Common Gain, Noise Floor, and Strength affect the input; Average also uses Average Gain. Audio Input Band, Attack / Release, and Slow Response do not control this source selection or response time.
 
-Without AudioLink, Audio Input shows a warning and supplies zero input. If Audio Enabled is on but Audio Input is missing, Brightness shows a warning and building fails with a dependency error. Audio Enabled off adds no audio-update GPU state or operations.
+Selecting a channel hides Audio Source, Audio Attack, and Audio Release. The channel's Source, Gain, Attack, and Release apply, without a second smoothing stage in Brightness. Adjust **Audio Boost** on Brightness in either mode. See [creating channels](./audio-input.md#channels).
+
+The audio response starts at zero per particle. Independent Audio Attack / Release also use exponential smoothing, not an exact duration to reach the target completely. The audio multiplier is 1 plus the squared response multiplied by Audio Boost and a per-particle factor from 0.65 to 1. The input response range of 0–1 does not clamp RGB output to 0–1; HDR brightening is retained.
+
+Silence, unavailable input, or disabling Audio Input causes responses to decay toward zero. If updates stop while input values remain, decay begins after Audio Input's Timeout. Disabling Brightness bypasses its rendering multiplier. Its independent response decays while disabled, but **channel responses remain managed by Audio Input and continue updating even when Brightness is disabled.**
+
+Without AudioLink, Audio Input shows a warning and supplies zero input. Building fails if Audio Enabled is on but Audio Input is missing, or if a selected channel has been deleted. Audio Enabled off adds no audio state or audio-update work owned by Brightness. See [existing settings after the audio extension](./audio-input.md#existing-data).
 
 ## Runtime API {#runtime}
 
@@ -63,7 +74,9 @@ Use `particleSystem.Modules.Brightness`; it returns null if the module is absent
 
 BaseMinimum, BaseMaximum, Waveform, Period, PeriodMinimum, PeriodMaximum, RandomPhase, TimeMode, Minimum, Maximum, Duty, Smoothness, and Target each have Get / Set methods. Enabled also supports Live changes. Use `FluxParticleBrightnessWaveform`, `FluxParticleBrightnessTimeMode`, and `FluxParticleBrightnessTarget` from `TpLab.Flux.FX.Udon`.
 
-**Audio Enabled is a build-time setting**, not an API switch that adds audio processing at runtime. AudioBoost, AudioAttack, and AudioRelease support Live Get / Set operations, but have no audio brightening effect if the configuration was built with Audio Enabled off. See [Runtime API](./runtime-parameters.md) for shared usage rules.
+**Audio Enabled and Audio Channel are build-time settings.** Audio processing cannot be added or channel connections changed at runtime. AudioBoost, AudioAttack, AudioRelease, and AudioSource have Get / Set methods. Read or change the source with `GetAudioSource()` / `SetAudioSource(FluxParticleAudioSource)`.
+
+AudioBoost affects both modes. AudioSource, AudioAttack, and AudioRelease affect only independent responses. Calling `SetAudioSource` while a channel is selected does not change the connection. Use [GetAudioChannel](./audio-input.md#runtime) to edit the channel itself. With Audio Enabled off, these settings have no audio brightening effect. Setters return true on success and false on rejection. See [Runtime API](./runtime-parameters.md) for shared usage rules.
 
 ## Migrate legacy Blink {#migration}
 

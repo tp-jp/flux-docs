@@ -111,10 +111,10 @@ Implementation alone cannot predict frame rate for a specific particle count. Af
 
 ## Audio Input and Distance Fade costs {#input-appearance}
 
-[Audio Input](./audio-input.md) stores response (Float3) and freshness (Float2) per particle and adds update work. Disabling retains decay processing; compare against removing the module. Inspect generated State Pages and passes rather than assuming a fixed RenderTexture count. AudioLink is optional, with zero input when absent.
+[Audio Input](./audio-input.md) stores the existing response (Float3) and freshness (Float2) per particle, plus a Float response and initialization/update work for each configured channel. Shared four-band input is unsmoothed; each channel computes its own response. Disabling retains decay processing; compare against removing the module. Inspect generated State Pages and passes rather than assuming a fixed RenderTexture count. AudioLink is optional, with zero input when absent.
 
 [Distance Fade](./distance-fade.md) attenuates render color; it does not stop simulation. Fully faded rendering does not guarantee eliminated draw cost. Non-uniform scale is unsupported, and orthographic cameras bypass fading.
 
 ## Brightness audio processing {#brightness}
 
-Audio Enabled off adds no audio-update state or operations. With audio included, disabling Brightness leaves response-decay updates running. Brightness reads Audio Input through its public input contract; it does not separately sample AudioLink. See [Brightness](./brightness.md#audio).
+Audio Enabled off adds no audio state or update owned by Brightness. Independent Response stores its own Float state and continues decay updates while Brightness is disabled. Selecting a channel reads its existing response directly, without adding Brightness audio state or a second smoothing stage. Channel updates continue while Brightness is disabled. Both modes use Audio Input's shared input or response without separately sampling AudioLink. See [Brightness](./brightness.md#audio).

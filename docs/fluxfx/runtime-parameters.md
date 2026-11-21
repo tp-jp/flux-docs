@@ -177,6 +177,8 @@ Billboardの回転はZ軸だけ、サイズや頻度は非負など、Inspector�
 
 `target.Modules.AudioInput`・`target.Modules.DistanceFade`を取得し、`TpLab.Flux.FX.Udon.Modules`の拡張メソッドを使います。両方ともLive設定とGetEnabled／SetEnabledに対応します。設定名と範囲は[Audio Input](./audio-input.md#runtime)・[Distance Fade](./distance-fade.md#runtime)を参照してください。変更は対応するLive Inspector項目にも反映されます。Audio InputのHandleは設定用で、粒子ごとの応答をCPUへ読み戻すものではありません。
 
+チャンネルは`target.Modules.GetAudioChannel(id)`で取得し、Source・Gain・Attack・ReleaseをGet／Setで変更できます。完全な固定IDを使い、未組み込み・不明IDのnullとSetterの成否を確認してください。入力元は`FluxParticleAudioSource`で、既存のBand enumとは数値が異なります。[コード例と範囲](./audio-input.md#runtime)を参照してください。チャンネルの追加・削除・並べ替えには再構築が必要です。
+
 ## Brightness {#brightness}
 
-廃止されたBlink APIの代わりに`target.Modules.Brightness`を使います。PeriodはHzではなく秒です。描画設定とEnabledはLive変更できます。Audio Enabledの変更には再構築が必要で、実行中に音声処理を追加できません。組み込み済みの音声処理にはAudioBoost／AudioAttack／AudioReleaseがあります。[BrightnessのAPI](./brightness.md#runtime)と[旧Blinkからの移行](./brightness.md#migration)を参照してください。
+廃止されたBlink APIの代わりに`target.Modules.Brightness`を使います。PeriodはHzではなく秒です。描画設定とEnabledはLive変更できます。Audio EnabledとAudio Channelの変更には再構築が必要です。AudioBoostは両方式で作用し、AudioSource／AudioAttack／AudioReleaseは独立した応答に作用します。チャンネル選択中のSetAudioSourceは接続先を変更しません。[BrightnessのAPI](./brightness.md#runtime)と[旧Blinkからの移行](./brightness.md#migration)を参照してください。

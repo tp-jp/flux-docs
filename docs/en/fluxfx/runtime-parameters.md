@@ -177,6 +177,8 @@ Runtime edits do not modify the saved Prefab or synchronize over the network. Se
 
 Use `target.Modules.AudioInput` and `target.Modules.DistanceFade` with `TpLab.Flux.FX.Udon.Modules`. Both expose Live settings and GetEnabled / SetEnabled. See [Audio Input](./audio-input.md#runtime) and [Distance Fade](./distance-fade.md#runtime) for the complete setting names and ranges. These changes also appear in supported Live Inspector fields. Audio Input exposes settings, not CPU readback of per-particle responses.
 
+Use `target.Modules.GetAudioChannel(id)` to get a channel and Get / Set its Source, Gain, Attack, and Release. Pass the full fixed ID, check for null when absent or unknown, and check setter results. Sources use `FluxParticleAudioSource`, whose numeric values differ from the existing Band enum. See the [example and ranges](./audio-input.md#runtime). Adding, removing, or reordering channels requires rebuilding.
+
 ## Brightness {#brightness}
 
-Use `target.Modules.Brightness` instead of the removed Blink API. Period is in seconds, not frequency in Hz. Rendering settings and Enabled support Live changes. Audio Enabled requires rebuilding; it cannot add audio processing at runtime. Included audio processing exposes AudioBoost / AudioAttack / AudioRelease. See [Brightness API](./brightness.md#runtime) and [legacy Blink migration](./brightness.md#migration).
+Use `target.Modules.Brightness` instead of the removed Blink API. Period is in seconds, not frequency in Hz. Rendering settings and Enabled support Live changes. Audio Enabled and Audio Channel require rebuilding. AudioBoost affects both modes; AudioSource / AudioAttack / AudioRelease affect independent responses. SetAudioSource does not change the connection while a channel is selected. See [Brightness API](./brightness.md#runtime) and [legacy Blink migration](./brightness.md#migration).

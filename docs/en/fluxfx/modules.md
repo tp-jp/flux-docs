@@ -22,7 +22,7 @@ You cannot add multiple modules of the same type. Already-added types are remove
 | Group | Standard modules | Purpose |
 | --- | --- | --- |
 | Velocity Update | Gravity, Force, Noise, Vortex, Drag, Limit Velocity | Update stored velocity |
-| Position Update | Velocity over Lifetime; [Audio Input](./audio-input.md) | Additional displacement, or audio response supply (Audio Input does not move particles) |
+| Position Update | Velocity over Lifetime; [Audio Input](./audio-input.md) | Additional displacement, or four-band / average input and channel responses (Audio Input does not move particles) |
 | Rendering | Color, Size, Rotation over Lifetime; Texture Sheet Animation; Brightness; Trails; [Distance Fade](./distance-fade.md) | Appearance and trails |
 
 Other groups, such as Spawn, may appear depending on registered modules.

@@ -22,7 +22,7 @@
 | グループ | 標準モジュール | 主な役割 |
 | --- | --- | --- |
 | Velocity Update | Gravity、Force、Noise、Vortex、Drag、Limit Velocity | 保存される速度を更新する |
-| Position Update | Velocity over Lifetime、[Audio Input](./audio-input.md) | 追加の移動、または音声応答の供給（Audio Inputは位置を変更しない） |
+| Position Update | Velocity over Lifetime、[Audio Input](./audio-input.md) | 追加の移動、または4帯域・平均入力とチャンネル応答の供給（Audio Inputは位置を変更しない） |
 | Rendering | Color・Size・Rotation over Lifetime、Texture Sheet Animation、Brightness、Trails、[Distance Fade](./distance-fade.md) | 描画時の見た目や軌跡を設定する |
 
 登録されたモジュールに応じて、Spawnなど別のグループが表示される場合もあります。

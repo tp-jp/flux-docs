@@ -21,10 +21,12 @@
 | Smoothness | 0 | Pulseの切り替えの滑らかさ。0〜1 |
 | Target | RGB | RGB / Alpha / Both |
 | Audio Enabled | OFF | 音声処理を構成に組み込む |
+| Audio Channel | Independent Response | 独立した応答、または作成済みチャンネルを選ぶ |
+| Audio Source | Average | 独立した応答の入力元。5種類から選ぶ |
 | Audio Boost | 2 | 音声による増光量。0以上 |
 | Audio Attack / Release | 0.025秒 / 0.12秒 | 音声応答の立ち上がり・減衰時間。0.01秒以上 |
 
-Inspectorは日英対応です。WaveformがOffなら時間関連項目を隠し、DutyとSmoothnessはPulseのときだけ表示します。Audio Boost・Audio Attack・Audio ReleaseはAudio EnabledがONのときだけ表示します。
+Inspectorは日英対応です。WaveformがOffなら時間関連項目を隠し、DutyとSmoothnessはPulseのときだけ表示します。Audio ChannelとAudio BoostはAudio EnabledがONのときだけ表示します。Audio Source・Audio Attack・Audio Releaseは、さらにIndependent Responseを選んだときだけ表示します。
 
 ## 時間による変化 {#waveforms}
 
@@ -47,15 +49,24 @@ RGBはRGBだけ、AlphaはAlphaだけ、Bothは両方に倍率を掛けます。
 
 ## 音声で明るくする {#audio}
 
-基準倍率・Sine・PulseにAudioLinkは不要です。音声増光には、同じSystemへ[Audio Input](./audio-input.md)を追加し、AudioLinkを導入して入力を用意したうえで、Playを開始する前にAudio EnabledをONにします。
+基準倍率・Sine・PulseにAudioLinkは不要です。音声増光には、同じFluxParticleAuthoringへ[Audio Input](./audio-input.md)を追加し、AudioLinkへ音声を入力したうえで、Play前に **Audio Enabled／音声増光を組み込む** をONにします。
 
-BrightnessはAudio Inputの**未平滑化の4音域平均**と入力の更新状態を読み、独自のAudio Attack／Releaseで応答を計算します。Audio Inputの平滑化済みresponseを再利用したり、AudioLinkテクスチャを別途読み直したりしません。入力のGain・Noise Floor・Strength・Average Gainは影響しますが、選択BandやAudio InputのAttack／ReleaseでBrightnessの応答を調整するものではありません。
+**Audio Channel／音声チャンネル** で、次のどちらかを選びます。
 
-音声応答は粒子ごとに0から始まり、Audio Attack／Releaseで指数関数的に目標値へ近づきます。指定時間で目標値へ完全に到達するわけではありません。増光量は応答の2乗にAudio Boostと粒子ごとの係数（0.65〜1）を掛けた値で、これを1に足したものが音声増光倍率です。
+| 選択 | 入力と応答時間 |
+| --- | --- |
+| Independent Response／独立した応答 | Audio Sourceで選んだ未平滑化入力に、Brightness自身のAudio Attack／Releaseを適用 |
+| 作成済みチャンネル | Audio Inputのチャンネルが計算した平滑化済み応答をそのまま使用 |
 
-無音、入力が利用できない状態、Audio InputまたはBrightnessの無効化では、音声応答がゼロへ減衰して音声増光倍率が1へ戻ります。入力値が残ったままフレーム更新が止まった場合は、Audio InputのTimeoutに達すると減衰を始めます。Brightnessを無効にした間は描画への倍率適用も止まります。
+独立した応答では、**Audio Source／音声の入力元** をAverage／Bass／Low Mid／High Mid／Trebleから選べます。初期値はAverage（AudioLinkの4帯域平均）です。共通のGain・Noise Floor・Strengthが作用し、AverageではAverage Gainも作用します。Audio InputのBand・Attack／Release／Slow Responseは、この入力選択や応答時間を変更しません。
 
-AudioLinkが未導入ならAudio Inputに警告が表示され、入力は0です。Audio EnabledがONなのにAudio Input自体がない場合は、Brightnessに警告が表示され、構築時にも依存エラーになります。Audio EnabledがOFFなら音声更新用のGPU状態と処理は追加されません。
+チャンネルを選ぶとAudio Source・Audio Attack・Audio Releaseは非表示になります。チャンネル側のSource・Gain・Attack・Releaseを使い、Brightness側で二重に平滑化しません。**Audio Boost／音声増光量** は、どちらの方式でもBrightnessで調整します。[チャンネルの作成手順](./audio-input.md#channels)を参照してください。
+
+音声応答は粒子ごとに0から始まります。独立した応答のAudio Attack／Releaseも指数関数による追従で、指定時間で目標値に完全に到達するわけではありません。音声増光倍率は、1に「応答の2乗 × Audio Boost × 粒子ごとの係数（0.65〜1）」を加えた値です。入力応答の0〜1という範囲は、RGB出力を0〜1へ制限するものではなく、HDR増光を維持します。
+
+無音・取得不能・Audio Inputの無効化では、応答がゼロへ減衰します。入力値が残っていても更新が停止すると、Audio InputのTimeout後に減衰します。Brightnessを無効にすると描画への倍率適用は止まります。独立した応答はその間に減衰しますが、**チャンネル応答はAudio Inputが管理するため、Brightnessを無効にしても更新を続けます。**
+
+AudioLinkが未導入ならAudio Inputに警告が表示され、入力は0です。Audio EnabledがONなのにAudio Inputがない場合や、選択したチャンネルが削除された場合は構築エラーになります。Audio EnabledがOFFなら、Brightness自身の音声状態と音声更新処理は追加されません。既存設定の扱いは[音声入力拡張時の設定](./audio-input.md#existing-data)を参照してください。
 
 ## Runtime API {#runtime}
 
@@ -63,7 +74,9 @@ AudioLinkが未導入ならAudio Inputに警告が表示され、入力は0で�
 
 BaseMinimum、BaseMaximum、Waveform、Period、PeriodMinimum、PeriodMaximum、RandomPhase、TimeMode、Minimum、Maximum、Duty、Smoothness、Targetには、それぞれGet／Setメソッドがあります。EnabledもLive変更できます。enumは`TpLab.Flux.FX.Udon`の`FluxParticleBrightnessWaveform`、`FluxParticleBrightnessTimeMode`、`FluxParticleBrightnessTarget`を使います。
 
-**Audio Enabledは構築時の設定**です。実行中に音声処理を追加するAPIではありません。AudioBoost・AudioAttack・AudioReleaseはGet／SetでLive変更できますが、Audio EnabledがOFFで構築された構成では音声増光に作用しません。共通の扱いは[Runtime API](./runtime-parameters.md)を参照してください。
+**Audio EnabledとAudio Channelは構築時の設定**です。実行中に音声処理の追加やチャンネル接続の変更はできません。AudioBoost・AudioAttack・AudioRelease・AudioSourceにはGet／Setがあります。入力元は`GetAudioSource()`／`SetAudioSource(FluxParticleAudioSource)`で取得・変更します。
+
+AudioBoostは両方式で作用します。AudioSource・AudioAttack・AudioReleaseが応答に作用するのは独立した応答の場合だけです。チャンネルを選択中に`SetAudioSource`を呼んでも接続先は変わりません。チャンネル自体の設定変更には[GetAudioChannel](./audio-input.md#runtime)を使います。Audio EnabledがOFFなら、これらは音声増光に作用しません。Setterは成功時にtrue、拒否時にfalseを返します。共通の扱いは[Runtime API](./runtime-parameters.md)を参照してください。
 
 ## 旧Blinkから移行する {#migration}
 

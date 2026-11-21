@@ -275,27 +275,28 @@ Add Audio Input to the same System and create the corresponding channel for Read
 
 To compute an independent response in Update, use unsmoothed ReadBands / ReadSample with ReadFreshness, checking Audio Input Enabled, counter >= 0, and time without updates < Timeout together. Bands already includes Gain, Noise Floor, and Strength; the Sample average also includes Average Gain. The average is formed from raw bands before common processing, so averaging the four Bands components does not generally produce the same value.
 
+ReadBands / ReadSample do not check Enabled or Timeout themselves. Input values may remain while disabled or stale, so a nonzero value alone does not establish validity. ReadFreshness is for Update; do not pass it to Render or Spawn reads.
+
 Generated HLSL exposes the existing response as `ctx.valueAudioInputResponse` and the four bands as `ctx.valueAudioInputBands`. Consumers must also declare target Value reads/writes and order against other writers. Do not write Audio Input's owned state; own any independent response state in the consumer.
 
 ### Per-channel IDs {#audio-channel-ids}
 
-`{id}` is the full Channel ID shown in the Inspector, not a display name or array index. Empty or duplicate IDs, or IDs containing characters other than lowercase ASCII letters and digits, are rejected.
+`{id}` is the full Channel ID shown in the Inspector, not a display name or array index. Empty or duplicate Channel IDs, or Channel IDs containing characters other than lowercase ASCII letters and digits, are rejected. Parameter IDs use `audio-input.channel.{id}.` followed by source, gain, attack, or release.
 
 | Kind | ID or factory API | Meaning |
 | --- | --- | --- |
-| Parameter | `audio-input.channel.{id}.source` / `.gain` / `.attack` / `.release` | All Live; contracts are provided by FluxParticleAudioChannelContract(id) |
 | Value | `ChannelSample(id)` → `audio-input.channel.{id}.sample` | Float, ReadOnly; input after channel Gain, before smoothing |
 | Value | `ChannelResponse(id)` → `audio-input.channel.{id}.response` | Float, OwnerManaged; smoothed response owned by Audio Input |
 | Operation | `audio-input.channel.{id}.response.initialize` | Spawn; initializes the channel response to zero |
 | Operation | `ChannelUpdate(id)` → `audio-input.channel.{id}.response.update` | Update; updates the response after freshness |
 
-ChannelSample / ChannelResponse / ChannelUpdate are methods on FluxParticleAudioInputOutputs. Each channel updates independently after freshness, without ordering against the existing response or other channels. Consumers that need the updated response should use ReadChannel. See [Audio Input](./audio-input.md#runtime) for ranges and runtime APIs.
+All channel Parameters are Live; obtain their contracts with `FluxParticleAudioChannelContract(id)`. ChannelSample / ChannelResponse / ChannelUpdate are methods on FluxParticleAudioInputOutputs. Each channel updates independently after freshness, without ordering against the existing response or other channels. Consumers that need the updated response should use ReadChannel. See [Audio Input](./audio-input.md#runtime) for ranges and runtime APIs.
 
 ### Distance fade and color order {#distance-fade-order}
 
 Distance Fade collects existing Render-phase render.color writers at registration time, plus `render.color`, as optional predecessors. Register custom color processing before Distance Fade and verify order. Writers registered later are not automatically discovered.
 
-The standard pipeline diagram above shows the basic chain. With Distance Fade, `render.distance-fade` follows the color operations registered before it. Audio Input runs a separate sequence: update input freshness, update the response, then run Update operations that use the response. It does not modify velocity or position itself.
+The standard pipeline diagram above shows the basic chain. With Distance Fade, `render.distance-fade` follows the color operations registered before it.
 
 When using the generated Render program for custom density captures or similar purposes, defining `FLUXFX_INTRINSIC_RENDER` before inclusion skips distance fading. If another renderer calls the shared `Runtime/Shaders/DistanceFade.hlsl`, pass the source System's origin and uniform scale, not the destination renderer's transform.
 

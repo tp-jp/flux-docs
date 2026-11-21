@@ -69,7 +69,7 @@ Averageは**AudioLinkの4帯域の平均**です。任意の周波数範囲や�
 
 ### 参照と編集できる項目 {#channel-editing}
 
-参照は固定IDで保持され、名前変更・並べ替え・保存後も維持されます。参照中のチャンネルを削除するとBrightnessのInspectorにMissingが表示され、そのチャンネルを使う構成のビルドは失敗します。有効なチャンネルかIndependent Responseを選び直してください。別チャンネルへ自動接続しません。空・重複・不正なIDも拒否されるため、通常はInspectorが生成したIDをそのまま使います。
+参照は固定IDで保持され、名前変更・並べ替え・保存後も維持されます。参照中のチャンネルを削除すると、Audio EnabledがONのBrightnessのInspectorにMissingが表示され、そのチャンネルを使う構成のビルドは失敗します。有効なチャンネルかIndependent Responseを選び直してください。別チャンネルへ自動接続しません。空・重複・不正なIDも拒否されるため、通常はInspectorが生成したIDをそのまま使います。
 
 | 操作 | Play中のLive編集 |
 | --- | --- |
@@ -91,13 +91,15 @@ Live変更はPlay終了時に破棄されます。保持する設定はPlayを�
 
 無音、取得不能、Audio Inputの無効化では、従来の応答とチャンネル応答はゼロへ減衰します。入力値が残ったままフレーム更新が止まった場合は、Timeoutに達してから減衰します。**Audio Inputを無効化しても減衰用の更新は続きます。** Brightnessだけを無効化しても、Audio Inputが管理するチャンネルの更新は続きます。
 
+これらは生存粒子のシミュレーションが進んでいる場合の動作です。応答の追従とTimeoutの計測にはシミュレーションの時間刻みを使い、SystemをPauseすると両方とも進みません。モジュールのEnabledをOFFにする操作と、System全体のPauseは区別してください。
+
 Brightnessは、[独立した応答またはチャンネル応答](./brightness.md#audio)を使います。カスタムモジュール向けの共有出力と読み取りPhaseは[音声入力の読み取り契約](./custom-module-reference.md#audio-response-read)を参照してください。標準のColor over Lifetimeなどへ自動接続する機能ではありません。
 
 ## Runtimeから変更する {#runtime}
 
 `target.Modules.AudioInput`を取得し、`TpLab.Flux.FX.Udon.Modules`の拡張メソッドを使用します。Band、Gain、NoiseFloor、Strength、Attack、Release、SlowResponse、AverageGain、Timeoutにはそれぞれ`Get名前`／`Set名前`があります。有効状態はGetEnabled／SetEnabledです。Bandのenumは`TpLab.Flux.FX.Udon.FluxParticleAudioBand`です。
 
-チャンネルは`target.Modules.GetAudioChannel(id)`で取得します。Inspectorに表示される**完全なChannel ID**を渡してください。表示名や配列番号ではありません。未組み込み・不明IDではnullを返します。
+チャンネルは`target.Modules.GetAudioChannel(id)`で取得します。Audio Inputの各チャンネルにある **Channel ID** 欄から完全なIDをコピーしてください。Brightnessの選択欄に表示される先頭8文字だけのID、表示名、配列番号は使いません。未組み込み・不明IDではnullを返します。
 
 | 設定 | API |
 | --- | --- |

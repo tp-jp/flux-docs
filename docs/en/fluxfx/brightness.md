@@ -64,9 +64,9 @@ Selecting a channel hides Audio Source, Audio Attack, and Audio Release. The cha
 
 The audio response starts at zero per particle. Independent Audio Attack / Release also use exponential smoothing, not an exact duration to reach the target completely. The audio multiplier is 1 plus the squared response multiplied by Audio Boost and a per-particle factor from 0.65 to 1. The input response range of 0–1 does not clamp RGB output to 0–1; HDR brightening is retained.
 
-Silence, unavailable input, or disabling Audio Input causes responses to decay toward zero. If updates stop while input values remain, decay begins after Audio Input's Timeout. Disabling Brightness bypasses its rendering multiplier. Its independent response decays while disabled, but **channel responses remain managed by Audio Input and continue updating even when Brightness is disabled.**
+See [Audio Input](./audio-input.md#response) for decay on input loss and behavior while paused. Disabling Brightness bypasses its rendering multiplier. Its independent response decays while disabled, but **channel responses remain managed by Audio Input and continue updating even when Brightness is disabled.**
 
-Without AudioLink, Audio Input shows a warning and supplies zero input. Building fails if Audio Enabled is on but Audio Input is missing, or if a selected channel has been deleted. Audio Enabled off adds no audio state or audio-update work owned by Brightness. See [existing settings after the audio extension](./audio-input.md#existing-data).
+Without AudioLink, Audio Input shows a warning and supplies zero input. With Audio Enabled on, building fails if Audio Input is missing or the selected channel has been deleted. Audio Enabled off adds no audio state or audio-update work owned by Brightness. See [existing settings after the audio extension](./audio-input.md#existing-data).
 
 ## Runtime API {#runtime}
 

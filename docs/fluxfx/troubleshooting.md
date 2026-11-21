@@ -153,8 +153,9 @@ StaticはPause・Stop・Clear・Restartでも変更可能になりません。[�
 | 音声増光をONにすると構築エラーになる | 同じSystemにAudio Inputが必要。Brightnessが無効でもAudio EnabledがONなら依存関係は必要 |
 | 音声に反応しない | Play前にAudio EnabledをONにする。両モジュールのEnabled、Audio Boost、AudioLinkの入力、Audio InputのGain・Strengthを確認する |
 | 共通のBandやAttack／ReleaseがBrightnessに効かない | 独立した応答はBrightnessのAudio Source・Audio Attack／Release、チャンネル選択時はチャンネル側のSource・Attack／Releaseで調整する |
-| Audio Source・Audio Attack／Releaseが表示されない | 作成済みチャンネルを選択中は非表示。独立した応答を選ぶと表示される |
+| Audio Source・Audio Attack／Releaseが表示されない | Audio EnabledをONにし、Independent Responseを選ぶと表示される |
 | チャンネルがMissingになった | 参照先を削除していないか確認し、有効なチャンネルかIndependent Responseを選ぶ。使用中の不明IDは構築エラーになる |
+| 音声入力が止まっても応答が減衰しない | SystemがPause中なら応答更新とTimeoutの計測も止まる。[再生を再開](./playback.md)して確認する |
 | Play中に接続先やチャンネル数を変えられない | 接続と配列の変更は再構築が必要。Playを停止して変更する |
 | 旧BlinkがMissingになった | 旧モジュールを削除せず、[移行手順](./brightness.md#migration)に従う |
 

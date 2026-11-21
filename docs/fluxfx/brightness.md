@@ -64,9 +64,9 @@ RGBはRGBだけ、AlphaはAlphaだけ、Bothは両方に倍率を掛けます。
 
 音声応答は粒子ごとに0から始まります。独立した応答のAudio Attack／Releaseも指数関数による追従で、指定時間で目標値に完全に到達するわけではありません。音声増光倍率は、1に「応答の2乗 × Audio Boost × 粒子ごとの係数（0.65〜1）」を加えた値です。入力応答の0〜1という範囲は、RGB出力を0〜1へ制限するものではなく、HDR増光を維持します。
 
-無音・取得不能・Audio Inputの無効化では、応答がゼロへ減衰します。入力値が残っていても更新が停止すると、Audio InputのTimeout後に減衰します。Brightnessを無効にすると描画への倍率適用は止まります。独立した応答はその間に減衰しますが、**チャンネル応答はAudio Inputが管理するため、Brightnessを無効にしても更新を続けます。**
+入力停止時の減衰とPause中の扱いは[Audio Input](./audio-input.md#response)を参照してください。Brightnessを無効にすると描画への倍率適用は止まります。独立した応答はその間に減衰しますが、**チャンネル応答はAudio Inputが管理するため、Brightnessを無効にしても更新を続けます。**
 
-AudioLinkが未導入ならAudio Inputに警告が表示され、入力は0です。Audio EnabledがONなのにAudio Inputがない場合や、選択したチャンネルが削除された場合は構築エラーになります。Audio EnabledがOFFなら、Brightness自身の音声状態と音声更新処理は追加されません。既存設定の扱いは[音声入力拡張時の設定](./audio-input.md#existing-data)を参照してください。
+AudioLinkが未導入ならAudio Inputに警告が表示され、入力は0です。Audio EnabledがONで、Audio Inputがない場合や選択したチャンネルが削除された場合は構築エラーになります。Audio EnabledがOFFなら、Brightness自身の音声状態と音声更新処理は追加されません。既存設定の扱いは[音声入力拡張時の設定](./audio-input.md#existing-data)を参照してください。
 
 ## Runtime API {#runtime}
 

@@ -153,8 +153,9 @@ See [Audio Input](./audio-input.md) and [Distance Fade](./distance-fade.md) for 
 | Enabling audio causes a build error | Add Audio Input to the same System. With Audio Enabled on, this dependency remains even if Brightness is disabled |
 | No audio brightening | Turn on Audio Enabled before Play. Check both modules' Enabled states, Audio Boost, AudioLink input, and Audio Input Gain / Strength |
 | Common Band or Attack / Release does not affect Brightness | For an independent response, adjust Brightness Audio Source / Audio Attack / Release. With a channel selected, adjust that channel's Source / Attack / Release |
-| Audio Source / Audio Attack / Release are hidden | These fields are hidden with an existing channel selected; select Independent Response to show them |
+| Audio Source / Audio Attack / Release are hidden | Turn on Audio Enabled and select Independent Response to show these fields |
 | A channel is Missing | Check whether the referenced channel was deleted and select a valid channel or Independent Response. An unknown ID in use causes a build error |
+| Responses do not decay after audio input stops | A paused System stops response updates and Timeout measurement. [Resume playback](./playback.md) and check again |
 | Connections or channel count cannot be changed during Play | Connection and array changes require rebuilding; stop Play before editing |
 | Legacy Blink appears as missing | Preserve the old module and follow the [migration steps](./brightness.md#migration) |
 

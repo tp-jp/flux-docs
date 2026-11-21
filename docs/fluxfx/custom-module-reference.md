@@ -273,29 +273,30 @@ Read／ReadChannelをOperationの`reads`へ渡すと、Updateでは当該Stepの
 
 同じSystemへAudio Inputを追加し、ReadChannelでは対応するチャンネルも作成してください。読み取り宣言だけでは自動追加しません。存在しないIDはビルドエラーで、他のチャンネルへ置き換えません。
 
-独自の応答を計算するUpdate処理では、未平滑化のReadBands／ReadSampleとReadFreshnessを使い、Audio InputのEnabled、カウンターが0以上、未更新時間がTimeout未満という条件を合わせて確認します。BandsにはGain・Noise Floor・Strength、Sampleの平均にはAverage Gainも適用済みです。平均は未加工の4帯域から求めてから共通処理を行うため、Bandsの4成分を平均した値とは一致するとは限りません。
+独自の応答を計算するUpdate処理では、未平滑化のReadBands／ReadSampleとReadFreshnessを使い、Audio InputのEnabled、カウンターが0以上、未更新時間がTimeout未満という条件を合わせて確認します。BandsにはGain・Noise Floor・Strength、Sampleの平均にはAverage Gainも適用済みです。平均は未加工の4帯域から求めてから共通処理を行うため、Bandsの4成分の平均とは一致しない場合があります。
+
+ReadBands／ReadSample自体はEnabledやTimeoutを判定しません。無効化中や更新停止中にも入力値が残る場合があるため、値が0かどうかだけで有効性を判断しないでください。ReadFreshnessはUpdate用であり、RenderやSpawnのreadsには渡しません。
 
 生成されるHLSLでは、従来の応答は`ctx.valueAudioInputResponse`、4帯域は`ctx.valueAudioInputBands`です。利用側は対象Valueのreads・writesと他Writerとの順序も宣言します。Audio Inputの所有状態へ書き込まず、独自の応答状態は利用側が所有してください。
 
 ### チャンネルごとのID {#audio-channel-ids}
 
-`{id}`はInspectorに表示される完全なChannel IDです。表示名や配列番号ではありません。空・重複・小文字ASCII英数字以外を含むIDは拒否されます。
+`{id}`はInspectorに表示される完全なChannel IDです。表示名や配列番号ではありません。空・重複・小文字ASCII英数字以外を含むChannel IDは拒否されます。Parameter IDは`audio-input.channel.{id}.`にsource、gain、attack、releaseを続けた文字列です。
 
 | 種類 | IDまたは生成用API | 意味 |
 | --- | --- | --- |
-| Parameter | `audio-input.channel.{id}.source` / `.gain` / `.attack` / `.release` | いずれもLive。契約はFluxParticleAudioChannelContract(id) |
 | Value | `ChannelSample(id)` → `audio-input.channel.{id}.sample` | Float・ReadOnly。固有Gain適用後、未平滑化の入力 |
 | Value | `ChannelResponse(id)` → `audio-input.channel.{id}.response` | Float・OwnerManaged。Audio Inputが管理する平滑化済み応答 |
 | Operation | `audio-input.channel.{id}.response.initialize` | Spawn。チャンネル応答を0に初期化 |
 | Operation | `ChannelUpdate(id)` → `audio-input.channel.{id}.response.update` | Update。freshness更新後に応答を更新 |
 
-ChannelSample／ChannelResponse／ChannelUpdateはFluxParticleAudioInputOutputsのメソッドです。各チャンネルは独立してfreshness更新後に処理され、従来のresponseや別チャンネルとの順序は指定しません。応答更新後に読む必要がある利用側はReadChannelを使います。設定範囲とRuntime APIは[Audio Input](./audio-input.md#runtime)を参照してください。
+チャンネルのParameterはいずれもLiveで、契約は`FluxParticleAudioChannelContract(id)`で取得します。ChannelSample／ChannelResponse／ChannelUpdateはFluxParticleAudioInputOutputsのメソッドです。各チャンネルは独立してfreshness更新後に処理され、従来のresponseや別チャンネルとの順序は指定しません。応答更新後に読む必要がある利用側はReadChannelを使います。設定範囲とRuntime APIは[Audio Input](./audio-input.md#runtime)を参照してください。
 
 ### 距離フェードと色処理の順序 {#distance-fade-order}
 
 Distance Fadeは、登録時に存在するRender Phaseのrender.color Writerと、`render.color`を任意の先行Operationとして集めます。独自の色処理はDistance Fadeより先に登録し、処理順を確認してください。後から追加した独自Writerまで自動検出するわけではありません。
 
-上の図は標準モジュールの基本的な処理順序を示しています。Distance Fadeを含む構成では、その前に登録した色処理の後へ`render.distance-fade`が続きます。Audio Inputでは、速度・位置を変更する処理とは別に、入力の更新状態（freshness）、応答（response）、その応答を使うUpdate処理の順に実行します。
+上の図は標準モジュールの基本的な処理順序を示しています。Distance Fadeを含む構成では、その前に登録した色処理の後へ`render.distance-fade`が続きます。
 
 独自の処理で密度などを取得するために、生成されたRenderプログラムを利用する場合、include前の`FLUXFX_INTRINSIC_RENDER`定義により距離フェードが省略されます。共通HLSL `Runtime/Shaders/DistanceFade.hlsl`を別の描画処理から呼ぶ場合は、元のSystemの原点と、親を含む一様スケールの倍率を渡してください。
 

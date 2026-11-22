@@ -25,7 +25,9 @@
 | Handle取得やSetが失敗する | モジュールの組み込み、enum番号、型、Policy、入力制約 |
 | 表示が想定と異なる | 座標空間、更新間隔、読み取る時点、実行順、Culling Bounds |
 
-SceneFlowの確認方法は[導入](./installation.md)を参照してください。生成されたShaderや設定を調べることはできますが、修正はModule・Contract・Definition・HLSLへ戻して行います。生成物だけを編集しても次の生成で置き換わります。
+SceneFlowの確認方法は[導入](./installation.md)を参照してください。生成されたShaderや設定を調べることはできますが、修正はModule・Contract・Definition・元のHLSLへ戻して行います。生成Shader・固定HLSLを直接編集すると、次の生成時に内容の不一致で失敗する場合があります。変更済みファイルは上書きされず、[生成物の整理でも保持されます](./generated-assets.md#protection)。
+
+古い生成物を整理する場合は、[手動整理の手順と保持期間の違い](./generated-assets.md#manual-cleanup)を確認し、調査に必要な出力を先に保存してください。拡張ツールからの分析には[整理API](./generated-assets.md#api)を使えます。
 
 ### 宣言・配置に関するエラー {#compiler-errors}
 

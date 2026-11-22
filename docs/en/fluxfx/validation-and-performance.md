@@ -25,7 +25,9 @@ Change one condition at a time. For CustomLift, start with Start Speed 0 and exp
 | Handle retrieval or Set fails | Module inclusion, enum slots, types, policies, and input constraints |
 | Unexpected appearance | Simulation space, update interval, read versions, execution order, Culling Bounds |
 
-See [Installation](./installation.md) for SceneFlow checks. You can inspect generated shaders and configuration, but make fixes in Module, Contract, Definition, or HLSL sources. Editing generated output alone will not survive regeneration.
+See [Installation](./installation.md) for SceneFlow checks. You can inspect generated shaders and configuration, but make fixes in Module, Contract, Definition, or original HLSL sources. Editing generated shaders or frozen HLSL directly can cause a content mismatch error on the next generation attempt. Modified files are not overwritten and are also [kept during cleanup](./generated-assets.md#protection).
+
+To remove old output, review the [manual cleanup steps and differences in retention](./generated-assets.md#manual-cleanup), and save output needed for investigation first. Extension tools can use the [cleanup API](./generated-assets.md#api) for analysis.
 
 ### Declaration and layout errors {#compiler-errors}
 

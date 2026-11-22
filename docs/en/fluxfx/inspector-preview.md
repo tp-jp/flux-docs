@@ -96,3 +96,5 @@ Backend is optional during normal authoring. Open it to inspect capacity or cost
 These estimates are not total effect memory: Meshes and other resources also consume memory.
 
 Generation errors appear in Backend or the overlay. Check Mesh, shape values, and module settings, then retry with Restart.
+
+Use [Generated asset management](./generated-assets.md) to clean up generated shaders and Materials. The cleanup window shows candidates and retention reasons; this operation is separate from Backend inspection.

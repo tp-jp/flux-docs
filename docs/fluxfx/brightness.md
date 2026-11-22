@@ -101,7 +101,7 @@ AudioBoostは両方式で作用します。AudioSource・AudioAttack・AudioRele
 
 対象は**Assets内の保存済みPrefabとScene**で、閉じているSceneも含めてファイルを更新します。[Authoringへの移行](./migration.md)の「開いているSceneのみ」とは対象範囲が異なります。参照IDと項目別Overrideを保持し、再実行で重複させません。不完全な設定、曖昧な参照ID、旧BlinkとBrightnessの併用などでは処理を停止して報告します。全構成を無条件に変換するものではありません。
 
-処理時のバックアップはTemp内に作成されます。プロジェクト全体の事前バックアップも残してください。古い生成Shaderが削除済みHLSLを参照している場合は、設定の移行後に **Tools → FluxFX → Clean Unused Generated Assets** で整理が必要になることがあります。
+処理時のバックアップはTemp内に作成されます。プロジェクト全体の事前バックアップも残してください。古い生成Shaderが削除済みHLSLを参照している場合は、設定の移行後に[生成物の手動整理](./generated-assets.md#manual-cleanup)で候補と保持理由を確認してください。使用中の生成物は保持されます。
 
 ## サンプルとの違い {#samples}
 

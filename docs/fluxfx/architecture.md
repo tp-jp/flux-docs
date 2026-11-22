@@ -49,6 +49,8 @@ Operationは論理的な処理単位です。**1モジュールや1Operationが�
 
 `FluxParticleProgramBuild`は生成結果をUnityの実行用構成へ反映し、Buffer・Kernel・Material、パラメーターの初期値やハンドルの対応情報を接続します。SceneFlowでは`FluxFXCompileBuildPass`がこの処理を行い、その後にFlux側の`FluxBuildPass`が実行されます。
 
+生成したAssetの所有情報と依存関係は生成セッションで記録します。未使用になった出力の整理方法と拡張APIは[生成物の管理](./generated-assets.md)を参照してください。生成・HLSL固定・セッション終了と、未使用生成物の整理は別の処理です。
+
 ## 実行時の役割分担 {#runtime}
 
 | 要素 | 役割 |

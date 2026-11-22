@@ -14,6 +14,7 @@
 | [導入](./installation.md) | VCC、依存パッケージ、導入確認 |
 | [移行](./migration.md) | 旧設定をAuthoringへ移行、PrefabとSceneの保存 |
 | [クイックスタート](./quickstart.md) | Prefab配置、粒子の表示、初期設定の調整 |
+| [リリースノート](./release-notes.md) | 変更内容と検証範囲 |
 
 <span id="basics"></span>
 
@@ -26,6 +27,7 @@
 | [Emission](./emission.md) | 発生頻度とBurst、再生周期との関係 |
 | [Shape](./shape.md) | 発生形状と領域 |
 | [Renderer](./renderer.md) | Billboard・Mesh、テクスチャ、ブレンド、描画範囲 |
+| [生成物の管理](./generated-assets.md) | 手動での分析・整理、起動時の自動整理、保護条件、拡張API |
 
 <span id="modules"></span>
 

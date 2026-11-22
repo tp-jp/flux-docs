@@ -14,6 +14,7 @@ Start with installation and the quick start, then explore Inspector settings, mo
 | [Installation](./installation.md) | VCC, dependencies, and verification |
 | [Migration](./migration.md) | Move legacy settings to Authoring; migrate and save Prefabs and Scenes |
 | [Quick start](./quickstart.md) | Add a Prefab, display particles, and adjust initial settings |
+| [Release notes](./release-notes.md) | Changes and verification scope |
 
 <span id="基本操作"></span>
 
@@ -26,6 +27,7 @@ Start with installation and the quick start, then explore Inspector settings, mo
 | [Emission](./emission.md) | Rate, bursts, and playback cycles |
 | [Shape](./shape.md) | Spawn shapes and regions |
 | [Renderer](./renderer.md) | Billboard, Mesh, textures, blending, and bounds |
+| [Generated asset management](./generated-assets.md) | Manual analysis and cleanup, automatic startup cleanup, protection, and extension APIs |
 
 <span id="モジュール"></span>
 

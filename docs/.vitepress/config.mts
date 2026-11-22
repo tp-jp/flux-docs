@@ -39,14 +39,16 @@ const jaTheme: DefaultTheme.Config = {
           { text: '導入', link: '/fluxfx/installation' },
           { text: '移行', link: '/fluxfx/migration' },
           { text: 'クイックスタート', link: '/fluxfx/quickstart' },
-          { text: 'ガイドの目次', link: '/fluxfx/guide' }
+          { text: 'ガイドの目次', link: '/fluxfx/guide' },
+          { text: 'リリースノート', link: '/fluxfx/release-notes' }
         ] },
         { text: '基本操作', items: [
           { text: 'Inspectorとプレビュー', link: '/fluxfx/inspector-preview' },
           { text: 'Main', link: '/fluxfx/main' },
           { text: 'Emission', link: '/fluxfx/emission' },
           { text: 'Shape', link: '/fluxfx/shape' },
-          { text: 'Renderer', link: '/fluxfx/renderer' }
+          { text: 'Renderer', link: '/fluxfx/renderer' },
+          { text: '生成物の管理', link: '/fluxfx/generated-assets' }
         ] },
         { text: 'モジュール', items: [
           { text: 'モジュールの基本', link: '/fluxfx/modules' },
@@ -111,6 +113,8 @@ const labels: Record<string, string> = {
   "移行": "Migration",
   "クイックスタート": "Quick start",
   "ガイドの目次": "Guide contents",
+  "リリースノート": "Release notes",
+  "生成物の管理": "Generated asset management",
   "基本操作": "Basics",
   "Bufferとデータ構造": "Buffers and data layout",
   "Kernelとシェーダー": "Kernels and shaders",

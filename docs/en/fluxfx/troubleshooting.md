@@ -160,3 +160,14 @@ See [Audio Input](./audio-input.md) and [Distance Fade](./distance-fade.md) for 
 | Legacy Blink appears as missing | Preserve the old module and follow the [migration steps](./brightness.md#migration) |
 
 Without AudioLink, input is zero. See [Brightness](./brightness.md) for settings.
+
+## Generated assets are not cleaned up {#generated-assets}
+
+| State | Check |
+| --- | --- |
+| Opening the menu shows no candidates | Click Analyze Generated Assets. Opening the window alone does not start a scan |
+| Automatic cleanup does not run | Check the enabled setting, pending requests or retention deadlines, and the previous automatic scan time. If the startup opportunity was skipped, no automatic run occurs until the next launch |
+| Analysis marks an asset as kept | Check its reason and reference source. Assets in use and modified frozen shaders or HLSL are kept |
+| Deletion fails or management records cannot be read | Inspect the diagnostics and JSON report. If a referring asset cannot be deleted, its dependencies are also kept |
+
+See [Generated asset management](./generated-assets.md) for operations and protection rules. Cleanup does not fix bugs in the original Module or HLSL sources.

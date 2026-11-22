@@ -49,6 +49,8 @@ An Operation is a logical processing unit. **One module or Operation does not ne
 
 `FluxParticleProgramBuild` applies the generated result to Unity's runtime configuration, connecting Buffers, Kernels, Materials, initial parameter values, and handle mappings. In SceneFlow, `FluxFXCompileBuildPass` performs this work before Flux's `FluxBuildPass` runs.
 
+Generation sessions record asset ownership and dependencies. See [Generated asset management](./generated-assets.md) for cleaning up unused output and the extension APIs. Generation, HLSL freezing, and ending sessions are separate from unused asset cleanup.
+
 ## Runtime responsibilities {#runtime}
 
 | Component | Role |

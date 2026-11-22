@@ -101,7 +101,7 @@ Saved settings become Pulse, preserving Minimum, Duty, Smoothness, Random Phase,
 
 The menu updates **saved Prefab and Scene files under Assets**, including closed Scenes. This differs from [Authoring migration](./migration.md), which processes only open Scenes. Reference IDs and per-field overrides are preserved, and rerunning does not duplicate modules. Incomplete settings, ambiguous reference IDs, or coexisting Blink and Brightness cause the operation to stop and report the problem. Conversion is not unconditional for every configuration.
 
-The operation creates backups under Temp; also keep your project backup. If old generated shaders reference removed HLSL, after migrating settings you may need **Tools → FluxFX → Clean Unused Generated Assets**.
+The operation creates backups under Temp; also keep your project backup. If old generated shaders reference removed HLSL, migrate settings and review candidates and retention reasons through [manual generated asset cleanup](./generated-assets.md#manual-cleanup). Assets still in use are kept.
 
 ## Sample differences {#samples}
 

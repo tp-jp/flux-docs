@@ -41,7 +41,7 @@ After initial import, compilation, and generation session recovery finish, FluxF
 - A cleanup request is pending, or an asset retention deadline has been reached.
 - At least 24 hours have elapsed since the previous automatic full scan started. If no scan timestamp is recorded, this restriction does not apply.
 
-Migrating an older schedule preserves its recorded scan timestamp. Manual analysis and cleanup do not reset the start of the automatic cleanup interval.
+Migrating the schedule format or [storage location](#metadata-migration) preserves the recorded scan timestamp and the 24-hour interval. Manual analysis and cleanup do not reset the start of the automatic cleanup interval.
 
 That launch's check is consumed even if the conditions are not met. Recompilation, domain reloads, and toggling the setting do not trigger another check. Installing an update in an Editor already using FluxFX does not count as a new launch. Leaving the Editor open for 24 hours does not cause cleanup to run during the session.
 
@@ -76,14 +76,36 @@ Deletion proceeds from referring assets to their dependencies. For example, a Ma
 
 ## Records and reports {#records}
 
+Asset ownership and cleanup requests describe the generated state of each local environment. They are stored in UserSettings to keep them separate from shared project settings.
+
 | Path | Contents |
 | --- | --- |
-| `ProjectSettings/FluxFXGeneration/Roots` | Ownership ledgers for each root, including asset identities and dependencies |
-| `ProjectSettings/FluxFXGeneration/CleanupSchedule.json` | Pending requests, scan timestamps, and the next retention deadline check |
+| `UserSettings/FluxFXGeneration/Roots/` | Ownership ledgers for each root, including asset identities and dependencies |
+| `UserSettings/FluxFXGeneration/CleanupSchedule.json` | Pending requests, scan timestamps, and the next retention deadline check |
 | `Library/FluxFX/GenerationSessions` | Generation session execution history |
 | `Temp/FluxFX/GenerationCleanup` | Analysis and cleanup reports in JSON |
 
-Ownership is separate from the execution history in Library, so recreating Library preserves the ledgers. Analysis may migrate older management records into the ledger. Temp reports are not a permanent history; save reports needed for investigation elsewhere.
+Ownership is separate from the execution history in Library, so recreating Library preserves the ledgers in UserSettings. Temp reports are not a permanent history; save reports needed for investigation elsewhere.
+
+### Automatic migration from ProjectSettings {#metadata-migration}
+
+After updating, the Editor automatically migrates `ProjectSettings/FluxFXGeneration/Roots/` and `ProjectSettings/FluxFXGeneration/CleanupSchedule.json` to the locations above when it loads. Metadata reads and writes also check that migration has completed, so manual action is normally unnecessary. **Storage migration runs even when automatic cleanup is OFF.**
+
+Migration preserves asset GUIDs, owners, dependencies, active sessions, retention deadlines, cleanup requests, and last scan timestamps. The existing automatic cleanup ON/OFF setting, startup-only checks, limit of one automatic scan per 24 hours, and reference protection are also preserved.
+
+All metadata files being migrated are validated, and source and destination files are verified to match byte for byte before old files and empty old folders are removed. **Migration itself does not perform a full generated asset scan or delete generated assets.** Generated shaders, frozen HLSL, Materials, and other output stay in their existing locations, as does the execution history in `Library/FluxFX/GenerationSessions`. Public APIs and normal operating procedures are unchanged.
+
+### When migration stops {#migration-errors}
+
+An interrupted migration can resume if already saved contents match the source byte for byte. Identical JSON values with different whitespace or line endings still constitute a conflict. Different destination contents, corrupt metadata, or read/write errors stop migration. Existing metadata is not overwritten or replaced with defaults, and generation and cleanup do not proceed until the cause is resolved.
+
+Check the affected path and error in the Console, then inspect the old and new metadata and access permissions as appropriate. Do not delete conflicting ledgers without reviewing their contents. Unknown files and nonempty old folders are retained after migration.
+
+### Git considerations {#git}
+
+A common Unity ignore pattern is `/[Uu]ser[Ss]ettings/`. Whether these files are actually excluded from Git depends on the project's `.gitignore` and their tracking state. Adding an ignore rule does not untrack files already tracked by Git.
+
+If the old metadata files were tracked, migration produces deletion changes for those files. Moving the storage location alone does not automatically exclude metadata from Git in every project.
 
 ## Extension API {#api}
 
@@ -100,7 +122,7 @@ Editor code uses `FluxParticleGenerationCleanup` in the `TpLab.Flux.FX.Editor.Bu
 
 Omitting `root` uses `FluxParticleGenerationSession.DefaultRoot`. For a custom root, use the one registered by the generation session's `Begin` call. Automatic cleanup requested through `Request()` targets the default root.
 
-Although `Analyze` does not delete assets, it migrates old records when needed and records a scan timestamp if a full scan starts. It also saves diagnostic JSON. `CollectWithReport` and `Collect` delete assets without opening a confirmation window. To implement a review UI, display an `Analyze` result and pass it to `CollectReviewed` after confirmation.
+Although `Analyze` does not delete assets, it checks metadata storage migration and incorporates legacy session records from Library into the ownership ledger when needed. It records a timestamp if a full scan starts and also saves diagnostic JSON. `CollectWithReport` and `Collect` delete assets without opening a confirmation window. To implement a review UI, display an `Analyze` result and pass it to `CollectReviewed` after confirmation.
 
 `Analyze` and the `Collect` methods do not apply automatic cleanup's 24-hour restrictions. Active session, reference, and ownership protection still applies. Generation, HLSL freezing, and ending sessions remain the producer's responsibility; cleanup APIs do not perform these tasks.
 

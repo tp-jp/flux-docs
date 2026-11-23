@@ -169,5 +169,6 @@ Without AudioLink, input is zero. See [Brightness](./brightness.md) for settings
 | Automatic cleanup does not run | Check the enabled setting, pending requests or retention deadlines, and the previous automatic scan time. If the startup opportunity was skipped, no automatic run occurs until the next launch |
 | Analysis marks an asset as kept | Check its reason and reference source. Assets in use and modified frozen shaders or HLSL are kept |
 | Deletion fails or management records cannot be read | Inspect the diagnostics and JSON report. If a referring asset cannot be deleted, its dependencies are also kept |
+| `Cannot migrate FluxFX generation metadata` appears | Check the path and error in the Console and follow [When migration stops](./generated-assets.md#migration-errors). Do not delete conflicting ledgers without reviewing them |
 
 See [Generated asset management](./generated-assets.md) for operations and protection rules. Cleanup does not fix bugs in the original Module or HLSL sources.

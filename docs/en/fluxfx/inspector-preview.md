@@ -14,7 +14,7 @@ Custom modules can provide their own translations for headings and fields. Modul
 
 | Section | Contents |
 | --- | --- |
-| [Main](./main.md) | Capacity, playback, and initial lifetime/speed values |
+| [Main](./main.md) | Capacity, System Follow, playback, and initial lifetime/speed values |
 | [Emission](./emission.md) | Rate and bursts |
 | [Shape](./shape.md) | Spawn positions and velocity directions |
 | [Modules](./modules.md) | Movement and appearance effects |
@@ -57,6 +57,32 @@ In Edit Mode, display the target Authoring Inspector and enable the FluxFX Previ
 This Stop differs from runtime Stop(), which continues updating existing particles.
 
 Playback Time shows elapsed preview time. Alive particles shows the asynchronously obtained count, not an immediate exact value. Before a result is available, it shows an em dash (—).
+
+## Preview Follow controls {#preview-follow}
+
+When [System Follow in Main](./main.md#system-follow) is enabled, the Scene view's **FluxFX Preview → Preview Follow** controls appear. Choose where to display the preview independently of the runtime follow target.
+
+| Control | Behavior |
+| --- | --- |
+| Fixed at Placement | Default. Use the placement in the Scene without applying the runtime follow target or offset |
+| Follow Scene Camera | Follow the camera of the last active Scene view |
+| Follow Specified Transform | Follow a Transform assigned specifically for the preview |
+| Freeze Follow Position | Keep the current follow position and orientation |
+| Release Follow Position | Resume following the current target |
+
+Follow modes use Main's Follow Offset, Follow Offset Space, and Follow Rotation. The Scene camera stands in for the player; it does not automatically reproduce the height difference between Local Player Position and Head.
+
+**Freezing the follow position is separate from pausing particles.** Freeze while playing to keep particles running, then move the camera away to inspect the effect from outside. Changing the mode or assigned Transform releases the freeze. Freeze/release buttons are not shown in placement mode.
+
+An unassigned preview-only Transform does not fall back to the Scene camera or the runtime Follow Transform. After switching to a follow mode, simulation waits until a target is first acquired. If the target is later lost, the preview retains its last position and orientation and its playback state. You cannot newly freeze the position while no target is available. An existing freeze can be released, but following requires an available target to resume.
+
+Changing the preview mode or target, or freezing/releasing the position, does not reset particles or Playback Time. Click **Restart** to compare from an empty state. Restart also preserves the target and frozen state.
+
+If runtime System Follow is set to Specified Transform, [Main's Follow Transform must be valid](./main.md#system-follow) regardless of the preview mode. Unlike an unassigned preview-only Transform, an invalid Main setting causes configuration generation to fail.
+
+Preview controls are temporary Editor state. They do not modify runtime settings, the Scene Transform, or saved Prefab data. Recreating the Inspector, for example by deselecting the object, restores the default placement mode. Rebuilding the preview after module edits preserves the target and frozen state.
+
+The [snow around the player example](./main.md#follow-snow-example) walks through placement, camera following, and freezing the follow position.
 
 <span id="設定変更と再生成"></span>
 

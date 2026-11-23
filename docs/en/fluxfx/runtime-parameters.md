@@ -8,6 +8,8 @@ Prepare saved settings in FluxParticleAuthoring. External Udon scripts reference
 
 To implement a handle for your own module, see [Custom modules](./custom-modules.md#runtime-handle).
 
+Configure [System Follow](./main.md#system-follow) on Authoring before Play Mode. Although it appears in Main, there is no Runtime API to change its target, offset, or rotation mode.
+
 <span id="操作の入口"></span>
 
 ## API entry points

@@ -63,6 +63,8 @@ Generation sessions record asset ownership and dependencies. See [Generated asse
 
 During an update, System advances Emitter and passes its spawn requests and the update interval to Executor. Executor allocates spawn destinations and updates particles on the GPU. UdonSharp does not calculate every particle's position in an array and upload it each frame.
 
+[System Follow](./main.md#system-follow) is a common setting that moves System's Transform, not a Module. With it OFF, simulation advances in `Update`; when enabled, it advances after following in `PostLateUpdate`. Emission and simulation wait until a target is first acquired.
+
 `Stop` stops new emission while existing particles continue updating. `Pause` stops simulation progression. See [Playback controls](./playback.md) for API differences.
 
 ## GPU state and rendering {#gpu-and-rendering}

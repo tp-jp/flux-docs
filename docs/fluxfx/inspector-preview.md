@@ -14,7 +14,7 @@ FluxFXの編集設定は、`FluxParticleAuthoring`の専用Inspector（**Flux FX
 
 | セクション | 内容 |
 | --- | --- |
-| [Main](./main.md) | 容量、再生条件、寿命や初速などの初期値 |
+| [Main](./main.md) | 容量、System Follow、再生条件、寿命や初速などの初期値 |
 | [Emission](./emission.md) | 発生頻度とBurst |
 | [Shape](./shape.md) | 発生位置と初速度方向の形状 |
 | [Modules](./modules.md) | 動きや見た目を変える機能 |
@@ -57,6 +57,32 @@ SystemのInspectorはUdonSharp標準表示で、設定用のSerializeFieldは非
 ここでのStopは、既存粒子を更新し続ける実行時APIの`Stop()`とは異なります。
 
 **Playback Time** はプレビューの経過時間、**Alive particles** は取得した生存粒子数です。生存数は非同期に取得されるため、即時の厳密な値ではありません。未取得の場合は`—`が表示されます。
+
+## Previewの追従操作 {#preview-follow}
+
+[MainのSystem Follow](./main.md#system-follow)を有効にすると、Sceneビューの **FluxFX Preview → Preview Follow（Previewの追従）** に操作欄が表示されます。実行時の追従先とは別に、Previewでの表示位置を選びます。
+
+| 英語UI | 日本語UI | 動作 |
+| --- | --- | --- |
+| Fixed at Placement | 配置位置で固定 | 既定。シーン上の配置で表示し、実行時の追従先やオフセットは適用しない |
+| Follow Scene Camera | Sceneカメラに追従 | 最後にアクティブだったSceneビューのカメラへ追従する |
+| Follow Specified Transform | 指定Transformに追従 | Preview専用に指定したTransformへ追従する |
+| Freeze Follow Position | 追従位置を固定 | 追従中の位置と向きを保持する |
+| Release Follow Position | 追従位置の固定を解除 | 現在の追従先への追従を再開する |
+
+追従モードでは、MainのFollow Offset・Follow Offset Space・Follow Rotationを使います。Sceneカメラはプレイヤーの代用であり、Local Player PositionとHeadの高さの違いは自動再現しません。
+
+**位置の固定と粒子のPauseは別操作です。** 再生中に追従位置を固定すると、粒子の再生を続けたまま、カメラを動かして外側から観察できます。モードや指定Transformを変えると固定は解除されます。配置位置モードでは固定／解除ボタンは表示されません。
+
+Preview専用の指定Transformが未指定でも、Sceneカメラや実行時のFollow Transformへ自動的には切り替えません。追従モードへ切り替えてから初めて対象を取得するまではシミュレーションを待機し、取得後に対象が失われた場合は最後の位置・向きと再生状態を維持します。対象を取得できない間は、新たに位置を固定することはできません。固定済みの状態は解除できますが、追従を再開するには対象が必要です。
+
+Previewのモード・追従先の変更や固定／解除は、粒子やPlayback Timeを初期化しません。空の状態から比較する場合は **Restart** を押してください。Restartでも追従先と固定状態は保持されます。
+
+実行時のSystem FollowがSpecified Transformの場合は、Previewのモードにかかわらず[MainのFollow Transformに有効な参照が必要](./main.md#system-follow)です。Preview専用の指定Transformが未指定の場合とは異なり、Mainの設定不備は構成生成エラーになります。
+
+Previewの操作はEditor内の一時状態です。実行時設定、シーンのTransform、Prefabの保存内容は変更しません。選択解除などでInspectorが作り直されると既定の配置位置モードに戻ります。モジュール編集などによるPreview再構築では、追従先と固定状態を保持します。
+
+[プレイヤーの周囲に降る雪の例](./main.md#follow-snow-example)で、配置位置・カメラ追従・位置固定を使い分ける手順を説明します。
 
 <span id="changes-and-regeneration"></span>
 

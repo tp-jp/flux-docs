@@ -39,6 +39,7 @@ See [installation](./installation.md). Confirm SceneFlow Debug Window detects `F
 | --- | --- |
 | Play On Awake / playback API | Call Play if automatic playback is off; check Pause |
 | Start Delay | Wait for it or set it to 0 while investigating |
+| System Follow | When enabled, emission waits for the first target acquisition after runtime starts. For generation errors caused by invalid settings, see [follow checks](#system-follow) |
 | Rate over Time / Bursts | Rate 0 without bursts emits nothing; try Rate 8 |
 | Completed non-looping schedule | Use Restart; Play does not rewind |
 | Start Lifetime | Avoid zero or very short values; try 3 seconds |
@@ -48,6 +49,18 @@ See [installation](./installation.md). Confirm SceneFlow Debug Window detects `F
 | Culling Bounds | Include the full particle and trail area |
 
 IsEmitting true does not prove particles have spawned. [Request the alive count](./state-and-count.md) to distinguish missing emission from invisible living particles.
+
+## System Follow and Preview following {#system-follow}
+
+| Symptom | Check |
+| --- | --- |
+| Generation fails with Specified Transform | Assign Main's Follow Transform to something other than System or its descendants. An unassigned reference is also an error; a preview-only reference cannot replace it |
+| Preview does not follow the player or camera | The default is Fixed at Placement. Enable System Follow in Main, then choose camera or specified Transform following under FluxFX Preview → Preview Follow |
+| Preview does not follow the specified Transform | Assign the preview-only reference; it does not fall back to the Scene camera or runtime reference. If frozen, click Release Follow Position |
+| System moves while paused | Pause stops particle simulation. To hold the preview position and orientation, use Freeze Follow Position |
+| Existing particles or Trails disappear after movement | Culling Bounds moves with System. Adjust it to include particles and Trails left behind in World space |
+
+See [Main](./main.md#system-follow) for runtime settings, and [Preview Follow controls](./inspector-preview.md#preview-follow) for Editor-only operations and state retention.
 
 <span id="数が増えない・burstが欠ける"></span>
 

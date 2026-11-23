@@ -92,6 +92,8 @@ public class FluxPlaybackControl : UdonSharpBehaviour
 
 `Pause()`を使います。粒子の生成とシミュレーション時間が止まります。表示を消す操作ではありません。`Play()`で再開できます。
 
+[System Follow](./main.md#system-follow)によるGameObjectの追従はPause中も続きます。Local空間の粒子はSystemとともに移動するため、ワールド上の位置まで固定する操作ではありません。Editorの[Previewの追従位置固定](./inspector-preview.md#preview-follow)は別の操作です。
+
 <span id="hide-particles-immediately"></span>
 
 ### すぐに消す

@@ -63,6 +63,8 @@ Operationは論理的な処理単位です。**1モジュールや1Operationが�
 
 更新時はSystemがEmitterを進め、その発生要求と更新間隔をExecutorへ渡します。ExecutorはGPU上で生成先の割り当てと粒子の更新を行います。UdonSharpが各粒子の位置を配列で計算し、毎フレーム転送する構成ではありません。
 
+[System Follow](./main.md#system-follow)はModuleではなく、SystemのTransformを動かす共通設定です。OFFのときは`Update`でシミュレーションを進め、有効なときは`PostLateUpdate`で追従した後に進めます。初めて追従先を取得するまでは発生・シミュレーションを待機します。
+
 `Stop`は新しい発生を止め、既存粒子の更新は継続します。`Pause`はシミュレーションの進行を止めます。APIごとの違いは[再生と停止](./playback.md)を参照してください。
 
 ## GPU上の状態と描画 {#gpu-and-rendering}

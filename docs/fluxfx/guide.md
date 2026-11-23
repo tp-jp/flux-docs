@@ -22,8 +22,8 @@
 
 | 章 | 扱う内容 |
 | --- | --- |
-| [Inspectorとプレビュー](./inspector-preview.md) | AuthoringとSystem、設定コピー、プレビュー、ベイクとLive編集 |
-| [Main](./main.md) | 容量、寿命、初速、初期値、シミュレーション空間、再生条件 |
+| [Inspectorとプレビュー](./inspector-preview.md) | AuthoringとSystem、設定コピー、Previewの追従と位置固定、ベイクとLive編集 |
+| [Main](./main.md) | 容量、初期値、シミュレーション空間、System Follow、再生条件 |
 | [Emission](./emission.md) | 発生頻度とBurst、再生周期との関係 |
 | [Shape](./shape.md) | 発生形状と領域 |
 | [Renderer](./renderer.md) | Billboard・Mesh、テクスチャ、ブレンド、描画範囲 |

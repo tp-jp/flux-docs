@@ -22,8 +22,8 @@ Start with installation and the quick start, then explore Inspector settings, mo
 
 | Chapter | Topics |
 | --- | --- |
-| [Inspector and preview](./inspector-preview.md) | Authoring and System, copying settings, preview, baking, and Live editing |
-| [Main](./main.md) | Capacity, lifetime, initial speed and other initial values, simulation space, and playback |
+| [Inspector and preview](./inspector-preview.md) | Authoring and System, copying settings, Preview following and freezing, baking, and Live editing |
+| [Main](./main.md) | Capacity, initial values, simulation space, System Follow, and playback |
 | [Emission](./emission.md) | Rate, bursts, and playback cycles |
 | [Shape](./shape.md) | Spawn shapes and regions |
 | [Renderer](./renderer.md) | Billboard, Mesh, textures, blending, and bounds |

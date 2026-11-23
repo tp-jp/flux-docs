@@ -30,7 +30,7 @@ Particle Countは実行前に確保するスロット数です。生存粒子数
 
 Stopは新規発生を止めますが、既存粒子の更新は続きます。全粒子が消えたことを理由に、シミュレーション更新全体を自動停止する処理もありません。Pauseはシミュレーション更新を止めますが、残っている粒子の描画や確保済みメモリをなくす操作ではありません。
 
-Culling Boundsは描画範囲の判定に使われます。カメラ外になったからといって、FluxParticleSystemのUpdateまで自動的に停止する仕組みではありません。
+Culling Boundsは描画範囲の判定に使われます。カメラ外になったからといって、FluxParticleSystemの更新まで自動的に停止する仕組みではありません。[System Follow](./main.md#follow-runtime)が有効なら、Pause中もGameObjectの追従は続きます。
 
 <span id="buffers-and-memory-estimates"></span>
 

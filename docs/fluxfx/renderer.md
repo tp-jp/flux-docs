@@ -74,7 +74,7 @@ Rendererの **Intensity Mask** にTexture2Dを割り当てると、粒子画像�
 
 **Culling Bounds** は、カメラから見える範囲かどうかを判定するための領域です。CenterとSizeを設定し、粒子が移動する範囲を含めます。Sizeは各成分とも正の値が必要です。
 
-この範囲はRendererのローカル座標です。Simulation SpaceがWorldでも、Boundsまでワールド座標になるわけではありません。発生元を移動する場合は、既存粒子が残る範囲も考慮してください。
+この範囲はRendererのローカル座標です。Simulation SpaceがWorldでも、[System Follow](./main.md#system-follow)などで発生元を動かすとBoundsも移動します。World空間に残った粒子やTrailsも覆うように設定してください。自動拡張は行いません。[Previewの追従位置を固定](./inspector-preview.md#preview-follow)してカメラを離すと、移動後に残る粒子を観察できます。
 
 範囲が狭いと、粒子が見える位置にあるのに描画全体が消えることがあります。まずPrefabの範囲で表示を確認し、その後エフェクトの移動範囲に合わせて調整します。Boundsは粒子を閉じ込めたり、衝突させたりする設定ではありません。
 

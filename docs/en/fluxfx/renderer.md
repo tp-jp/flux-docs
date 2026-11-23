@@ -74,7 +74,7 @@ The mask uses **the same UVs as Texture**. Tiling, Offset, and [Texture Sheet An
 
 Culling Bounds controls visibility testing. Set Center and Size to cover the particle movement region; every Size component must be positive.
 
-Bounds are local to the Renderer, even with World simulation. If the emitter moves, account for the area where existing particles remain.
+Bounds are local to the Renderer. Even with World simulation, moving the emitter, including through [System Follow](./main.md#system-follow), moves Bounds too. Include particles and Trails left behind in World space; bounds are not expanded automatically. [Freeze the Preview follow position](./inspector-preview.md#preview-follow) and move the camera away to inspect particles left behind after movement.
 
 Bounds that are too small can make the entire effect disappear even while particles should be visible. Start with the Prefab's bounds, then fit them to the effect. Bounds do not contain particles or create collisions.
 

@@ -30,7 +30,7 @@ State is stored in Flux RenderTextures, with shader passes over allocated areas.
 
 Stop ends new emission but keeps simulation updating, including after all particles die. Pause stops simulation updates but does not remove existing rendering or allocated memory.
 
-Culling Bounds control rendering visibility; being off-camera does not automatically stop FluxParticleSystem Update.
+Culling Bounds control rendering visibility; being off-camera does not automatically stop FluxParticleSystem updates. When [System Follow](./main.md#follow-runtime) is enabled, the GameObject continues following even while particles are paused.
 
 <span id="bufferとメモリの目安"></span>
 

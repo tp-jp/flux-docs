@@ -8,6 +8,8 @@
 
 独自モジュールのハンドルを実装する方法は[カスタムモジュール](./custom-modules.md#runtime-handle)を参照してください。
 
+[System Follow](./main.md#system-follow)はPlay開始前にAuthoringで設定します。Mainに表示されますが、追従先・オフセット・回転方式を変更するRuntime APIはありません。
+
 <span id="api-entry-points"></span>
 
 ## 操作の入口

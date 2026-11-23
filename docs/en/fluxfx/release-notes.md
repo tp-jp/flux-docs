@@ -1,8 +1,38 @@
 # Release notes {#release-notes}
 
+## 0.7.0: Add System Follow and Preview Follow Controls {#v0-7-0}
+
+The [GitHub Release and distribution files](https://github.com/tp-jp/FluxFX/releases/tag/0.7.0) were confirmed public on November 23, 2026.
+
+**System Follow** moves the System GameObject with the local player's position, tracked head, or a specified Transform. It is configured in Authoring's Main section, not as a Module. It defaults to OFF, preserving the placement and behavior of existing data.
+
+- Configure a position offset in world axes or relative to the target's orientation, and choose how to follow rotation. Configure these before Play Mode; no Udon Runtime API for changing follow settings was added.
+- When System Follow is enabled, Preview controls explicitly select placement, Scene camera, or a specified Transform. Fixed at Placement is the default. An unassigned preview Transform does not fall back to the Scene camera or runtime reference.
+- Freeze or release the preview follow position and orientation independently of particle Pause. Keep particles playing while observing the effect from outside.
+- Preview controls do not modify saved data. Preview rebuilds after module edits preserve the target and frozen state; recreating the Inspector restores defaults.
+
+See [Main](./main.md#system-follow) for settings and a snow example, and [Preview Follow controls](./inspector-preview.md#preview-follow) for operations. When leaving particles in World space, also adjust [Culling Bounds](./renderer.md#set-rendering-bounds), which moves with System.
+
+### Verification scope {#verification-0-7-0}
+
+These results come from implementation-time records, not from rerunning Unity tests for this documentation update.
+
+| Area | Result |
+| --- | --- |
+| C# compilation | Passed during System Follow implementation and after the Preview extension |
+| Player/Editor Udon compilation | Both passed during System Follow implementation; not rerun after the Preview extension |
+| Related EditMode tests | All 63 passed after the Preview extension; this was not a full regression run |
+| Preview image comparison | Maximum RGBA difference 0 in all four World/Local × MSAA 1/4 cases, including Trails and Distance Fade |
+| Preview controls | Verified frozen pose with GPU simulation continuing, resumed following on release, target/frozen state retention across rebuilds, and English/Japanese UI |
+| Saved data | Verified matching Authoring, Runtime, Transform, and rebaked results, with the Scene dirty state preserved |
+| Play/ClientSim | Verified all four target modes, World/Local, initially inactive objects, re-enabling, rotation, offsets, and related cases during System Follow implementation; not rerun after the Preview extension |
+| VRChat and VR headsets | Not tested |
+
+Records are in `Temp/SystemFollow/verification.txt` and `Temp/PreviewFollow/verification.txt`. The former describes the older preview behavior; the latter defines the current controls. Records under Temp may be lost.
+
 ## 0.6.1: Move generation metadata to UserSettings {#v0-6-1}
 
-This is a patch update. The current `package.json` version is 0.6.1, but publication and distribution have not been confirmed.
+This is a patch update. The [GitHub Release and distribution files](https://github.com/tp-jp/FluxFX/releases/tag/0.6.1) were confirmed public on November 23, 2026.
 
 Generation metadata has moved to UserSettings. Existing ledgers, cleanup requests, and scan intervals are carried over automatically, separating metadata for each environment's generated state from shared project settings.
 
@@ -21,7 +51,7 @@ The record is stored at `Temp/GenerationMetadataMigration/verification.txt` and 
 
 ## 0.6.0: Revamped generated asset cleanup, enabled by default at startup {#v0-6-0}
 
-This entry covers generated asset cleanup changes in the package recorded as version 0.6.0 in `package.json`. Publication status has not been confirmed.
+This entry covers generated asset cleanup changes. The [GitHub Release and distribution files](https://github.com/tp-jp/FluxFX/releases/tag/0.6.0) were confirmed public on November 23, 2026.
 
 Cleanup of unused FluxFX-managed shaders, frozen HLSL, Materials, and other assets has been revamped. Manual cleanup lets you review candidates and retention reasons; automatic cleanup runs when needed at project startup. Assets in use and their dependencies are kept.
 

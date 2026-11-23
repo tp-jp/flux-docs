@@ -39,6 +39,7 @@
 | --- | --- |
 | Play On Awake・再生API | 自動再生がオフならPlayを呼ぶ。Pause中でないか確認する |
 | Start Delay | 待機時間を過ぎるまで待つか、切り分け時は0にする |
+| System Follow | 有効時は実行開始後、初めて追従先を取得するまで待機する。設定不備による生成エラーは[追従の確認項目](#system-follow)を参照 |
 | Rate over Time・Bursts | Rateが0でBurstもなければ発生しない。まずRateを8にする |
 | 非ループの終了 | Playでは発生周期を巻き戻さない。Restartを呼ぶ |
 | Start Lifetime | 0や極端に短い値を避け、まず3秒程度で確認する |
@@ -48,6 +49,18 @@
 | Culling Bounds | 粒子と軌跡が移動する範囲を含める |
 
 `IsEmitting`がtrueでも、実際に粒子が生まれているとは限りません。必要なら[生存数を取得](./state-and-count.md)し、「発生していない」のか「生存しているが見えていない」のかを切り分けます。
+
+## System Follow・Previewの追従 {#system-follow}
+
+| 症状 | 確認すること |
+| --- | --- |
+| Specified Transformで生成エラーになる | MainのFollow TransformにSystem自身・子孫以外を指定する。未指定もエラー。Preview専用の参照では代用できない |
+| Previewがプレイヤーやカメラへ追従しない | 既定は配置位置で固定。MainのSystem Followを有効にし、FluxFX PreviewのPreview FollowからSceneカメラまたは指定Transformへの追従を選ぶ |
+| Previewで指定Transformへ追従しない | Preview専用の参照を設定する。未指定でもSceneカメラや実行時の参照へは切り替わらない。固定中なら「追従位置の固定を解除」を押す |
+| PauseしてもSystemが動く | Pauseは粒子のシミュレーションを止める操作。Previewで位置と向きを止めるには「追従位置を固定」を使う |
+| 移動すると残っている粒子やTrailsが消える | Culling BoundsもSystemとともに移動する。World空間に残る粒子・Trailsを含めて範囲を調整する |
+
+実行時の設定は[Main](./main.md#system-follow)、Editor専用の操作と状態の保持は[Previewの追従操作](./inspector-preview.md#preview-follow)を参照してください。
 
 <span id="counts-stop-growing-or-bursts-are-incomplete"></span>
 

@@ -1,8 +1,38 @@
 # リリースノート {#release-notes}
 
+## 0.7.0：System FollowとPreview追従操作を追加 {#v0-7-0}
+
+2026年11月23日に[GitHub Releaseと配布ファイル](https://github.com/tp-jp/FluxFX/releases/tag/0.7.0)の公開を確認しました。
+
+SystemのGameObjectをローカルプレイヤーの位置・頭部・指定Transformへ追従させる **System Follow** を追加しました。通常のModuleではなく、AuthoringのMainで設定します。既定はOFFで、既存データの配置・動作を維持します。
+
+- 追従位置のオフセット、World／追従先の向きを基準にしたオフセット、回転追従を設定できます。設定はPlay開始前に行い、変更用のUdon Runtime APIは追加していません。
+- System Follow有効時のPreviewに、配置位置・Sceneカメラ・指定Transformを明示的に選ぶ操作を追加しました。既定は配置位置で固定です。Previewの指定Transformが未指定でも、Sceneカメラや実行時の参照へ自動的には切り替えません。
+- Previewの追従位置と向きを固定・解除できます。粒子のPauseとは別操作で、再生を続けながら外側から観察できます。
+- Preview操作は保存内容を変更しません。モジュール編集などによるPreview再構築では追従先・固定状態を保持し、Inspectorが作り直されると既定に戻ります。
+
+設定と雪の例は[Main](./main.md#system-follow)、操作手順は[Previewの追従操作](./inspector-preview.md#preview-follow)を参照してください。World空間の粒子を残す場合は、Systemとともに移動する[Culling Bounds](./renderer.md#描画範囲を設定する)も調整します。
+
+### 検証範囲 {#verification-0-7-0}
+
+以下は実装時の記録に基づく結果です。このドキュメント更新でUnityのテストを再実行した結果ではありません。
+
+| 対象 | 確認結果 |
+| --- | --- |
+| C#コンパイル | System Follow実装時・Preview拡張後ともPASS |
+| Player／Editor用Udonコンパイル | System Follow実装時に両方PASS。Preview拡張後は再実行していない |
+| 関連EditModeテスト | Preview拡張後、63件すべてPASS。全回帰ではない |
+| Preview画像比較 | World／Local × MSAA 1／4の4条件で最大RGBA差0。Trails・Distance Fadeを含む |
+| Preview操作 | 固定中の姿勢保持とGPUシミュレーション継続、解除後の追従、再構築時の追従先・固定状態の保持、日英UIを確認 |
+| 保存内容への影響 | Authoring・Runtime・Transform・再ベイク結果の一致、Scene変更状態の維持を確認 |
+| Play／ClientSim | System Follow実装時に4種類の追従先、World／Local、初期非アクティブ、再有効化、回転・オフセットなどを確認。Preview拡張後は再実行していない |
+| VRChat実機・VRヘッドセット | 未検証 |
+
+記録は`Temp/SystemFollow/verification.txt`と`Temp/PreviewFollow/verification.txt`です。前者のPreview仕様は拡張前のもので、現在の操作は後者に従います。Temp内のため記録が消失する可能性があります。
+
 ## 0.6.1：生成物の管理情報をUserSettingsへ移動 {#v0-6-1}
 
-パッチ更新です。現行`package.json`は0.6.1ですが、公開・配布の完了は未確認です。
+パッチ更新です。2026年11月23日に[GitHub Releaseと配布ファイル](https://github.com/tp-jp/FluxFX/releases/tag/0.6.1)の公開を確認しました。
 
 生成物の管理情報をUserSettingsへ移動しました。既存の台帳・整理予約・実行間隔を自動で引き継ぎます。各環境の生成状態に対応する管理情報を、共有するプロジェクト設定から分離します。
 
@@ -21,7 +51,7 @@
 
 ## 0.6.0：生成物の整理機能を刷新し、起動時の自動整理を既定で有効化 {#v0-6-0}
 
-この項目では、`package.json`に0.6.0と記録されたパッケージの、生成物整理に関する変更を扱います。パッケージの公開状況は未確認です。
+生成物整理に関する変更です。2026年11月23日に[GitHub Releaseと配布ファイル](https://github.com/tp-jp/FluxFX/releases/tag/0.6.0)の公開を確認しました。
 
 FluxFXが管理する未使用のShader・固定HLSL・Materialなどの整理機能を刷新しました。手動では削除候補と保持理由を確認でき、自動ではプロジェクト起動時に必要な整理を行います。使用中の生成物と、その依存ファイルは保持します。
 

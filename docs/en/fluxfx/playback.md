@@ -92,6 +92,8 @@ Use `Stop()`. Particles keep moving until their lifetime ends. Use the [asynchro
 
 Use `Pause()` to stop emission and simulation time. It does not hide particles. Resume with `Play()`.
 
+[System Follow](./main.md#system-follow) continues moving the GameObject while particles are paused. Local-space particles move with System, so Pause does not necessarily hold their world positions. [Freezing the Preview follow position](./inspector-preview.md#preview-follow) in the Editor is a separate operation.
+
 <span id="すぐに消す"></span>
 
 ### Hide particles immediately
